@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { APP_CONFIG } from "@/lib/config"
+import { persistentAdManager } from "./persistent-ad-manager"
 
 interface AdBannerProps {
   adSlot?: string
@@ -11,6 +12,7 @@ interface AdBannerProps {
   style?: React.CSSProperties
   mobileOptimized?: boolean
   sticky?: boolean
+  persistAcrossPages?: boolean
 }
 
 export function AdBanner({
@@ -20,12 +22,12 @@ export function AdBanner({
   className = "",
   style = {},
   mobileOptimized = false,
-  sticky = false
+  sticky = false,
+  persistAcrossPages = false
 }: AdBannerProps) {
   const [isClient, setIsClient] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [shouldShowAd, setShouldShowAd] = useState(false)
-  const [userEngagement, setUserEngagement] = useState(0)
   const adRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
@@ -37,122 +39,44 @@ export function AdBanner({
   }, [])
 
   useEffect(() => {
-    // Stricter bounce protection for AdSense policy compliance
-    let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0')
-    let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0')
-    let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0')
-    let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0')
-    let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0')
-    let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0')
+    // Use persistent ad manager for engagement tracking
+    const manager = persistentAdManager
+    const engagement = manager['calculateEngagementScore']?.() || 0
+    const sessionTime = Date.now() - manager['state'].userEngagement.sessionStart
     
-    if (!sessionStartTime) {
-      sessionStartTime = Date.now()
-      sessionStorage.setItem('sessionStartTime', sessionStartTime.toString())
-    }
-    
-    const currentTime = Date.now()
-    const sessionDuration = currentTime - sessionStartTime
-    
-    // Calculate engagement score with much stricter requirements
-    let engagementScore = 0
-    if (sessionDuration > 60000) engagementScore += 2 // 60 seconds minimum
-    if (pageViews >= 3) engagementScore += 3 // More page views required
-    if (toolUsage >= 2) engagementScore += 5 // More tool usage required
-    if (fileUploads > 0) engagementScore += 6 // File uploads are highest value
-    if (timeOnPage > 120000) engagementScore += 4 // 2 minutes on page
-    if (scrollDepth > 60) engagementScore += 2 // Scroll engagement
-    
-    // Much stricter requirements for ad display
-    const shouldShow = engagementScore >= 10 && sessionDuration > 60000 && toolUsage >= 1
-    
-    setShouldShowAd(shouldShow)
-    setUserEngagement(engagementScore)
-    
-    // Track page view
-    pageViews++
-    sessionStorage.setItem('pageViews', pageViews.toString())
-    
-    // Track tool usage and file uploads
-    const trackToolUsage = () => {
-      toolUsage++
-      sessionStorage.setItem('toolUsage', toolUsage.toString())
-      // Re-evaluate ad display after tool usage
-      setTimeout(() => {
-        const newEngagement = engagementScore + 5
-        if (newEngagement >= 10 && sessionDuration > 60000) {
-          setShouldShowAd(true)
-        }
-      }, 2000)
-    }
-    
-    const trackFileUpload = () => {
-      fileUploads++
-      sessionStorage.setItem('fileUploads', fileUploads.toString())
-      // High value action - immediate re-evaluation
-      setTimeout(() => {
-        const newEngagement = engagementScore + 6
-        if (newEngagement >= 10 && sessionDuration > 45000) {
-          setShouldShowAd(true)
-        }
-      }, 1000)
-    }
-    
-    // Track scroll depth
-    const trackScroll = () => {
-      const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100)
-      if (scrollPercent > scrollDepth) {
-        scrollDepth = scrollPercent
-        sessionStorage.setItem('scrollDepth', scrollDepth.toString())
-      }
-    }
-    
-    // Listen for file uploads and tool actions
-    document.addEventListener('change', (e) => {
-      if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
-        trackFileUpload()
-      }
-    })
-    
-    window.addEventListener('scroll', trackScroll, { passive: true })
-    
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement
-      if (target.closest('[data-tool-action]') || 
-          target.closest('button[type="submit"]') ||
-          target.textContent?.includes('Process') ||
-          target.textContent?.includes('Generate') ||
-          target.textContent?.includes('Convert')) {
-        trackToolUsage()
-      }
-    })
-    
-    return () => {
-      window.removeEventListener('scroll', trackScroll)
-    }
-    
-    // Track time on page with cleanup
-    const timeTracker = setInterval(() => {
-      timeOnPage += 5000
-      sessionStorage.setItem('timeOnPage', timeOnPage.toString())
-    }, 5000)
-    
-    return () => {
-      clearInterval(timeTracker)
-    }
+    setShouldShowAd(engagement >= 15 && sessionTime > 60000)
   }, [])
   useEffect(() => {
-    if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd) {
+  useEffect(() => {
+    if (isClient && shouldShowAd && adRef.current && persistAcrossPages) {
+      // Check if ad is already loaded to prevent duplicate loading
+      if (!persistentAdManager.isAdLoaded(adSlot)) {
+        // Try to restore existing ad first
+        const restoredAd = persistentAdManager.restoreAd(adSlot)
+        if (restoredAd) {
+          adRef.current.appendChild(restoredAd)
+          return
+        }
+      }
+    }
+  }, [isClient, shouldShowAd, adSlot, persistAcrossPages])
+    if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd && !persistentAdManager.isAdLoaded(adSlot)) {
       try {
         // Additional delay for ad initialization
         setTimeout(() => {
           (window as any).adsbygoogle = (window as any).adsbygoogle || []
-        ;(window as any).adsbygoogle.push({})
+          ;(window as any).adsbygoogle.push({})
+          
+          // Preserve ad for cross-page persistence
+          if (persistAcrossPages && adRef.current) {
+            persistentAdManager.preserveAd(adSlot, adRef.current)
+          }
         }, 1000)
       } catch (error) {
         console.warn('AdSense initialization failed:', error)
       }
     }
-  }, [isClient, shouldShowAd])
+  }, [isClient, shouldShowAd, adSlot, persistAcrossPages])
 
   // Don't render if ads are disabled
   if (!APP_CONFIG.enableAds || !APP_CONFIG.adsensePublisherId || !shouldShowAd) {
@@ -176,7 +100,8 @@ export function AdBanner({
           <div className="text-gray-700 font-medium mb-1">AdSense Ad Space</div>
           <div className="text-xs text-gray-500">Slot: {adSlot}</div>
           <div className="text-xs text-gray-400 mt-1">Publisher: ca-pub-4755003409431265</div>
-          <div className="text-xs text-gray-400 mt-1">Engagement: {userEngagement}/10</div>
+          <div className="text-xs text-gray-400 mt-1">Engagement: {persistentAdManager['calculateEngagementScore']?.() || 0}/15</div>
+          <div className="text-xs text-gray-400 mt-1">Persistent: {persistAcrossPages ? 'Yes' : 'No'}</div>
         </div>
       </div>
     )
