@@ -87,14 +87,10 @@ export default function RootLayout({
         <Script id="adsense-init" strategy="afterInteractive">
           {`
             (function() {
-              // Ultimate bounce protection and quality traffic for AdSense
+              // Enhanced bounce protection and quality traffic for AdSense
               let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0');
               let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0');
               let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0');
-              let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0');
-              let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
-              let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
-              let lastActivity = Date.now();
               let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0');
               let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
               let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
@@ -105,8 +101,7 @@ export default function RootLayout({
                 sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
               }
               
-              // Enhanced user engagement tracking
-              document.addEventListener('click', function(e) {
+              // Enhanced user engagement tracking with rate limiting
                 lastActivity = Date.now();
                 lastActivity = Date.now();
                 const target = e.target;
@@ -120,17 +115,10 @@ export default function RootLayout({
                   fileUploads++;
                   sessionStorage.setItem('fileUploads', fileUploads.toString());
                 }
-                
-                // Track file uploads specifically
-                if (target && target.closest('input[type="file"]')) {
-                  fileUploads++;
-                  sessionStorage.setItem('fileUploads', fileUploads.toString());
-                }
               });
               
               // Track scroll depth for engagement
               let maxScroll = 0;
-              window.addEventListener('scroll', function() {
                 lastActivity = Date.now();
                 const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
                 maxScroll = Math.max(maxScroll, scrollPercent);
@@ -151,102 +139,31 @@ export default function RootLayout({
                 document.addEventListener(event, function() {
                   lastActivity = Date.now();
                 }, { passive: true });
-              });
-              
-              // Track scroll depth for engagement
-              let maxScroll = 0;
-              window.addEventListener('scroll', function() {
-                lastActivity = Date.now();
-                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-                maxScroll = Math.max(maxScroll, scrollPercent);
-                if (maxScroll > scrollDepth) {
-                  scrollDepth = maxScroll;
-                  sessionStorage.setItem('scrollDepth', scrollDepth.toString());
-                }
-              });
-              
-              // Track time on page
-              setInterval(function() {
-                timeOnPage += 5000;
-                sessionStorage.setItem('timeOnPage', timeOnPage.toString());
-              }, 5000);
-              
-              // Track user activity
-              ['mousemove', 'keypress', 'scroll', 'click'].forEach(function(event) {
-                document.addEventListener(event, function() {
-                  lastActivity = Date.now();
-                }, { passive: true });
-              });
-              
-              // Enhanced error handling for image processing
-              window.addEventListener('error', function(e) {
-                if (e.message && e.message.includes('out of memory')) {
-                  console.warn('Memory error detected, cleaning up...');
-                  // Clean up blob URLs
-                  const images = document.querySelectorAll('img[src^="blob:"]');
-                  images.forEach(img => {
-                    if (img.src) URL.revokeObjectURL(img.src);
-                  });
-                  
-                  // Force garbage collection if available
-                  if ('gc' in window && typeof window.gc === 'function') {
-                    window.gc();
-                  }
-                }
-              });
-              
-              // Enhanced processing state management
-              let isProcessing = false;
-              document.addEventListener('click', function(e) {
-                const target = e.target;
-                if (target && target.textContent && 
-                    (target.textContent.includes('Process') || target.textContent.includes('Generate'))) {
-                  isProcessing = true;
-                  setTimeout(() => { isProcessing = false; }, 30000); // Reset after 30s
-                }
-              });
-              
-              // Warn before navigation during processing
-              window.addEventListener('beforeunload', function(e) {
-                if (isProcessing) {
-                  e.preventDefault();
-                  e.returnValue = 'Processing in progress. Are you sure you want to leave?';
-                  return e.returnValue;
-                }
               });
               
               // Handle SPA navigation for AdSense
               let currentPath = window.location.pathname;
+              let rapidNavigationCount = 0;
+              let lastNavigationTime = Date.now();
               
               function initAdsense() {
                 const sessionDuration = Date.now() - sessionStartTime;
                 const isUserActive = (Date.now() - lastActivity) < 120000; // Active within 2 minutes
                 
-                // Calculate comprehensive engagement score
+                // Calculate comprehensive engagement score with stricter requirements
                 let engagementScore = 0;
-                if (sessionDuration > 30000) engagementScore += 2; // 30 seconds
-                if (pageViews >= 2) engagementScore += 2;
-                if (toolUsage >= 1) engagementScore += 3;
-                if (fileUploads > 0) engagementScore += 3;
+                if (sessionDuration > 45000) engagementScore += 2; // 45 seconds minimum
+                if (pageViews >= 3) engagementScore += 2; // More page views required
+                if (toolUsage >= 2) engagementScore += 4; // More tool usage required
+                if (fileUploads > 0) engagementScore += 4; // File uploads are high value
                 if (scrollDepth > 50) engagementScore += 1;
-                if (timeOnPage > 60000) engagementScore += 2; // 1 minute
+                if (timeOnPage > 90000) engagementScore += 3; // 1.5 minutes
                 
-                const shouldShowAds = engagementScore >= 5 && isUserActive && sessionDuration > 30000;
-                
-                // Calculate comprehensive engagement score
-                let engagementScore = 0;
-                if (sessionDuration > 30000) engagementScore += 2; // 30 seconds
-                if (pageViews >= 2) engagementScore += 2;
-                if (toolUsage >= 1) engagementScore += 3;
-                if (fileUploads > 0) engagementScore += 3;
-                if (scrollDepth > 50) engagementScore += 1;
-                if (timeOnPage > 60000) engagementScore += 2; // 1 minute
-                
-                const shouldShowAds = engagementScore >= 5 && isUserActive && sessionDuration > 30000;
+                // Stricter requirements for ad display
+                const shouldShowAds = engagementScore >= 7 && isUserActive && sessionDuration > 45000;
                 
                 if (!shouldShowAds) {
                   console.log('User engagement insufficient for ads:', { engagementScore, sessionDuration, isUserActive });
-                  return;
                   return;
                 }
                 
@@ -254,105 +171,59 @@ export default function RootLayout({
                   // Initialize AdSense for SPA
                   window.adsbygoogle = window.adsbygoogle || [];
                   
-                  // Rate-limited ad initialization
+                  // Rate-limited ad initialization with bounce protection
                   const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
                   
-                  // Limit concurrent ads to prevent policy violations
-                  const maxAdsPerPage = window.innerWidth < 768 ? 2 : 3;
-                  const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
-                  
-                  adsToInit.forEach((ad, index) => {
-                  // Limit concurrent ads to prevent policy violations
-                  const maxAdsPerPage = window.innerWidth < 768 ? 2 : 3;
+                  // Stricter ad limits for tools platform
+                  const maxAdsPerPage = window.innerWidth < 768 ? 1 : 2;
                   const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
                   
                   adsToInit.forEach((ad, index) => {
                     try {
-                      // Stagger ad initialization to prevent rapid requests
+                      // Longer stagger for tools platform
                       setTimeout(() => {
                         window.adsbygoogle.push({});
-                      }, index * 1000); // 1 second delay between ads
-                      setTimeout(() => {
-                        window.adsbygoogle.push({});
-                      }, index * 1000); // 1 second delay between ads
+                      }, index * 2000); // 2 second delay between ads
                     } catch (e) {
                       console.warn('AdSense push failed:', e);
                     }
                   });
+                } catch (e) {
                   
                   console.warn('AdSense initialization failed:', e);
                 }
               }
               
-              // Handle route changes for SPA
+              // Enhanced route change handling with bounce protection
               function handleRouteChange() {
+                const now = Date.now();
+                
+                // Check for rapid navigation (bounce protection)
+                if (now - lastNavigationTime < 3000) { // Less than 3 seconds
+                  rapidNavigationCount++;
+                  if (rapidNavigationCount > 2) {
+                    // User is bouncing rapidly, delay ads significantly
+                    console.log('Rapid navigation detected, delaying ads');
+                    setTimeout(initAdsense, 15000); // 15 second delay
+                    return;
+                  }
+                } else {
+                  rapidNavigationCount = 0;
+                }
+                lastNavigationTime = now;
+                
                 pageViews++;
                 sessionStorage.setItem('pageViews', pageViews.toString());
                 
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
-                  // Longer delay for route changes to ensure quality traffic
-                  // Longer delay for route changes to ensure quality traffic
-                  setTimeout(initAdsense, 3000);
+                  // Much longer delay for route changes to ensure quality traffic
+                  setTimeout(initAdsense, 5000);
                 }
-              }
-              
-              // Detect rapid page bouncing and disable ads temporarily
-              let rapidNavigationCount = 0;
-              let lastNavigationTime = Date.now();
-              
-              function checkRapidNavigation() {
-                const now = Date.now();
-                if (now - lastNavigationTime < 2000) { // Less than 2 seconds
-                  rapidNavigationCount++;
-                  if (rapidNavigationCount > 3) {
-                    // User is bouncing rapidly, disable ads for 30 seconds
-                    console.log('Rapid navigation detected, temporarily disabling ads');
-                    const ads = document.querySelectorAll('.adsbygoogle');
-                    ads.forEach(ad => ad.style.display = 'none');
-                    
-                    setTimeout(() => {
-                      ads.forEach(ad => ad.style.display = 'block');
-                      rapidNavigationCount = 0;
-                    }, 30000);
-                  }
-                } else {
-                  rapidNavigationCount = 0;
-                }
-                lastNavigationTime = now;
-              }
-              
-              // Detect rapid page bouncing and disable ads temporarily
-              let rapidNavigationCount = 0;
-              let lastNavigationTime = Date.now();
-              
-              function checkRapidNavigation() {
-                const now = Date.now();
-                if (now - lastNavigationTime < 2000) { // Less than 2 seconds
-                  rapidNavigationCount++;
-                  if (rapidNavigationCount > 3) {
-                    // User is bouncing rapidly, disable ads for 30 seconds
-                    console.log('Rapid navigation detected, temporarily disabling ads');
-                    const ads = document.querySelectorAll('.adsbygoogle');
-                    ads.forEach(ad => ad.style.display = 'none');
-                    
-                    setTimeout(() => {
-                      ads.forEach(ad => ad.style.display = 'block');
-                      rapidNavigationCount = 0;
-                    }, 30000);
-                  }
-                } else {
-                  rapidNavigationCount = 0;
-                }
-                lastNavigationTime = now;
               }
               
               // Listen for navigation changes
               window.addEventListener('popstate', function() {
-                checkRapidNavigation();
-                handleRouteChange();
-              });
-                checkRapidNavigation();
                 handleRouteChange();
               });
               
@@ -362,28 +233,21 @@ export default function RootLayout({
               
               history.pushState = function(...args) {
                 originalPushState.apply(history, args);
-                checkRapidNavigation();
-                checkRapidNavigation();
                 handleRouteChange();
               };
               
               history.replaceState = function(...args) {
                 originalReplaceState.apply(history, args);
-                checkRapidNavigation();
-                checkRapidNavigation();
                 handleRouteChange();
               };
               
               if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
-                  // Delay initial ad loading to ensure quality engagement
-                  setTimeout(initAdsense, 5000);
-                });
-                  // Delay initial ad loading to ensure quality engagement
-                  setTimeout(initAdsense, 5000);
+                  // Longer delay for initial ad loading
+                  setTimeout(initAdsense, 8000);
                 });
               } else {
-                setTimeout(initAdsense, 5000);
+                setTimeout(initAdsense, 8000);
               }
             })();
           `}
