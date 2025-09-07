@@ -67,6 +67,9 @@ npm install
 npm run dev
 ```
 
+## Multi Domain
+based on domain the header, homepage and footer will be change
+
 ## Build
 
 ```bash
