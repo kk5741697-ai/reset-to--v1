@@ -26,4 +26,15 @@ Thank you for your interest in Google AdSense. We've reviewed your application, 
 
 
 also don't remove the .env file
+# AdSense Configuration (Optional - leave empty to disable ads)
+NEXT_PUBLIC_ADSENSE_PUBLISHER_ID=ca-pub-4755003409431265
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=https://pixoratools.com
+
+# API Configuration (Optional)
+NEXT_PUBLIC_API_URL=
+
+# Analytics (Optional)
+NEXT_PUBLIC_GA_ID=G-CMZ40J80GE
 Issues like insufficient content or content quality are common and easy to resolve. Learn more about why your site wasn’t approved and how to fix it.
