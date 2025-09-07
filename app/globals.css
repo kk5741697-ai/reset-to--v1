@@ -179,32 +179,40 @@ footer a:hover {
 .adsbygoogle {
   display: block !important;
   text-align: center !important;
-  min-height: 90px;
+  min-height: 100px;
   background-color: transparent;
   overflow: hidden;
+  margin: 20px 0;
+  border-radius: 8px;
+  border: 1px solid #f3f4f6;
 }
 
 /* Ensure ads don't interfere with layout */
 .ad-container {
-  min-height: 90px;
+  min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0;
+  margin: 24px 0;
   clear: both;
   position: relative;
   z-index: 1;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 }
 
 /* Mobile ad adjustments */
 @media (max-width: 768px) {
   .ad-container {
-    min-height: 60px;
-    margin: 15px 0;
+    min-height: 80px;
+    margin: 16px 0;
+    padding: 8px;
   }
   
   .adsbygoogle {
-    min-height: 60px;
+    min-height: 80px;
   }
   
   /* Ensure mobile ads are responsive */
@@ -217,7 +225,7 @@ footer a:hover {
   .adsbygoogle[data-ad-format="fluid"] {
     width: 100% !important;
     height: auto !important;
-    min-height: 50px;
+    min-height: 70px;
   }
   
   /* Mobile bottom banner ads */
@@ -229,45 +237,114 @@ footer a:hover {
     z-index: 40;
     background: white;
     border-top: 1px solid #e5e7eb;
-    padding: 8px;
+    padding: 12px;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
   /* Adjust body padding when mobile ad is present */
   body.has-mobile-ad {
-    padding-bottom: 80px;
+    padding-bottom: 100px;
   }
 }
 
-/* SPA (Single Page Application) AdSense compatibility */
+/* Enhanced SPA AdSense compatibility */
 .adsbygoogle[data-adsbygoogle-status="done"] {
   display: block !important;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.adsbygoogle[data-adsbygoogle-status=""] {
+  opacity: 0.7;
+}
+
+/* Ad loading states */
+.ad-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Responsive ad containers */
 @media (min-width: 768px) {
   .ad-container {
-    min-height: 120px;
+    min-height: 140px;
+    margin: 32px 0;
   }
   
   .adsbygoogle {
-    min-height: 120px;
+    min-height: 140px;
   }
 }
 
-/* Tool-specific ad positioning */
+/* Enhanced tool-specific ad positioning */
 .tool-canvas .ad-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  margin: 0;
-  pointer-events: none;
+  position: relative;
+  margin: 20px auto;
+  max-width: 600px;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(229, 231, 235, 0.8);
 }
 
 .tool-canvas .ad-container > * {
   pointer-events: auto;
 }
 
+/* Bounce protection styles */
+.bounce-protection-active .adsbygoogle {
+  display: none !important;
+}
+
+.high-engagement .adsbygoogle {
+  border: 2px solid #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+}
+
+/* Quality content indicators */
+.quality-content {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+}
+
+.educational-content {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+/* Enhanced user engagement tracking */
+[data-tool-action] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-tool-action]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* File upload engagement tracking */
+input[type="file"] {
+  position: relative;
+}
+
+input[type="file"]:focus,
+input[type="file"]:active {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
 /* Enhanced tool interface styles */
 .tool-interface {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);

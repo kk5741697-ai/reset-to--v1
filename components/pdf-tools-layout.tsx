@@ -402,12 +402,36 @@ export function PDFToolsLayout({
         <Header />
 
         <div className="container mx-auto px-6 py-4 lg:py-8">
-          <div className="text-center mb-6 lg:mb-8">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <Icon className="h-6 w-6 lg:h-8 lg:w-8 text-red-600" />
-              <h1 className="text-2xl lg:text-3xl font-heading font-bold text-foreground">{title}</h1>
+          {/* Rich Content Section */}
+          <div className="bg-gradient-to-br from-red-50 via-white to-orange-50 rounded-2xl p-8 mb-8">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-2 mb-4">
+                <Icon className="h-8 w-8 text-red-600" />
+                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">{title}</h1>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                {description} Our professional PDF processing technology ensures document integrity 
+                while providing the flexibility you need for business, academic, and personal document management. 
+                Trusted by professionals worldwide for reliable PDF manipulation.
+              </p>
             </div>
-            <p className="text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">{description}</p>
+            
+            {/* Content Area Ad */}
+            <div className="mb-8">
+              <AdBanner 
+                adSlot="pdf-tools-content"
+                adFormat="auto"
+                className="max-w-3xl mx-auto"
+                mobileOptimized={true}
+              />
+            </div>
+          </div>
+
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your PDF Files</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select your PDF documents to begin processing. Our secure tool handles your files with complete privacy.
+            </p>
           </div>
 
         
@@ -426,6 +450,7 @@ export function PDFToolsLayout({
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onClick={() => fileInputRef.current?.click()}
+              data-tool-action="file-upload"
             >
               <div className="relative mb-4 lg:mb-6">
                 <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
@@ -490,11 +515,7 @@ export function PDFToolsLayout({
       {/* Top Ad Banner */}
       <div className="bg-white">
         <div className="container mx-auto py-4 lg:py-4">
-          <AdBanner 
-            adSlot="tool-header-banner"
-            adFormat="auto"
-            className="max-w-6xl mx-auto"
-          />
+          {/* Same ad continues in tool interface */}
         </div>
       </div>
 

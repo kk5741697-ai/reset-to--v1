@@ -304,4 +304,344 @@ export function TextToolLayout({
             <span className="text-2xl font-bold text-gray-900">Beautify</span>
           </div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2 text-center">{title}</h1>
-          <div className="flex flex-wrap items
+          <div className="flex flex-wrap items-center justify-center space-x-2 text-gray-600 text-sm lg:text-base">
+            <Icon className="h-5 w-5 text-teal-600" />
+            <span>{description}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6 lg:py-8">
+        {/* Mobile Options Button */}
+        {isMobile && (options.length > 0 || examples.length > 0) && (
+          <div className="mb-4">
+            <Button
+              onClick={() => setIsMobileSidebarOpen(true)}
+              variant="outline"
+              className="w-full h-12 flex items-center justify-center space-x-2"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Options & Examples</span>
+            </Button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Desktop Sidebar */}
+          {!isMobile && (options.length > 0 || examples.length > 0) && (
+            <div className="lg:col-span-1">
+              <Card className="sticky top-6">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <Settings className="h-5 w-5 text-teal-600" />
+                    <span>Options</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Tool Options */}
+                  {options.map((option) => (
+                    <div key={option.key} className="space-y-2">
+                      <Label className="text-sm font-medium">{option.label}</Label>
+                      
+                      {option.type === "text" && (
+                        <Input
+                          value={toolOptions[option.key] || ""}
+                          onChange={(e) => setToolOptions(prev => ({ ...prev, [option.key]: e.target.value }))}
+                          placeholder={option.label}
+                        />
+                      )}
+
+                      {option.type === "number" && (
+                        <Input
+                          type="number"
+                          value={toolOptions[option.key] || ""}
+                          onChange={(e) => setToolOptions(prev => ({ ...prev, [option.key]: Number(e.target.value) }))}
+                          min={option.min}
+                          max={option.max}
+                          step={option.step}
+                        />
+                      )}
+
+                      {option.type === "select" && (
+                        <Select
+                          value={toolOptions[option.key]?.toString()}
+                          onValueChange={(value) => setToolOptions(prev => ({ ...prev, [option.key]: value }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {option.selectOptions?.map((opt) => (
+                              <SelectItem key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+
+                      {option.type === "checkbox" && (
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={toolOptions[option.key] || false}
+                            onCheckedChange={(checked) => setToolOptions(prev => ({ ...prev, [option.key]: checked }))}
+                          />
+                          <span className="text-sm">{option.label}</span>
+                        </div>
+                      )}
+
+                      {option.type === "slider" && (
+                        <div className="space-y-2">
+                          <Slider
+                            value={[toolOptions[option.key] || option.defaultValue]}
+                            onValueChange={([value]) => setToolOptions(prev => ({ ...prev, [option.key]: value }))}
+                            min={option.min}
+                            max={option.max}
+                            step={option.step}
+                          />
+                          <div className="flex justify-between text-xs text-gray-500">
+                            <span>{option.min}</span>
+                            <span>{toolOptions[option.key] || option.defaultValue}</span>
+                            <span>{option.max}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {option.type === "color" && (
+                        <Input
+                          type="color"
+                          value={toolOptions[option.key] || option.defaultValue}
+                          onChange={(e) => setToolOptions(prev => ({ ...prev, [option.key]: e.target.value }))}
+                        />
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Examples */}
+                  {examples.length > 0 && (
+                    <div className="space-y-2 pt-4 border-t">
+                      <Label className="text-sm font-medium">Examples</Label>
+                      <div className="space-y-1">
+                        {examples.map((example, index) => (
+                          <Button
+                            key={index}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => loadExample(example.content)}
+                            className="w-full justify-start h-auto p-2 text-left"
+                          >
+                            <div className="truncate">
+                              <div className="font-medium text-xs">{example.name}</div>
+                              <div className="text-xs text-gray-500 truncate">
+                                {example.content.substring(0, 30)}...
+                              </div>
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sidebar Ad */}
+                  <div className="pt-4 border-t">
+                    <AdBanner 
+                      adSlot="text-tool-sidebar"
+                      adFormat="auto"
+                      className="w-full"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Main Content */}
+          <div className={`${!isMobile && (options.length > 0 || examples.length > 0) ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
+            {/* Auto Update Toggle */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={autoUpdate}
+                  onCheckedChange={setAutoUpdate}
+                />
+                <Label className="text-sm">Auto-update output</Label>
+              </div>
+              
+              {!autoUpdate && (
+                <Button onClick={processText} size="sm">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Process
+                </Button>
+              )}
+            </div>
+
+            {/* Center Ad */}
+            <div className="mb-6 lg:mb-8">
+              {/* Same ad continues in tool interface */}
+            </div>
+
+            {/* Tool Options */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Input */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">Input</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const input = document.createElement('input')
+                          input.type = 'file'
+                          input.accept = fileExtensions.join(',')
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0]
+                            if (file) {
+                              const reader = new FileReader()
+                              reader.onload = (e) => {
+                                setInput(e.target?.result as string)
+                              }
+                              reader.readAsText(file)
+                            }
+                          }
+                          input.click()
+                        }}
+                      >
+                        <Upload className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setInput("")}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={placeholder}
+                    className="min-h-[300px] lg:min-h-[400px] font-mono text-sm"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Output */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">Output</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      {output && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyToClipboard(output)}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadFile(output, `output${getFileExtension()}`)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {error ? (
+                    <div className="flex items-center space-x-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                      <span className="text-red-700 text-sm">{error}</span>
+                    </div>
+                  ) : (
+                    <Textarea
+                      value={output}
+                      readOnly
+                      placeholder={outputPlaceholder}
+                      className="min-h-[300px] lg:min-h-[400px] font-mono text-sm bg-gray-50"
+                    />
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Stats */}
+            {stats && (
+              <Card className="mt-6">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <FileText className="h-5 w-5 text-teal-600" />
+                    <span>Statistics</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {Object.entries(stats).map(([key, value]) => (
+                      <div key={key} className="text-center p-3 bg-gray-50 rounded-lg">
+                        <div className="text-2xl font-bold text-teal-600">{value as string}</div>
+                        <div className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Bottom Ad */}
+            <div className="mt-8">
+              {/* Same ad continues throughout the tool */}
+            </div>
+
+            {/* Examples */}
+            {examples.length > 0 && !isMobile && (
+              <Card className="mt-6">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">Examples</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {examples.map((example, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        onClick={() => loadExample(example.content)}
+                        className="h-auto p-4 text-left justify-start"
+                      >
+                        <div className="w-full">
+                          <div className="font-medium mb-1">{example.name}</div>
+                          <div className="text-sm text-gray-500 truncate">
+                            {example.content.substring(0, 60)}...
+                          </div>
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Sticky Bottom Ad */}
+        {isMobile && (
+          <div className="mt-8 pb-20">
+            {/* Same ad continues in mobile interface */}
+          </div>
+        )}
+      </div>
+
+      <MobileOptionsSidebar />
+      <Footer />
+    </div>
+  )
+}
