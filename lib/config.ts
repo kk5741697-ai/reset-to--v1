@@ -2,6 +2,10 @@ export interface AppConfig {
   enableAds: boolean
   adsensePublisherId?: string
   enableAutoAds: boolean
+  enableBounceProtection: boolean
+  minSessionTime: number
+  minPageViews: number
+  minToolUsage: number
   enableAnalytics: boolean
   enableSearch: boolean
   maxFileSize: number // MB
@@ -11,9 +15,13 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG: AppConfig = {
-  enableAds: true, // Enable ads with bounce protection
+  enableAds: true,
   adsensePublisherId: process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "ca-pub-4755003409431265",
-  enableAutoAds: false, // Disable auto ads for tools to prevent policy violations
+  enableAutoAds: false,
+  enableBounceProtection: true,
+  minSessionTime: 30000, // 30 seconds minimum before showing ads
+  minPageViews: 2, // Minimum page views before showing ads
+  minToolUsage: 1, // Minimum tool interactions before showing ads
   enableAnalytics: true,
   enableSearch: true,
   maxFileSize: 100,

@@ -25,6 +25,7 @@ export function AdBanner({
   const [isClient, setIsClient] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [shouldShowAd, setShouldShowAd] = useState(false)
+  const [userEngagement, setUserEngagement] = useState(0)
   const adRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
@@ -36,10 +37,12 @@ export function AdBanner({
   }, [])
 
   useEffect(() => {
-    // Implement bounce protection for AdSense policy compliance
+    // Enhanced bounce protection for AdSense policy compliance
     let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0')
     let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0')
     let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0')
+    let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0')
+    let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0')
     
     if (!sessionStartTime) {
       sessionStartTime = Date.now()
@@ -49,27 +52,44 @@ export function AdBanner({
     const currentTime = Date.now()
     const sessionDuration = currentTime - sessionStartTime
     
-    // Enhanced bounce protection - only show ads if user has engaged meaningfully
-    const shouldShow = sessionDuration > 15000 || // 15 seconds minimum
-                      pageViews > 3 || // Multiple page views
-                      toolUsage > 1 // Used multiple tools
+    // Calculate engagement score
+    let engagementScore = 0
+    if (sessionDuration > APP_CONFIG.minSessionTime) engagementScore += 2
+    if (pageViews >= APP_CONFIG.minPageViews) engagementScore += 2
+    if (toolUsage >= APP_CONFIG.minToolUsage) engagementScore += 3
+    if (fileUploads > 0) engagementScore += 3
+    if (timeOnPage > 60000) engagementScore += 2 // 1 minute on page
+    
+    // Only show ads if user has meaningful engagement
+    const shouldShow = engagementScore >= 4 && sessionDuration > APP_CONFIG.minSessionTime
     
     setShouldShowAd(shouldShow)
+    setUserEngagement(engagementScore)
     
     // Track page view
     pageViews++
     sessionStorage.setItem('pageViews', pageViews.toString())
     
-    // Track tool usage on file uploads and processing
+    // Enhanced tracking for better engagement detection
     const trackToolUsage = () => {
       toolUsage++
       sessionStorage.setItem('toolUsage', toolUsage.toString())
     }
     
+    const trackFileUpload = () => {
+      fileUploads++
+      sessionStorage.setItem('fileUploads', fileUploads.toString())
+    }
+    
+    const trackTimeOnPage = () => {
+      timeOnPage += 5000
+      sessionStorage.setItem('timeOnPage', timeOnPage.toString())
+    }
+    
     // Listen for file uploads and tool actions
     document.addEventListener('change', (e) => {
       if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
-        trackToolUsage()
+        trackFileUpload()
       }
     })
     
@@ -83,6 +103,13 @@ export function AdBanner({
         trackToolUsage()
       }
     })
+    
+    // Track time on page
+    const timeTracker = setInterval(trackTimeOnPage, 5000)
+    
+    return () => {
+      clearInterval(timeTracker)
+    }
   }, [])
   useEffect(() => {
     if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd) {

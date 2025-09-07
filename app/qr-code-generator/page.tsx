@@ -642,14 +642,65 @@ export default function QRCodeGeneratorPage() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-2">
-          <AdBanner 
-            adSlot="tool-header-banner"
-            adFormat="auto"
-            className="max-w-6xl mx-auto"
-            mobileOptimized={true}
-          />
+      {/* Rich Content Section for AdSense Approval */}
+      <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <QrCode className="h-8 w-8 text-green-600" />
+              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">Professional QR Code Generator</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Create custom QR codes for any purpose with our advanced generator. From simple URLs to complex vCards, 
+              WiFi credentials, and event details - generate professional QR codes with custom styling, logos, and colors. 
+              Perfect for marketing campaigns, business cards, restaurant menus, and digital experiences.
+            </p>
+          </div>
+
+          {/* Educational Content Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <Link className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">URL QR Codes</h3>
+              <p className="text-sm text-gray-600">
+                Direct users to websites, landing pages, or online resources instantly.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <Wifi className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">WiFi Access</h3>
+              <p className="text-sm text-gray-600">
+                Share WiFi credentials securely without revealing passwords to guests.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <User className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Contact Cards</h3>
+              <p className="text-sm text-gray-600">
+                Create vCard QR codes for instant contact information sharing.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                <Calendar className="h-6 w-6 text-orange-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Event Details</h3>
+              <p className="text-sm text-gray-600">
+                Generate event QR codes with dates, locations, and descriptions.
+              </p>
+            </div>
+          </div>
+          
+          {/* Content Area Ad */}
+          <div className="mb-8">
+            {/* Same ad continues in tool interface */}
+          </div>
         </div>
       </div>
 
@@ -826,6 +877,16 @@ export default function QRCodeGeneratorPage() {
 
           {/* Canvas Content */}
           <div className="flex-1 overflow-hidden flex items-center justify-center p-6">
+            {/* Same Ad in Canvas Area */}
+            <div className="absolute top-4 left-4 right-4 z-10">
+              <AdBanner 
+                adSlot="qr-generator-content"
+                adFormat="auto"
+                className="max-w-md mx-auto opacity-90"
+                mobileOptimized={true}
+              />
+            </div>
+            
             {!qrDataUrl ? (
               <div className="text-center max-w-md">
                 <div className="relative mb-8">
@@ -1160,11 +1221,6 @@ export default function QRCodeGeneratorPage() {
                 </div>
 
                 {/* Sidebar Ad */}
-                <AdBanner 
-                  adSlot="qr-sidebar"
-                  adFormat="auto"
-                  className="w-full"
-                />
 
                 {/* QR Code Info */}
                 {generateQRContent().trim() && (
@@ -1290,6 +1346,52 @@ export default function QRCodeGeneratorPage() {
         </div>
       </div>
 
+      {/* Additional Educational Content */}
+      <div className="bg-gray-50 py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">QR Code Marketing Strategies</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="font-semibold text-gray-900 mb-3">Restaurant Menus</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Replace physical menus with QR codes linking to digital menus. 
+                  Update prices and items instantly without reprinting.
+                </p>
+                <ul className="text-xs text-gray-500 space-y-1">
+                  <li>• Contactless dining experience</li>
+                  <li>• Easy menu updates</li>
+                  <li>• Multi-language support</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="font-semibold text-gray-900 mb-3">Business Cards</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Add QR codes to business cards for instant contact sharing. 
+                  Include social media links and portfolio URLs.
+                </p>
+                <ul className="text-xs text-gray-500 space-y-1">
+                  <li>• Instant contact saving</li>
+                  <li>• Social media integration</li>
+                  <li>• Professional networking</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="font-semibold text-gray-900 mb-3">Event Management</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Create QR codes for event check-ins, feedback forms, 
+                  and information sharing at conferences and meetings.
+                </p>
+                <ul className="text-xs text-gray-500 space-y-1">
+                  <li>• Quick event check-in</li>
+                  <li>• Feedback collection</li>
+                  <li>• Information distribution</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   )

@@ -87,23 +87,59 @@ export default function RootLayout({
         <Script id="adsense-init" strategy="afterInteractive">
           {`
             (function() {
-              // Enhanced bounce protection for AdSense policy compliance
+              // Ultimate bounce protection and quality traffic for AdSense
               let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0');
               let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0');
               let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0');
+              let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0');
+              let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
+              let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
+              let lastActivity = Date.now();
               
               if (!sessionStartTime) {
                 sessionStartTime = Date.now();
                 sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
               }
               
-              // Track tool usage
+              // Enhanced user engagement tracking
               document.addEventListener('click', function(e) {
+                lastActivity = Date.now();
                 const target = e.target;
                 if (target && (target.closest('[data-tool-action]') || target.closest('button'))) {
                   toolUsage++;
                   sessionStorage.setItem('toolUsage', toolUsage.toString());
                 }
+                
+                // Track file uploads specifically
+                if (target && target.closest('input[type="file"]')) {
+                  fileUploads++;
+                  sessionStorage.setItem('fileUploads', fileUploads.toString());
+                }
+              });
+              
+              // Track scroll depth for engagement
+              let maxScroll = 0;
+              window.addEventListener('scroll', function() {
+                lastActivity = Date.now();
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                maxScroll = Math.max(maxScroll, scrollPercent);
+                if (maxScroll > scrollDepth) {
+                  scrollDepth = maxScroll;
+                  sessionStorage.setItem('scrollDepth', scrollDepth.toString());
+                }
+              });
+              
+              // Track time on page
+              setInterval(function() {
+                timeOnPage += 5000;
+                sessionStorage.setItem('timeOnPage', timeOnPage.toString());
+              }, 5000);
+              
+              // Track user activity
+              ['mousemove', 'keypress', 'scroll', 'click'].forEach(function(event) {
+                document.addEventListener(event, function() {
+                  lastActivity = Date.now();
+                }, { passive: true });
               });
               
               // Enhanced error handling for image processing
@@ -123,7 +159,7 @@ export default function RootLayout({
                 }
               });
               
-              // Prevent navigation during processing
+              // Enhanced processing state management
               let isProcessing = false;
               document.addEventListener('click', function(e) {
                 const target = e.target;
@@ -148,27 +184,46 @@ export default function RootLayout({
               
               function initAdsense() {
                 const sessionDuration = Date.now() - sessionStartTime;
-                const shouldShowAds = sessionDuration > 15000 || pageViews > 2 || toolUsage > 0;
+                const isUserActive = (Date.now() - lastActivity) < 120000; // Active within 2 minutes
+                
+                // Calculate comprehensive engagement score
+                let engagementScore = 0;
+                if (sessionDuration > 30000) engagementScore += 2; // 30 seconds
+                if (pageViews >= 2) engagementScore += 2;
+                if (toolUsage >= 1) engagementScore += 3;
+                if (fileUploads > 0) engagementScore += 3;
+                if (scrollDepth > 50) engagementScore += 1;
+                if (timeOnPage > 60000) engagementScore += 2; // 1 minute
+                
+                const shouldShowAds = engagementScore >= 5 && isUserActive && sessionDuration > 30000;
                 
                 if (!shouldShowAds) {
-                  return; // Don't initialize ads for bouncy users
+                  console.log('User engagement insufficient for ads:', { engagementScore, sessionDuration, isUserActive });
+                  return;
                 }
                 
                 try {
                   // Initialize AdSense for SPA
                   window.adsbygoogle = window.adsbygoogle || [];
                   
-                  // Push existing ads on page
+                  // Rate-limited ad initialization
                   const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
-                  ads.forEach(() => {
+                  
+                  // Limit concurrent ads to prevent policy violations
+                  const maxAdsPerPage = window.innerWidth < 768 ? 2 : 3;
+                  const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
+                  
+                  adsToInit.forEach((ad, index) => {
                     try {
-                      window.adsbygoogle.push({});
+                      // Stagger ad initialization to prevent rapid requests
+                      setTimeout(() => {
+                        window.adsbygoogle.push({});
+                      }, index * 1000); // 1 second delay between ads
                     } catch (e) {
                       console.warn('AdSense push failed:', e);
                     }
                   });
                   
-                  // Disable auto ads to prevent policy violations
                 } catch (e) {
                   console.warn('AdSense initialization failed:', e);
                 }
@@ -181,12 +236,41 @@ export default function RootLayout({
                 
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
-                  setTimeout(initAdsense, 2000); // Longer delay for better user experience
+                  // Longer delay for route changes to ensure quality traffic
+                  setTimeout(initAdsense, 3000);
                 }
               }
               
+              // Detect rapid page bouncing and disable ads temporarily
+              let rapidNavigationCount = 0;
+              let lastNavigationTime = Date.now();
+              
+              function checkRapidNavigation() {
+                const now = Date.now();
+                if (now - lastNavigationTime < 2000) { // Less than 2 seconds
+                  rapidNavigationCount++;
+                  if (rapidNavigationCount > 3) {
+                    // User is bouncing rapidly, disable ads for 30 seconds
+                    console.log('Rapid navigation detected, temporarily disabling ads');
+                    const ads = document.querySelectorAll('.adsbygoogle');
+                    ads.forEach(ad => ad.style.display = 'none');
+                    
+                    setTimeout(() => {
+                      ads.forEach(ad => ad.style.display = 'block');
+                      rapidNavigationCount = 0;
+                    }, 30000);
+                  }
+                } else {
+                  rapidNavigationCount = 0;
+                }
+                lastNavigationTime = now;
+              }
+              
               // Listen for navigation changes
-              window.addEventListener('popstate', handleRouteChange);
+              window.addEventListener('popstate', function() {
+                checkRapidNavigation();
+                handleRouteChange();
+              });
               
               // Override pushState and replaceState for programmatic navigation
               const originalPushState = history.pushState;
@@ -194,18 +278,23 @@ export default function RootLayout({
               
               history.pushState = function(...args) {
                 originalPushState.apply(history, args);
+                checkRapidNavigation();
                 handleRouteChange();
               };
               
               history.replaceState = function(...args) {
                 originalReplaceState.apply(history, args);
+                checkRapidNavigation();
                 handleRouteChange();
               };
               
               if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initAdsense);
+                document.addEventListener('DOMContentLoaded', function() {
+                  // Delay initial ad loading to ensure quality engagement
+                  setTimeout(initAdsense, 5000);
+                });
               } else {
-                initAdsense();
+                setTimeout(initAdsense, 5000);
               }
             })();
           `}

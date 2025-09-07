@@ -90,13 +90,69 @@ export default function PasswordGeneratorPage() {
       <Header />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center space-x-2 mb-4">
-            <Shield className="h-8 w-8 text-accent" />
-            <h1 className="text-3xl font-heading font-bold text-foreground">Password Generator</h1>
+        {/* Rich Content Section for AdSense Approval */}
+        <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl p-8 mb-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Shield className="h-8 w-8 text-indigo-600" />
+              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">Secure Password Generator</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Generate cryptographically secure passwords with customizable length, character sets, and complexity requirements. 
+              Our password generator uses advanced randomization algorithms to create strong, unique passwords that protect 
+              your accounts from unauthorized access. Essential for cybersecurity and digital privacy protection.
+            </p>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate secure passwords with customizable length, characters, and complexity options.
+
+          {/* Security Education Content */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white border border-indigo-200 rounded-lg p-6">
+              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                <Lock className="h-6 w-6 text-indigo-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Cryptographic Security</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Uses Web Crypto API for true randomness, ensuring each password is unpredictable 
+                and secure against brute force attacks.
+              </p>
+            </div>
+            <div className="bg-white border border-green-200 rounded-lg p-6">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Privacy Protection</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Passwords are generated locally in your browser. No data is transmitted 
+                to our servers, ensuring complete privacy and security.
+              </p>
+            </div>
+            <div className="bg-white border border-purple-200 rounded-lg p-6">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <Key className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-3">Customizable Options</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Configure length, character types, and complexity to meet specific 
+                security requirements and platform restrictions.
+              </p>
+            </div>
+          </div>
+          
+          {/* Content Area Ad */}
+          <div className="mb-8">
+            <AdBanner 
+              adSlot="password-generator-content"
+              adFormat="auto"
+              className="max-w-3xl mx-auto"
+              mobileOptimized={true}
+            />
+          </div>
+        </div>
+
+        <div className="text-center mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generate Your Secure Password</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Configure your password requirements below and generate a cryptographically secure password.
           </p>
         </div>
 
@@ -201,16 +257,78 @@ export default function PasswordGeneratorPage() {
           {/* Password Tips */}
           <Card>
             <CardHeader>
-              <CardTitle>Password Security Tips</CardTitle>
+              <CardTitle>Essential Password Security Guidelines</CardTitle>
+              <CardDescription>Follow these best practices to protect your digital accounts</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Use at least 12 characters for better security</li>
-                <li>• Include a mix of uppercase, lowercase, numbers, and symbols</li>
-                <li>• Avoid using personal information or common words</li>
-                <li>• Use a unique password for each account</li>
-                <li>• Consider using a password manager to store passwords securely</li>
-                <li>• Enable two-factor authentication when available</li>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-3">Password Strength Requirements</h4>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span>Minimum 12 characters for strong security</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span>Mix of uppercase, lowercase, numbers, and symbols</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span>Avoid dictionary words and personal information</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span>Unique password for each account and service</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-3">Security Best Practices</h4>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li className="flex items-start space-x-2">
+                      <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span>Use a reputable password manager for storage</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span>Enable two-factor authentication when available</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span>Regular password updates for sensitive accounts</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span>Monitor accounts for suspicious activity</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Password Security Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Password Security Statistics</CardTitle>
+              <CardDescription>Understanding the importance of strong passwords</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">81%</div>
+                  <p className="text-sm text-gray-600">of data breaches involve weak or stolen passwords</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-600 mb-2">23.2M</div>
+                  <p className="text-sm text-gray-600">accounts use "123456" as their password</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">300+</div>
+                  <p className="text-sm text-gray-600">years to crack a 12-character complex password</p>
+                </div>
+              </div>
               </ul>
             </CardContent>
           </Card>
