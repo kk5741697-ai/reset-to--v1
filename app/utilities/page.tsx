@@ -94,11 +94,12 @@ export default function UtilitiesPage() {
             
             {/* Content Area Ad */}
             <div className="mb-6">
-              <AdBanner 
+              <PersistentAdBanner 
                 adSlot="utilities-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
+                persistAcrossPages={true}
               />
             </div>
           </div>
@@ -114,36 +115,36 @@ export default function UtilitiesPage() {
         {/* Educational Content */}
         <div className="mt-12">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Utility Tools for Every Profession</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Professional Utility Tools for Enterprise Workflows</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Development & IT</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Enterprise Development & IT Operations</h3>
                 <ul className="space-y-2 text-gray-700">
-                  <li>• Generate secure passwords for system administration</li>
-                  <li>• Create UUIDs for database records and API keys</li>
-                  <li>• Convert units for server specifications and calculations</li>
-                  <li>• Generate random test data for application testing</li>
-                  <li>• Compare text files and configuration changes</li>
+                  <li>• Generate cryptographically secure passwords for system administration, database access, and API authentication</li>
+                  <li>• Create RFC 4122 compliant UUIDs for distributed systems, database primary keys, and microservices identification</li>
+                  <li>• Convert measurement units for server specifications, network calculations, and infrastructure planning</li>
+                  <li>• Generate statistically valid random test data for load testing, performance benchmarking, and QA automation</li>
+                  <li>• Compare configuration files, deployment scripts, and code changes with detailed diff analysis</li>
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business & Research</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Intelligence & Research Analytics</h3>
                 <ul className="space-y-2 text-gray-700">
-                  <li>• Analyze document word counts and reading time</li>
-                  <li>• Generate placeholder text for design mockups</li>
-                  <li>• Convert currencies for international business</li>
-                  <li>• Create random samples for statistical analysis</li>
-                  <li>• Compare document versions and track changes</li>
+                  <li>• Comprehensive document analysis including word count, reading time estimation, and content complexity metrics</li>
+                  <li>• Professional Lorem Ipsum generation for design prototypes, wireframes, and content strategy planning</li>
+                  <li>• Real-time currency conversion for international business transactions and financial reporting</li>
+                  <li>• Statistical random sampling for market research, A/B testing, and data science applications</li>
+                  <li>• Version control and change tracking for legal documents, contracts, and policy management</li>
                 </ul>
               </div>
             </div>
             
             <div className="mt-8 text-center">
-              <p className="text-muted-foreground mb-4">Expanding our utility collection based on user feedback</p>
+              <p className="text-muted-foreground mb-4">Continuously expanding our professional utility suite based on enterprise user feedback and industry requirements</p>
               <p className="text-sm text-muted-foreground">
-                Have a suggestion for a new utility tool?{" "}
+                Need custom utility tools for your organization or specific industry requirements?{" "}
                 <Link href="/contact" className="text-accent hover:underline">
-                  Let us know
+                  Contact our enterprise solutions team
                 </Link>
               </p>
             </div>

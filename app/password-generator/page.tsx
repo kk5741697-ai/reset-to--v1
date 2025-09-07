@@ -12,7 +12,7 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Key, Copy, Download, RefreshCw, Shield, Eye, EyeOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
 
 export default function PasswordGeneratorPage() {
   const [length, setLength] = useState([16])
@@ -196,11 +196,12 @@ export default function PasswordGeneratorPage() {
                 <Label className="text-sm font-medium">Password Length: {length[0]}</Label>
                 <Slider
                   value={length}
-                  onValueChange={setLength}
+                <PersistentAdBanner 
                   min={4}
                   max={128}
                   step={1}
                   className="mt-2"
+                  persistAcrossPages={true}
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                   <span>4</span>
@@ -357,29 +358,52 @@ export default function PasswordGeneratorPage() {
         {/* Security Tips */}
         <Card className="mt-8 max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle>Password Security Best Practices</CardTitle>
+            <CardTitle>Enterprise Password Security & Compliance Guidelines</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-medium mb-3">Strong Password Guidelines</h4>
+                <h4 className="font-medium mb-3">Corporate Security Standards</h4>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Use at least 12 characters for better security</li>
-                  <li>• Include a mix of uppercase, lowercase, numbers, and symbols</li>
-                  <li>• Avoid dictionary words and personal information</li>
-                  <li>• Use unique passwords for each account</li>
-                  <li>• Consider using a password manager</li>
+                  <li>• Implement minimum 16-character passwords for enterprise accounts and administrative access</li>
+                  <li>• Enforce complex character requirements including uppercase, lowercase, numbers, and special symbols</li>
+                  <li>• Prohibit dictionary words, personal information, and common password patterns</li>
+                  <li>• Mandate unique passwords for each system, application, and service account</li>
+                  <li>• Deploy enterprise password managers with centralized policy enforcement</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-3">Security Recommendations</h4>
+                <h4 className="font-medium mb-3">Compliance & Risk Management</h4>
                 <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Enable two-factor authentication when available</li>
-                  <li>• Change passwords regularly for sensitive accounts</li>
-                  <li>• Never share passwords via email or text</li>
-                  <li>• Use different passwords for work and personal accounts</li>
-                  <li>• Store passwords securely in encrypted managers</li>
+                  <li>• Implement multi-factor authentication (MFA) for all critical business systems and applications</li>
+                  <li>• Establish password rotation policies aligned with industry standards and regulatory requirements</li>
+                  <li>• Prohibit password sharing through insecure channels and implement secure credential sharing protocols</li>
+                  <li>• Maintain strict separation between corporate and personal account credentials</li>
+                  <li>• Utilize enterprise-grade encrypted password vaults with audit trails and access controls</li>
                 </ul>
+              </div>
+            </div>
+            
+            {/* Compliance Standards */}
+            <div className="mt-8 pt-6 border-t">
+              <h4 className="font-medium mb-4 text-center">Compliance Standards Supported</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <div className="font-semibold text-blue-900">SOC 2</div>
+                  <div className="text-xs text-blue-700">Security Controls</div>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <div className="font-semibold text-green-900">GDPR</div>
+                  <div className="text-xs text-green-700">Data Protection</div>
+                </div>
+                <div className="bg-purple-50 p-3 rounded-lg">
+                  <div className="font-semibold text-purple-900">HIPAA</div>
+                  <div className="text-xs text-purple-700">Healthcare Security</div>
+                </div>
+                <div className="bg-orange-50 p-3 rounded-lg">
+                  <div className="font-semibold text-orange-900">PCI DSS</div>
+                  <div className="text-xs text-orange-700">Payment Security</div>
+                </div>
               </div>
             </div>
           </CardContent>

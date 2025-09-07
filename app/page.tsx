@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
 
 const featuredTools = [
   {
@@ -242,12 +242,59 @@ export default function HomePage() {
               who need reliable, fast, and secure file processing capabilities. With over 300 specialized tools, 
               we provide enterprise-grade functionality accessible from any web browser.
             </p>
-            <AdBanner 
-              adSlot="homepage-features"
-              adFormat="auto"
-              className="max-w-3xl mx-auto"
-              mobileOptimized={true}
-            />
+          </div>
+          
+          {/* Educational Content */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Code className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Professional File Processing</h3>
+                <p className="text-sm text-gray-600">
+                  Advanced algorithms for PDF manipulation, image optimization, and document conversion with enterprise-grade reliability.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Lock className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Privacy & Security First</h3>
+                <p className="text-sm text-gray-600">
+                  All processing happens locally in your browser. Your files never leave your device, ensuring complete privacy and GDPR compliance.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Lightning Fast Performance</h3>
+                <p className="text-sm text-gray-600">
+                  Optimized processing engines deliver results in seconds. No waiting for uploads or server processing delays.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <Globe className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Universal Compatibility</h3>
+                <p className="text-sm text-gray-600">
+                  Works on any device with a modern browser. No software installation or account registration required.
+                </p>
+              </div>
+            </div>
+            
+            {/* Content Area Ad */}
+            <div className="mb-8">
+              <PersistentAdBanner 
+                adSlot="homepage-features"
+                adFormat="auto"
+                className="max-w-3xl mx-auto"
+                mobileOptimized={true}
+                persistAcrossPages={true}
+              />
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -315,10 +362,11 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-heading font-bold text-gray-900 mb-4">
-              Explore Tool Categories
+              Comprehensive Tool Categories for Every Professional Need
             </h2>
-            <p className="text-lg text-gray-600">
-              Specialized domains for focused workflows
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Our specialized tool categories are designed for specific professional workflows, from document management 
+              to digital marketing, ensuring you have the right tools for every task.
             </p>
           </div>
           
@@ -332,7 +380,7 @@ export default function HomePage() {
                   PDF Tools
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  34 tools for PDF manipulation
+                  34 professional PDF tools for merging, splitting, compression, conversion, and security
                 </p>
                 <Badge variant="secondary" className="text-xs">
                   pixorapdf.com
@@ -349,7 +397,7 @@ export default function HomePage() {
                   Image Tools
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  41 tools for image editing
+                  41 advanced image editing tools for resizing, compression, conversion, and enhancement
                 </p>
                 <Badge variant="secondary" className="text-xs">
                   pixoraimg.com
@@ -366,7 +414,7 @@ export default function HomePage() {
                   QR & Barcode
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  23 tools for QR generation
+                  23 QR code and barcode generation tools with custom styling and bulk processing
                 </p>
                 <Badge variant="secondary" className="text-xs">
                   pixoraqrcode.com
@@ -383,13 +431,62 @@ export default function HomePage() {
                   Code Tools
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  52 tools for developers
+                  52 developer tools for code formatting, validation, minification, and conversion
                 </p>
                 <Badge variant="secondary" className="text-xs">
                   pixoracode.com
                 </Badge>
               </div>
             </Link>
+          </div>
+          
+          {/* Additional Educational Content */}
+          <div className="mt-12 bg-white rounded-2xl p-8 border border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Why Professionals Choose PixoraTools</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Enterprise Features</h4>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Batch processing capabilities for handling multiple files simultaneously</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Advanced compression algorithms that maintain quality while reducing file sizes</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Professional-grade PDF manipulation with bookmark and metadata preservation</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>AI-powered background removal and image enhancement technologies</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Developer Productivity</h4>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Code formatting and validation tools for JSON, XML, HTML, CSS, and JavaScript</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>SEO optimization tools including meta tag generation and sitemap creation</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>QR code generation with custom branding and multiple data format support</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Text processing utilities for encoding, hashing, and case conversion</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -398,18 +495,71 @@ export default function HomePage() {
       <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-heading font-bold text-white mb-4">
-            Ready to boost your productivity?
+            Transform Your Workflow with Professional Tools
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join millions of users who trust PixoraTools for their daily tasks
+            Join over 2 million professionals who rely on PixoraTools for efficient file processing, 
+            document management, and digital content creation. Start optimizing your workflow today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8">
-              Get Started Free
+              <Zap className="h-5 w-5 mr-2" />
+              Start Using Tools Free
             </Button>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
-              View All Tools
+              <Globe className="h-5 w-5 mr-2" />
+              Explore All 300+ Tools
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Industry Applications */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-heading font-bold text-gray-900 mb-4">
+              Trusted Across Industries
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              From startups to Fortune 500 companies, professionals across industries rely on our tools 
+              for mission-critical document processing and content optimization.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-blue-100 p-4 rounded-xl w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <FileType className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Legal & Finance</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Law firms and financial institutions use our PDF tools for document preparation, 
+                contract management, and secure file processing with encryption and watermarking capabilities.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-green-100 p-4 rounded-xl w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <ImageIcon className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Marketing & Design</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Marketing agencies and design studios leverage our image optimization tools for web performance, 
+                social media content creation, and brand asset management across multiple platforms.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-purple-100 p-4 rounded-xl w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <Code className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Software Development</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Development teams utilize our code formatting, validation, and conversion tools for maintaining 
+                code quality, API testing, and deployment optimization in CI/CD pipelines.
+              </p>
+            </div>
           </div>
         </div>
       </section>

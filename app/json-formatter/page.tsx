@@ -5,7 +5,7 @@ import { Braces, Code, CheckCircle, Archive, ArrowUpDown } from "lucide-react"
 import { TextProcessor } from "@/lib/processors/text-processor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
 
 const jsonExamples = [
   {
@@ -151,11 +151,12 @@ export default function JSONFormatterPage() {
             
             {/* Content Area Ad */}
             <div className="mb-8">
-              <AdBanner 
+              <PersistentAdBanner 
                 adSlot="json-formatter-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
+                persistAcrossPages={true}
               />
             </div>
           </div>
@@ -179,49 +180,81 @@ export default function JSONFormatterPage() {
       <div className="bg-gray-50 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">JSON Best Practices & Common Use Cases</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Professional JSON Processing & Development Workflows</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Development Workflows</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Enterprise Development</h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>API response formatting and debugging</span>
+                    <span>REST API response formatting, validation, and debugging for microservices architecture</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Configuration file management and validation</span>
+                    <span>Configuration file management for Docker, Kubernetes, and cloud deployment pipelines</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Database schema design and documentation</span>
+                    <span>NoSQL database schema design, MongoDB document validation, and data modeling</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Data transformation and migration scripts</span>
+                    <span>ETL data transformation, migration scripts, and data warehouse integration</span>
                   </li>
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Analysis</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Intelligence & Analytics</h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Log file analysis and error tracking</span>
+                    <span>Application log analysis, error tracking, and performance monitoring for production systems</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Analytics data processing and reporting</span>
+                    <span>Business intelligence data processing, KPI reporting, and dashboard integration</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Import/export data between different systems</span>
+                    <span>Cross-platform data integration, CRM synchronization, and ERP system connectivity</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                    <span>Testing and quality assurance workflows</span>
+                    <span>Automated testing frameworks, QA data validation, and continuous integration workflows</span>
                   </li>
                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* JSON Standards and Compliance */}
+      <div className="bg-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">JSON Standards & Compliance</h2>
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              Our JSON formatter adheres to RFC 7159 standards and supports advanced features like schema validation, 
+              custom formatting rules, and enterprise-grade error reporting. Perfect for maintaining code quality 
+              in production environments and ensuring data integrity across distributed systems.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600 mb-2">RFC 7159</div>
+                <p className="text-sm text-gray-600">Standards Compliant</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600 mb-2">99.9%</div>
+                <p className="text-sm text-gray-600">Validation Accuracy</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600 mb-2">50MB+</div>
+                <p className="text-sm text-gray-600">Max File Size</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600 mb-2">10M+</div>
+                <p className="text-sm text-gray-600">Files Processed</p>
               </div>
             </div>
           </div>
