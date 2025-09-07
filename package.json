@@ -64,7 +64,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.0-alpha.25",
+    "@tailwindcss/postcss": "^4.1.13",
     "@types/jszip": "^3.4.0",
     "@types/node": "^22.10.3",
     "@types/qrcode": "^1.5.5",

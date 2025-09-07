@@ -43,6 +43,7 @@ export function AdBanner({
     let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0')
     let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0')
     let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0')
+    let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0')
     
     if (!sessionStartTime) {
       sessionStartTime = Date.now()
@@ -52,16 +53,17 @@ export function AdBanner({
     const currentTime = Date.now()
     const sessionDuration = currentTime - sessionStartTime
     
-    // Calculate engagement score with stricter requirements
+    // Calculate engagement score with much stricter requirements
     let engagementScore = 0
-    if (sessionDuration > 45000) engagementScore += 2 // 45 seconds minimum
-    if (pageViews >= 3) engagementScore += 2 // More page views required
-    if (toolUsage >= 2) engagementScore += 4 // More tool usage required
-    if (fileUploads > 0) engagementScore += 4 // File uploads are high value
-    if (timeOnPage > 90000) engagementScore += 3 // 1.5 minutes on page
+    if (sessionDuration > 60000) engagementScore += 2 // 60 seconds minimum
+    if (pageViews >= 3) engagementScore += 3 // More page views required
+    if (toolUsage >= 2) engagementScore += 5 // More tool usage required
+    if (fileUploads > 0) engagementScore += 6 // File uploads are highest value
+    if (timeOnPage > 120000) engagementScore += 4 // 2 minutes on page
+    if (scrollDepth > 60) engagementScore += 2 // Scroll engagement
     
-    // Stricter requirements for ad display
-    const shouldShow = engagementScore >= 7 && sessionDuration > 45000
+    // Much stricter requirements for ad display
+    const shouldShow = engagementScore >= 10 && sessionDuration > 60000 && toolUsage >= 1
     
     setShouldShowAd(shouldShow)
     setUserEngagement(engagementScore)
@@ -74,11 +76,34 @@ export function AdBanner({
     const trackToolUsage = () => {
       toolUsage++
       sessionStorage.setItem('toolUsage', toolUsage.toString())
+      // Re-evaluate ad display after tool usage
+      setTimeout(() => {
+        const newEngagement = engagementScore + 5
+        if (newEngagement >= 10 && sessionDuration > 60000) {
+          setShouldShowAd(true)
+        }
+      }, 2000)
     }
     
     const trackFileUpload = () => {
       fileUploads++
       sessionStorage.setItem('fileUploads', fileUploads.toString())
+      // High value action - immediate re-evaluation
+      setTimeout(() => {
+        const newEngagement = engagementScore + 6
+        if (newEngagement >= 10 && sessionDuration > 45000) {
+          setShouldShowAd(true)
+        }
+      }, 1000)
+    }
+    
+    // Track scroll depth
+    const trackScroll = () => {
+      const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100)
+      if (scrollPercent > scrollDepth) {
+        scrollDepth = scrollPercent
+        sessionStorage.setItem('scrollDepth', scrollDepth.toString())
+      }
     }
     
     // Listen for file uploads and tool actions
@@ -87,6 +112,8 @@ export function AdBanner({
         trackFileUpload()
       }
     })
+    
+    window.addEventListener('scroll', trackScroll, { passive: true })
     
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement
@@ -98,6 +125,10 @@ export function AdBanner({
         trackToolUsage()
       }
     })
+    
+    return () => {
+      window.removeEventListener('scroll', trackScroll)
+    }
     
     // Track time on page with cleanup
     const timeTracker = setInterval(() => {
@@ -114,7 +145,7 @@ export function AdBanner({
       try {
         // Additional delay for ad initialization
         setTimeout(() => {
-        (window as any).adsbygoogle = (window as any).adsbygoogle || []
+          (window as any).adsbygoogle = (window as any).adsbygoogle || []
         ;(window as any).adsbygoogle.push({})
         }, 1000)
       } catch (error) {
@@ -145,7 +176,7 @@ export function AdBanner({
           <div className="text-gray-700 font-medium mb-1">AdSense Ad Space</div>
           <div className="text-xs text-gray-500">Slot: {adSlot}</div>
           <div className="text-xs text-gray-400 mt-1">Publisher: ca-pub-4755003409431265</div>
-          <div className="text-xs text-gray-400 mt-1">Engagement: {userEngagement}/7</div>
+          <div className="text-xs text-gray-400 mt-1">Engagement: {userEngagement}/10</div>
         </div>
       </div>
     )

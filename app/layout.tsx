@@ -87,7 +87,7 @@ export default function RootLayout({
         <Script id="adsense-init" strategy="afterInteractive">
           {`
             (function() {
-              // Enhanced bounce protection and quality traffic for AdSense
+              // Ultimate bounce protection and quality traffic for AdSense approval
               let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0');
               let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0');
               let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0');
@@ -95,14 +95,15 @@ export default function RootLayout({
               let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
               let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
               let lastActivity = Date.now();
+              let rapidNavigationCount = 0;
+              let lastNavigationTime = Date.now();
               
               if (!sessionStartTime) {
                 sessionStartTime = Date.now();
                 sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
               }
               
-              // Enhanced user engagement tracking with rate limiting
-                lastActivity = Date.now();
+              // Ultimate user engagement tracking with strict rate limiting
                 lastActivity = Date.now();
                 const target = e.target;
                 if (target && (target.closest('[data-tool-action]') || target.closest('button'))) {
@@ -110,29 +111,37 @@ export default function RootLayout({
                   sessionStorage.setItem('toolUsage', toolUsage.toString());
                 }
                 
-                // Track file uploads specifically
+                // Track file uploads specifically (highest value action)
                 if (target && target.closest('input[type="file"]')) {
                   fileUploads++;
                   sessionStorage.setItem('fileUploads', fileUploads.toString());
                 }
-              });
+              }, { passive: true });
               
-              // Track scroll depth for engagement
+              // Track scroll depth for engagement (throttled)
               let maxScroll = 0;
+              let scrollTimeout;
                 lastActivity = Date.now();
-                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-                maxScroll = Math.max(maxScroll, scrollPercent);
-                if (maxScroll > scrollDepth) {
-                  scrollDepth = maxScroll;
-                  sessionStorage.setItem('scrollDepth', scrollDepth.toString());
-                }
-              });
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                  const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                  maxScroll = Math.max(maxScroll, scrollPercent);
+                  if (maxScroll > scrollDepth) {
+                    scrollDepth = maxScroll;
+                    sessionStorage.setItem('scrollDepth', scrollDepth.toString());
+                  }
+                }, 100);
+              }, { passive: true });
               
-              // Track time on page
+              // Track time on page more accurately
+              let pageStartTime = Date.now();
               setInterval(function() {
-                timeOnPage += 5000;
-                sessionStorage.setItem('timeOnPage', timeOnPage.toString());
-              }, 5000);
+                if (document.visibilityState === 'visible') {
+                  timeOnPage += 10000; // 10 seconds
+                  sessionStorage.setItem('timeOnPage', timeOnPage.toString());
+                }
+              }, 10000);
               
               // Track user activity
               ['mousemove', 'keypress', 'scroll', 'click'].forEach(function(event) {
@@ -143,27 +152,36 @@ export default function RootLayout({
               
               // Handle SPA navigation for AdSense
               let currentPath = window.location.pathname;
-              let rapidNavigationCount = 0;
-              let lastNavigationTime = Date.now();
               
               function initAdsense() {
                 const sessionDuration = Date.now() - sessionStartTime;
-                const isUserActive = (Date.now() - lastActivity) < 120000; // Active within 2 minutes
+                const isUserActive = (Date.now() - lastActivity) < 180000; // Active within 3 minutes
+                const hasFileInteraction = fileUploads > 0;
+                const hasToolInteraction = toolUsage >= 2;
                 
-                // Calculate comprehensive engagement score with stricter requirements
+                // Calculate comprehensive engagement score with ultimate strictness
                 let engagementScore = 0;
                 if (sessionDuration > 45000) engagementScore += 2; // 45 seconds minimum
-                if (pageViews >= 3) engagementScore += 2; // More page views required
-                if (toolUsage >= 2) engagementScore += 4; // More tool usage required
-                if (fileUploads > 0) engagementScore += 4; // File uploads are high value
-                if (scrollDepth > 50) engagementScore += 1;
-                if (timeOnPage > 90000) engagementScore += 3; // 1.5 minutes
+                if (sessionDuration > 60000) engagementScore += 3; // 60 seconds minimum
+                if (pageViews >= 3) engagementScore += 3; // More page views required
+                if (toolUsage >= 2) engagementScore += 5; // More tool usage required
+                if (fileUploads > 0) engagementScore += 6; // File uploads are highest value
+                if (timeOnPage > 120000) engagementScore += 4; // 2 minutes
+                if (scrollDepth > 60) engagementScore += 2; // Scroll engagement
+                if (hasFileInteraction && hasToolInteraction) engagementScore += 3; // Bonus for both
                 
-                // Stricter requirements for ad display
-                const shouldShowAds = engagementScore >= 7 && isUserActive && sessionDuration > 45000;
+                // Ultimate strict requirements for ad display
+                const shouldShowAds = engagementScore >= 12 && isUserActive && sessionDuration > 60000 && (hasFileInteraction || hasToolInteraction);
                 
                 if (!shouldShowAds) {
-                  console.log('User engagement insufficient for ads:', { engagementScore, sessionDuration, isUserActive });
+                  console.log('User engagement insufficient for ads:', { 
+                    engagementScore, 
+                    sessionDuration, 
+                    isUserActive, 
+                    hasFileInteraction, 
+                    hasToolInteraction,
+                    required: 12
+                  });
                   return;
                 }
                 
@@ -171,19 +189,19 @@ export default function RootLayout({
                   // Initialize AdSense for SPA
                   window.adsbygoogle = window.adsbygoogle || [];
                   
-                  // Rate-limited ad initialization with bounce protection
+                  // Ultra rate-limited ad initialization with bounce protection
                   const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
                   
-                  // Stricter ad limits for tools platform
-                  const maxAdsPerPage = window.innerWidth < 768 ? 1 : 2;
+                  // Ultra strict ad limits for tools platform
+                  const maxAdsPerPage = window.innerWidth < 768 ? 1 : 1;
                   const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
                   
                   adsToInit.forEach((ad, index) => {
                     try {
-                      // Longer stagger for tools platform
+                      // Much longer stagger for tools platform
                       setTimeout(() => {
                         window.adsbygoogle.push({});
-                      }, index * 2000); // 2 second delay between ads
+                      }, index * 5000); // 5 second delay between ads
                     } catch (e) {
                       console.warn('AdSense push failed:', e);
                     }
@@ -194,17 +212,17 @@ export default function RootLayout({
                 }
               }
               
-              // Enhanced route change handling with bounce protection
+              // Ultimate route change handling with bounce protection
               function handleRouteChange() {
                 const now = Date.now();
                 
-                // Check for rapid navigation (bounce protection)
-                if (now - lastNavigationTime < 3000) { // Less than 3 seconds
+                // Check for rapid navigation (ultimate bounce protection)
+                if (now - lastNavigationTime < 5000) { // Less than 5 seconds
                   rapidNavigationCount++;
-                  if (rapidNavigationCount > 2) {
-                    // User is bouncing rapidly, delay ads significantly
+                  if (rapidNavigationCount > 1) {
+                    // User is bouncing rapidly, delay ads much longer
                     console.log('Rapid navigation detected, delaying ads');
-                    setTimeout(initAdsense, 15000); // 15 second delay
+                    setTimeout(initAdsense, 30000); // 30 second delay
                     return;
                   }
                 } else {
@@ -217,8 +235,8 @@ export default function RootLayout({
                 
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
-                  // Much longer delay for route changes to ensure quality traffic
-                  setTimeout(initAdsense, 5000);
+                  // Ultra long delay for route changes to ensure quality traffic
+                  setTimeout(initAdsense, 8000);
                 }
               }
               
@@ -243,11 +261,11 @@ export default function RootLayout({
               
               if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
-                  // Longer delay for initial ad loading
-                  setTimeout(initAdsense, 8000);
+                  // Much longer delay for initial ad loading
+                  setTimeout(initAdsense, 12000);
                 });
               } else {
-                setTimeout(initAdsense, 8000);
+                setTimeout(initAdsense, 12000);
               }
             })();
           `}
