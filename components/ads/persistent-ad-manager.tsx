@@ -197,8 +197,9 @@ export function PersistentAdBanner({
     if (isClient && shouldShow && adRef.current && persistAcrossPages) {
       // Try to restore existing ad first
       const restoredAd = persistentAdManager.restoreAd(adSlot)
-      if (restoredAd && !persistentAdManager.isAdLoaded(adSlot)) {
+      if (restoredAd) {
         adRef.current.appendChild(restoredAd)
+        return
       }
     }
   }, [isClient, shouldShow, adSlot, persistAcrossPages])

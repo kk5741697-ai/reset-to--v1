@@ -46,7 +46,7 @@ export function AdBanner({
     
     setShouldShowAd(engagement >= 15 && sessionTime > 60000)
   }, [])
-  useEffect(() => {
+  
   useEffect(() => {
     if (isClient && shouldShowAd && adRef.current && persistAcrossPages) {
       // Check if ad is already loaded to prevent duplicate loading
@@ -59,7 +59,7 @@ export function AdBanner({
         }
       }
     }
-  }, [isClient, shouldShowAd, adSlot, persistAcrossPages])
+    
     if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd && !persistentAdManager.isAdLoaded(adSlot)) {
       try {
         // Additional delay for ad initialization

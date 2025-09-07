@@ -685,7 +685,8 @@ export default function QRCodeGeneratorPage() {
 
         {/* QR Type Selection Header */}
         <div className="bg-gray-50 border-b px-4 py-3">
-          <div className="flex items-center space-x-2 overflow-x-auto">
+          <div className="flex items-center space-x-2 overflow-x-auto pb-2">
+            <Label className="text-sm font-medium text-gray-700 mr-2 flex-shrink-0">QR Type:</Label>
             {[
               { value: "url", label: "URL", icon: Globe },
               { value: "wifi", label: "WiFi", icon: Wifi },
@@ -701,7 +702,7 @@ export default function QRCodeGeneratorPage() {
                   variant={qrType === type.value ? "default" : "outline"}
                   size="sm"
                   onClick={() => setQrType(type.value)}
-                  className="flex-shrink-0 h-auto p-2 flex flex-col items-center min-w-[60px]"
+                  className="flex-shrink-0 h-auto p-2 flex flex-col items-center min-w-[70px]"
                 >
                   <Icon className="h-3 w-3 mb-1" />
                   <span className="text-xs">{type.label}</span>
@@ -804,7 +805,8 @@ export default function QRCodeGeneratorPage() {
 
           {/* QR Type Selection Header */}
           <div className="bg-gray-50 border-b px-6 py-3">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 overflow-x-auto">
+              <Label className="text-sm font-medium text-gray-700 mr-2 flex-shrink-0">QR Code Type:</Label>
               {[
                 { value: "url", label: "URL", icon: Globe },
                 { value: "wifi", label: "WiFi", icon: Wifi },
@@ -820,7 +822,7 @@ export default function QRCodeGeneratorPage() {
                     variant={qrType === type.value ? "default" : "outline"}
                     size="sm"
                     onClick={() => setQrType(type.value)}
-                    className="h-auto p-3 flex flex-col items-center min-w-[80px]"
+                    className="h-auto p-3 flex flex-col items-center min-w-[80px] flex-shrink-0"
                   >
                     <Icon className="h-4 w-4 mb-1" />
                     <span className="text-xs">{type.label}</span>
