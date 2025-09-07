@@ -354,11 +354,12 @@ export function TextToolLayout({
             
             {/* Content Area Ad */}
             <div className="mb-8">
-              <AdBanner 
+              <PersistentAdBanner 
                 adSlot="text-tools-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
+                persistAcrossPages={true}
               />
             </div>
           </div>
