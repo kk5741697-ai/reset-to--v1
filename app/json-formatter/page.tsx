@@ -225,5 +225,133 @@ export default function JSONFormatterPage() {
       
       <Footer />
     </div>
+              Format, validate, and beautify JSON data with our advanced JSON processor. Perfect for developers, 
+              API testing, data analysis, and configuration management. Our tool provides syntax highlighting, 
+              error detection, and multiple formatting options to make your JSON data readable and professional.
+            </p>
+          </div>
+
+          {/* Educational Content */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Code className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Format & Beautify</h3>
+                <p className="text-sm text-gray-600">
+                  Transform minified JSON into readable, properly indented format with customizable spacing.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Validate Syntax</h3>
+                <p className="text-sm text-gray-600">
+                  Detect and highlight JSON syntax errors with detailed error messages and line numbers.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Archive className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Minify & Compress</h3>
+                <p className="text-sm text-gray-600">
+                  Remove whitespace and compress JSON for production use and API optimization.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <ArrowUpDown className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Sort Keys</h3>
+                <p className="text-sm text-gray-600">
+                  Alphabetically sort object keys for consistent formatting and easier comparison.
+                </p>
+              </div>
+            </div>
+            
+            {/* Content Area Ad */}
+            <div className="mb-8">
+              <AdBanner 
+                adSlot="json-formatter-content"
+                adFormat="auto"
+                className="max-w-3xl mx-auto"
+                mobileOptimized={true}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <TextToolLayout
+        title="JSON Formatter"
+        description="Beautify, validate, and minify JSON data with syntax highlighting and error detection."
+        icon={Braces}
+        placeholder="Paste your JSON here..."
+        outputPlaceholder="Formatted JSON will appear here..."
+        processFunction={processJSON}
+        validateFunction={validateJSON}
+        options={jsonOptions}
+        examples={jsonExamples}
+        fileExtensions={[".json"]}
+      />
+      
+      {/* Additional Educational Content */}
+      <div className="bg-gray-50 py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">JSON Best Practices & Common Use Cases</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Development Workflows</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>API response formatting and debugging</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Configuration file management and validation</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Database schema design and documentation</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Data transformation and migration scripts</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Analysis</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Log file analysis and error tracking</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Analytics data processing and reporting</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Import/export data between different systems</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span>Testing and quality assurance workflows</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <Footer />
+    </div>
   )
 }

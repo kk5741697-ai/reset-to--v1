@@ -95,6 +95,10 @@ export default function RootLayout({
               let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
               let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
               let lastActivity = Date.now();
+              let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0');
+              let scrollDepth = parseInt(sessionStorage.getItem('scrollDepth') || '0');
+              let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0');
+              let lastActivity = Date.now();
               
               if (!sessionStartTime) {
                 sessionStartTime = Date.now();
@@ -103,6 +107,7 @@ export default function RootLayout({
               
               // Enhanced user engagement tracking
               document.addEventListener('click', function(e) {
+                lastActivity = Date.now();
                 lastActivity = Date.now();
                 const target = e.target;
                 if (target && (target.closest('[data-tool-action]') || target.closest('button'))) {
@@ -115,6 +120,37 @@ export default function RootLayout({
                   fileUploads++;
                   sessionStorage.setItem('fileUploads', fileUploads.toString());
                 }
+                
+                // Track file uploads specifically
+                if (target && target.closest('input[type="file"]')) {
+                  fileUploads++;
+                  sessionStorage.setItem('fileUploads', fileUploads.toString());
+                }
+              });
+              
+              // Track scroll depth for engagement
+              let maxScroll = 0;
+              window.addEventListener('scroll', function() {
+                lastActivity = Date.now();
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                maxScroll = Math.max(maxScroll, scrollPercent);
+                if (maxScroll > scrollDepth) {
+                  scrollDepth = maxScroll;
+                  sessionStorage.setItem('scrollDepth', scrollDepth.toString());
+                }
+              });
+              
+              // Track time on page
+              setInterval(function() {
+                timeOnPage += 5000;
+                sessionStorage.setItem('timeOnPage', timeOnPage.toString());
+              }, 5000);
+              
+              // Track user activity
+              ['mousemove', 'keypress', 'scroll', 'click'].forEach(function(event) {
+                document.addEventListener(event, function() {
+                  lastActivity = Date.now();
+                }, { passive: true });
               });
               
               // Track scroll depth for engagement
@@ -197,8 +233,20 @@ export default function RootLayout({
                 
                 const shouldShowAds = engagementScore >= 5 && isUserActive && sessionDuration > 30000;
                 
+                // Calculate comprehensive engagement score
+                let engagementScore = 0;
+                if (sessionDuration > 30000) engagementScore += 2; // 30 seconds
+                if (pageViews >= 2) engagementScore += 2;
+                if (toolUsage >= 1) engagementScore += 3;
+                if (fileUploads > 0) engagementScore += 3;
+                if (scrollDepth > 50) engagementScore += 1;
+                if (timeOnPage > 60000) engagementScore += 2; // 1 minute
+                
+                const shouldShowAds = engagementScore >= 5 && isUserActive && sessionDuration > 30000;
+                
                 if (!shouldShowAds) {
                   console.log('User engagement insufficient for ads:', { engagementScore, sessionDuration, isUserActive });
+                  return;
                   return;
                 }
                 
@@ -214,8 +262,16 @@ export default function RootLayout({
                   const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
                   
                   adsToInit.forEach((ad, index) => {
+                  // Limit concurrent ads to prevent policy violations
+                  const maxAdsPerPage = window.innerWidth < 768 ? 2 : 3;
+                  const adsToInit = Array.from(ads).slice(0, maxAdsPerPage);
+                  
+                  adsToInit.forEach((ad, index) => {
                     try {
                       // Stagger ad initialization to prevent rapid requests
+                      setTimeout(() => {
+                        window.adsbygoogle.push({});
+                      }, index * 1000); // 1 second delay between ads
                       setTimeout(() => {
                         window.adsbygoogle.push({});
                       }, index * 1000); // 1 second delay between ads
@@ -224,7 +280,6 @@ export default function RootLayout({
                     }
                   });
                   
-                } catch (e) {
                   console.warn('AdSense initialization failed:', e);
                 }
               }
@@ -237,8 +292,34 @@ export default function RootLayout({
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
                   // Longer delay for route changes to ensure quality traffic
+                  // Longer delay for route changes to ensure quality traffic
                   setTimeout(initAdsense, 3000);
                 }
+              }
+              
+              // Detect rapid page bouncing and disable ads temporarily
+              let rapidNavigationCount = 0;
+              let lastNavigationTime = Date.now();
+              
+              function checkRapidNavigation() {
+                const now = Date.now();
+                if (now - lastNavigationTime < 2000) { // Less than 2 seconds
+                  rapidNavigationCount++;
+                  if (rapidNavigationCount > 3) {
+                    // User is bouncing rapidly, disable ads for 30 seconds
+                    console.log('Rapid navigation detected, temporarily disabling ads');
+                    const ads = document.querySelectorAll('.adsbygoogle');
+                    ads.forEach(ad => ad.style.display = 'none');
+                    
+                    setTimeout(() => {
+                      ads.forEach(ad => ad.style.display = 'block');
+                      rapidNavigationCount = 0;
+                    }, 30000);
+                  }
+                } else {
+                  rapidNavigationCount = 0;
+                }
+                lastNavigationTime = now;
               }
               
               // Detect rapid page bouncing and disable ads temporarily
@@ -271,6 +352,9 @@ export default function RootLayout({
                 checkRapidNavigation();
                 handleRouteChange();
               });
+                checkRapidNavigation();
+                handleRouteChange();
+              });
               
               // Override pushState and replaceState for programmatic navigation
               const originalPushState = history.pushState;
@@ -279,17 +363,22 @@ export default function RootLayout({
               history.pushState = function(...args) {
                 originalPushState.apply(history, args);
                 checkRapidNavigation();
+                checkRapidNavigation();
                 handleRouteChange();
               };
               
               history.replaceState = function(...args) {
                 originalReplaceState.apply(history, args);
                 checkRapidNavigation();
+                checkRapidNavigation();
                 handleRouteChange();
               };
               
               if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
+                  // Delay initial ad loading to ensure quality engagement
+                  setTimeout(initAdsense, 5000);
+                });
                   // Delay initial ad loading to ensure quality engagement
                   setTimeout(initAdsense, 5000);
                 });

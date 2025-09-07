@@ -26,6 +26,7 @@ export function AdBanner({
   const [isMobile, setIsMobile] = useState(false)
   const [shouldShowAd, setShouldShowAd] = useState(false)
   const [userEngagement, setUserEngagement] = useState(0)
+  const [userEngagement, setUserEngagement] = useState(0)
   const adRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
@@ -41,6 +42,8 @@ export function AdBanner({
     let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0')
     let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0')
     let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0')
+    let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0')
+    let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0')
     let fileUploads = parseInt(sessionStorage.getItem('fileUploads') || '0')
     let timeOnPage = parseInt(sessionStorage.getItem('timeOnPage') || '0')
     
@@ -62,8 +65,15 @@ export function AdBanner({
     
     // Only show ads if user has meaningful engagement
     const shouldShow = engagementScore >= 4 && sessionDuration > APP_CONFIG.minSessionTime
+    if (toolUsage >= APP_CONFIG.minToolUsage) engagementScore += 3
+    if (fileUploads > 0) engagementScore += 3
+    if (timeOnPage > 60000) engagementScore += 2 // 1 minute on page
+    
+    // Only show ads if user has meaningful engagement
+    const shouldShow = engagementScore >= 4 && sessionDuration > APP_CONFIG.minSessionTime
     
     setShouldShowAd(shouldShow)
+    setUserEngagement(engagementScore)
     setUserEngagement(engagementScore)
     
     // Track page view
@@ -74,6 +84,16 @@ export function AdBanner({
     const trackToolUsage = () => {
       toolUsage++
       sessionStorage.setItem('toolUsage', toolUsage.toString())
+    }
+    
+    const trackFileUpload = () => {
+      fileUploads++
+      sessionStorage.setItem('fileUploads', fileUploads.toString())
+    }
+    
+    const trackTimeOnPage = () => {
+      timeOnPage += 5000
+      sessionStorage.setItem('timeOnPage', timeOnPage.toString())
     }
     
     const trackFileUpload = () => {
@@ -100,9 +120,16 @@ export function AdBanner({
           target.textContent?.includes('Process') ||
           target.textContent?.includes('Generate') ||
           target.textContent?.includes('Convert')) {
-        trackToolUsage()
+        trackFileUpload()
       }
     })
+    
+    // Track time on page
+    const timeTracker = setInterval(trackTimeOnPage, 5000)
+    
+    return () => {
+      clearInterval(timeTracker)
+    }
     
     // Track time on page
     const timeTracker = setInterval(trackTimeOnPage, 5000)
