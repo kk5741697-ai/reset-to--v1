@@ -9,7 +9,7 @@ import { SearchDialog } from "@/components/search/search-dialog"
 import { APP_CONFIG } from "@/lib/config"
 import { 
   Maximize, Crop, FileImage, ArrowUpDown, Edit3, Zap, ImageIcon, Download, Palette, Upload, Archive,
-  FileType, QrCode, Code, TrendingUp, Wrench, Globe, Scissors, Lock, RefreshCw, Search
+  FileType, QrCode, Code, TrendingUp, Wrench, Globe, Scissors, Lock, RefreshCw, Search, CheckCircle, Users
 } from "lucide-react"
 import Link from "next/link"
 
