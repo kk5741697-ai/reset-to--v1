@@ -91,16 +91,30 @@ export default function RootLayout({
               let sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0');
               let pageViews = parseInt(sessionStorage.getItem('pageViews') || '0');
               let toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0');
+              let timeOnPage = parseInt(sessionStorage.getItem('pageLoadTime') || '0');
               
               if (!sessionStartTime) {
                 sessionStartTime = Date.now();
                 sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
               }
               
+              if (!timeOnPage) {
+                timeOnPage = Date.now();
+                sessionStorage.setItem('pageLoadTime', timeOnPage.toString());
+              }
+              
               // Track tool usage
               document.addEventListener('click', function(e) {
                 const target = e.target;
                 if (target && (target.closest('[data-tool-action]') || target.closest('button'))) {
+                  toolUsage++;
+                  sessionStorage.setItem('toolUsage', toolUsage.toString());
+                }
+              });
+              
+              // Track file uploads specifically
+              document.addEventListener('change', function(e) {
+                if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
                   toolUsage++;
                   sessionStorage.setItem('toolUsage', toolUsage.toString());
                 }
@@ -148,7 +162,11 @@ export default function RootLayout({
               
               function initAdsense() {
                 const sessionDuration = Date.now() - sessionStartTime;
-                const shouldShowAds = sessionDuration > 15000 || pageViews > 2 || toolUsage > 0;
+                const pageTime = Date.now() - timeOnPage;
+                const shouldShowAds = sessionDuration > 20000 || // 20 seconds session
+                                    pageViews > 3 || // 3+ page views
+                                    toolUsage > 0 || // Used tools
+                                    pageTime > 30000; // 30 seconds on current page
                 
                 if (!shouldShowAds) {
                   return; // Don't initialize ads for bouncy users
@@ -178,10 +196,12 @@ export default function RootLayout({
               function handleRouteChange() {
                 pageViews++;
                 sessionStorage.setItem('pageViews', pageViews.toString());
+                // Reset page load time for new page
+                sessionStorage.setItem('pageLoadTime', Date.now().toString());
                 
                 if (window.location.pathname !== currentPath) {
                   currentPath = window.location.pathname;
-                  setTimeout(initAdsense, 2000); // Longer delay for better user experience
+                  setTimeout(initAdsense, 3000); // Even longer delay for better user experience
                 }
               }
               

@@ -729,6 +729,139 @@ export default function QRCodeGeneratorPage() {
             </CardContent>
           </Card>
 
+          {/* QR Code Content - After Preview */}
+          <div className="mt-8 space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <QrCode className="h-5 w-5 mr-2 text-green-600" />
+                  QR Code Applications & Benefits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Business Applications</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        Marketing campaigns and promotions
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        Contact information sharing
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        Event management and ticketing
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        Product information and reviews
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        WiFi network sharing
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Technical Features</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
+                        Up to 4,296 characters capacity
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
+                        30% error correction capability
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
+                        Custom logo integration
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
+                        Multiple export formats
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
+                        High-resolution output
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>QR Code Best Practices</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Design Guidelines</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li>• Use high contrast colors for better scanning</li>
+                      <li>• Keep logos under 20% of total QR area</li>
+                      <li>• Test QR codes before printing or publishing</li>
+                      <li>• Ensure minimum size of 2cm x 2cm for print</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Content Optimization</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li>• Use URL shorteners for long links</li>
+                      <li>• Include clear call-to-action text</li>
+                      <li>• Optimize for mobile scanning experience</li>
+                      <li>• Consider error correction level needs</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Distribution Tips</h4>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li>• Place QR codes at eye level when possible</li>
+                      <li>• Provide context about what the QR code does</li>
+                      <li>• Use vector formats for scalable printing</li>
+                      <li>• Include backup information (URL, contact)</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>QR Code Statistics & Impact</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                  <div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">5.6B+</div>
+                    <div className="text-sm font-medium text-gray-900">Annual QR Scans</div>
+                    <div className="text-xs text-gray-500">Global usage growth</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">94%</div>
+                    <div className="text-sm font-medium text-gray-900">Smartphone Support</div>
+                    <div className="text-xs text-gray-500">Built-in camera apps</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-purple-600 mb-2">300%</div>
+                    <div className="text-sm font-medium text-gray-900">ROI Increase</div>
+                    <div className="text-xs text-gray-500">Marketing campaigns</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-orange-600 mb-2">15sec</div>
+                    <div className="text-sm font-medium text-gray-900">Avg Scan Time</div>
+                    <div className="text-xs text-gray-500">User engagement</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Mobile Ad */}
           <AdBanner 
             adSlot="mobile-qr-content"
@@ -1190,6 +1323,16 @@ export default function QRCodeGeneratorPage() {
                     </div>
                   </div>
                 )}
+
+                {/* Canvas Ad - Reuse from upload */}
+                <div className="mt-8">
+                  <PersistentAdManager 
+                    toolName="qr-code-generator"
+                    adSlot="before-upload-banner"
+                    position="before-canvas"
+                    className="max-w-2xl mx-auto"
+                  />
+                </div>
               </div>
             </ScrollArea>
           </div>
@@ -1277,6 +1420,15 @@ export default function QRCodeGeneratorPage() {
               </div>
             )}
 
+            {/* After Canvas Ad - Reuse from upload */}
+            <div className="mt-8">
+              <PersistentAdManager 
+                toolName="qr-code-generator"
+                adSlot="after-upload-banner"
+                position="after-canvas"
+                className="max-w-2xl mx-auto"
+              />
+            </div>
             {/* Content Validation */}
             {!generateQRContent().trim() && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">

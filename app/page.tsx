@@ -233,11 +233,11 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           {/* Ad Banner in Features Section */}
           <div className="mb-12 text-center">
-            <AdBanner 
-              adSlot="1234567890"
-              adFormat="auto"
+            <PersistentAdManager 
+              toolName="homepage"
+              adSlot="homepage-features"
+              position="before-upload"
               className="max-w-3xl mx-auto"
-              mobileOptimized={true}
             />
           </div>
           
@@ -277,8 +277,79 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Always Available</h3>
               <p className="text-gray-600">
-                52 professional tools for formatting, validating, and converting text and code
+                300+ professional tools available 24/7 from any device with internet access
               </p>
+            </div>
+          </div>
+
+          {/* Additional Features Content */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Professional Features</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Batch Processing</h4>
+                    <p className="text-gray-600 text-sm">Process multiple files simultaneously for maximum efficiency and time savings.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Quality Preservation</h4>
+                    <p className="text-gray-600 text-sm">Advanced algorithms maintain original quality while optimizing file size and format.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Format Support</h4>
+                    <p className="text-gray-600 text-sm">Support for all major file formats with intelligent conversion and optimization.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Enterprise Security</h4>
+                    <p className="text-gray-600 text-sm">Bank-grade security with local processing ensures your data never leaves your device.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Industry Applications</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <Users className="h-5 w-5 text-blue-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Business & Enterprise</h4>
+                    <p className="text-gray-600 text-sm">Document management, compliance, and workflow optimization for businesses of all sizes.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <TrendingUp className="h-5 w-5 text-blue-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Marketing & Design</h4>
+                    <p className="text-gray-600 text-sm">Content optimization, image processing, and marketing material creation for agencies.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Code className="h-5 w-5 text-blue-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Development & IT</h4>
+                    <p className="text-gray-600 text-sm">Code formatting, data validation, and technical documentation tools for developers.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Globe className="h-5 w-5 text-blue-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Education & Research</h4>
+                    <p className="text-gray-600 text-sm">Academic research, student projects, and educational content creation and optimization.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

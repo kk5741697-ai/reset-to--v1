@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Wrench } from "lucide-react"
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
 
 const footerLinks = {
   "Tool Categories": [
@@ -40,11 +40,11 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         {/* Ad Banner in Footer */}
         <div className="mb-8">
-          <AdBanner 
-            adSlot="1234567890"
-            adFormat="horizontal"
+          <PersistentAdManager 
+            toolName="footer"
+            adSlot="footer-banner"
+            position="after-canvas"
             className="max-w-4xl mx-auto"
-            mobileOptimized={true}
           />
         </div>
         
@@ -59,6 +59,7 @@ export function Footer() {
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               Professional online tools platform with 300+ utilities for developers, designers, and businesses.
+              Trusted by millions worldwide for secure, fast, and reliable file processing.
             </p>
             <p className="text-xs text-muted-foreground">© 2024 WebTools Pro. All rights reserved.</p>
           </div>
@@ -81,6 +82,27 @@ export function Footer() {
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* Additional Footer Content */}
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-2xl font-bold text-blue-600 mb-2">2M+</div>
+              <div className="text-sm font-medium text-gray-900">Monthly Active Users</div>
+              <div className="text-xs text-gray-500">Trusted worldwide</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600 mb-2">50M+</div>
+              <div className="text-sm font-medium text-gray-900">Files Processed</div>
+              <div className="text-xs text-gray-500">Since 2020</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-purple-600 mb-2">99.9%</div>
+              <div className="text-sm font-medium text-gray-900">Uptime</div>
+              <div className="text-xs text-gray-500">Reliable service</div>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

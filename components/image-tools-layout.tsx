@@ -29,6 +29,8 @@ import {
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
+import { ToolContentSections } from "@/components/content/tool-content-sections"
 
 interface ToolOption {
   key: string
@@ -593,14 +595,21 @@ export function ImageToolsLayout({
       <div className="min-h-screen bg-background">
         <Header />
         
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-2 lg:py-3">
-            <AdBanner 
-              adSlot="tool-header-banner"
-              adFormat="auto"
-              className="max-w-4xl mx-auto"
-            />
-          </div>
+        {/* Before Upload Content */}
+        <ToolContentSections 
+          toolName={title} 
+          toolCategory="IMAGE" 
+          position="before-upload" 
+        />
+        
+        {/* Before Upload Ad */}
+        <div className="container mx-auto px-4 py-6">
+          <PersistentAdManager 
+            toolName={toolType}
+            adSlot="before-upload-banner"
+            position="before-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
         </div>
 
         <div className="container mx-auto px-4 py-6 lg:py-8">
@@ -638,6 +647,23 @@ export function ImageToolsLayout({
             </div>
           </div>
         </div>
+
+        {/* After Upload Ad */}
+        <div className="container mx-auto px-4 py-6">
+          <PersistentAdManager 
+            toolName={toolType}
+            adSlot="after-upload-banner"
+            position="after-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
+        </div>
+
+        {/* After Upload Content */}
+        <ToolContentSections 
+          toolName={title} 
+          toolCategory="IMAGE" 
+          position="after-upload" 
+        />
 
         <Footer />
 
@@ -878,9 +904,10 @@ export function ImageToolsLayout({
 
                 {/* Canvas Ad */}
                 <div className="my-8">
-                  <AdBanner 
-                    adSlot="image-canvas-content"
-                    adFormat="horizontal"
+                  <PersistentAdManager 
+                    toolName={toolType}
+                    adSlot="before-upload-banner"
+                    position="before-canvas"
                     className="max-w-2xl mx-auto"
                   />
                 </div>
@@ -1047,9 +1074,10 @@ export function ImageToolsLayout({
                 )}
 
                 {/* Sidebar Ad */}
-                <AdBanner 
-                  adSlot="image-sidebar"
-                  adFormat="auto"
+                <PersistentAdManager 
+                  toolName={toolType}
+                  adSlot="after-upload-banner"
+                  position="after-canvas"
                   className="w-full"
                 />
               </div>

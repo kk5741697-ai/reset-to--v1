@@ -32,6 +32,7 @@ import {
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
 
 interface ToolOption {
   key: string
@@ -266,11 +267,11 @@ export function TextToolLayout({
 
             {/* Mobile Ad */}
             <div className="py-4">
-              <AdBanner 
-                adSlot="mobile-text-sidebar"
-                adFormat="auto"
+              <PersistentAdManager 
+                toolName="text-tool"
+                adSlot="mobile-sidebar"
+                position="after-canvas"
                 className="w-full"
-                mobileOptimized={true}
               />
             </div>
           </div>
@@ -286,11 +287,11 @@ export function TextToolLayout({
       {/* Top Ad Banner */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">
-          <AdBanner 
-            adSlot="tool-header-banner"
-            adFormat="auto"
+          <PersistentAdManager 
+            toolName="text-tool"
+            adSlot="before-tool-banner"
+            position="before-upload"
             className="max-w-4xl mx-auto"
-            mobileOptimized={true}
           />
         </div>
       </div>
@@ -454,11 +455,11 @@ export function TextToolLayout({
 
         {/* Center Ad */}
         <div className="mb-6 lg:mb-8">
-          <AdBanner 
-            adSlot="text-tool-center"
-            adFormat="auto"
+          <PersistentAdManager 
+            toolName="text-tool"
+            adSlot="center-tool-banner"
+            position="before-canvas"
             className="max-w-4xl mx-auto"
-            mobileOptimized={true}
           />
         </div>
 
@@ -569,11 +570,11 @@ export function TextToolLayout({
 
         {/* Bottom Ad */}
         <div className="mt-8">
-          <AdBanner 
-            adSlot="text-tool-bottom"
-            adFormat="auto"
+          <PersistentAdManager 
+            toolName="text-tool"
+            adSlot="after-tool-banner"
+            position="after-canvas"
             className="max-w-4xl mx-auto"
-            mobileOptimized={true}
           />
         </div>
 
@@ -604,12 +605,11 @@ export function TextToolLayout({
         {/* Mobile Sticky Bottom Ad */}
         {isMobile && (
           <div className="mt-8 pb-20">
-            <AdBanner 
-              adSlot="mobile-bottom-sticky"
-              adFormat="auto"
+            <PersistentAdManager 
+              toolName="text-tool"
+              adSlot="mobile-bottom"
+              position="after-canvas"
               className="w-full"
-              mobileOptimized={true}
-              sticky={true}
             />
           </div>
         )}

@@ -11,6 +11,9 @@ import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Shield, Copy, RefreshCw, Eye, EyeOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
+import { ToolContentSections } from "@/components/content/tool-content-sections"
+import { CheckCircle, Lock, Zap, Users, Award } from "lucide-react"
 
 export default function PasswordGeneratorPage() {
   const [password, setPassword] = useState("")
@@ -21,6 +24,7 @@ export default function PasswordGeneratorPage() {
   const [includeSymbols, setIncludeSymbols] = useState(true)
   const [excludeSimilar, setExcludeSimilar] = useState(false)
   const [showPassword, setShowPassword] = useState(true)
+  const [showToolInterface, setShowToolInterface] = useState(false)
 
   const generatePassword = () => {
     let charset = ""
@@ -63,6 +67,7 @@ export default function PasswordGeneratorPage() {
     }
 
     setPassword(result)
+    setShowToolInterface(true)
   }
 
   const copyPassword = () => {
@@ -85,11 +90,156 @@ export default function PasswordGeneratorPage() {
     return "Strong"
   }
 
+  // Show content-rich interface before tool usage
+  if (!showToolInterface) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Shield className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-heading font-bold text-foreground">Secure Password Generator</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Generate cryptographically secure passwords with customizable length, character sets, and complexity options. 
+              Essential for cybersecurity, account protection, and compliance with security policies.
+            </p>
+          </div>
+
+          {/* Before Tool Ad */}
+          <PersistentAdManager 
+            toolName="password-generator"
+            adSlot="before-tool-banner"
+            position="before-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
+
+          {/* Security Features */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <Card>
+              <CardHeader className="text-center pb-4">
+                <Lock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <CardTitle className="text-lg">Cryptographic Security</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-600">
+                  Uses browser's crypto.getRandomValues() for true randomness and maximum security
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center pb-4">
+                <Shield className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <CardTitle className="text-lg">Privacy Protected</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-600">
+                  Passwords generated locally in your browser - never transmitted or stored anywhere
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center pb-4">
+                <Zap className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                <CardTitle className="text-lg">Instant Generation</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-600">
+                  Generate unlimited passwords instantly with customizable complexity and character sets
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center pb-4">
+                <Award className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <CardTitle className="text-lg">Enterprise Grade</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-600">
+                  Meets enterprise security standards and compliance requirements for password policies
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Generator */}
+          <Card className="max-w-2xl mx-auto mb-12">
+            <CardHeader>
+              <CardTitle>Quick Password Generator</CardTitle>
+              <CardDescription>Generate a secure password instantly</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-base font-medium">Password Length: {length[0]} characters</Label>
+                <Slider value={length} onValueChange={setLength} max={50} min={8} step={1} className="mt-2" />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="uppercase" checked={includeUppercase} onCheckedChange={setIncludeUppercase} />
+                  <Label htmlFor="uppercase">Uppercase (A-Z)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="lowercase" checked={includeLowercase} onCheckedChange={setIncludeLowercase} />
+                  <Label htmlFor="lowercase">Lowercase (a-z)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="numbers" checked={includeNumbers} onCheckedChange={setIncludeNumbers} />
+                  <Label htmlFor="numbers">Numbers (0-9)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="symbols" checked={includeSymbols} onCheckedChange={setIncludeSymbols} />
+                  <Label htmlFor="symbols">Symbols (!@#$%^&*)</Label>
+                </div>
+              </div>
+
+              <Button onClick={generatePassword} className="w-full" size="lg">
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Generate Secure Password
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* After Tool Ad */}
+          <PersistentAdManager 
+            toolName="password-generator"
+            adSlot="after-tool-banner"
+            position="after-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
+        </div>
+
+        {/* Comprehensive Content */}
+        <ToolContentSections 
+          toolName="Password Generator" 
+          toolCategory="UTILITIES" 
+          position="after-upload" 
+        />
+
+        <Footer />
+      </div>
+    )
+  }
+
+  // Show the full tool interface
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Tool Interface Ad */}
+        <PersistentAdManager 
+          toolName="password-generator"
+          adSlot="before-tool-banner"
+          position="before-canvas"
+          className="max-w-4xl mx-auto mb-8"
+        />
+
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2 mb-4">
             <Shield className="h-8 w-8 text-accent" />
@@ -214,6 +364,16 @@ export default function PasswordGeneratorPage() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+
+        {/* After Tool Interface Ad */}
+        <div className="mt-12">
+          <PersistentAdManager 
+            toolName="password-generator"
+            adSlot="after-tool-banner"
+            position="after-canvas"
+            className="max-w-4xl mx-auto"
+          />
         </div>
       </div>
 
