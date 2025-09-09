@@ -199,6 +199,8 @@ export default function JSONFormatterPage() {
     )
   }
           </div>
+    )
+  }
   // Show the actual tool interface
   return (
     <TextToolLayout
