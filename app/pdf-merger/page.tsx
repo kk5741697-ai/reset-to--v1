@@ -233,7 +233,6 @@ export default function PDFMergerPage() {
       </div>
       
       <Footer />
-  )
-}
+    </div>
   )
 }

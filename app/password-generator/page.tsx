@@ -441,7 +441,6 @@ export default function PasswordGeneratorPage() {
       </div>
 
       <Footer />
-      </div>
     </div>
   )
 }

@@ -262,7 +262,6 @@ export default function JSONFormatterPage() {
       </div>
       
       <Footer />
-  )
-}
+    </div>
   )
 }
