@@ -14,6 +14,7 @@ import {
 import Link from "next/link"
 
 import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
 
 const featuredTools = [
   {
