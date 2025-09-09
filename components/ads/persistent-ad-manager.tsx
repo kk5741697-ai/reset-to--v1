@@ -20,8 +20,8 @@ interface PersistentAdState {
 class PersistentAdManager {
   private static instance: PersistentAdManager
   private state: PersistentAdState
-  private engagementThreshold = 15 // Increased threshold
-  private minSessionTime = 60000 // 60 seconds minimum
+  private engagementThreshold = 20 // Increased threshold for better quality
+  private minSessionTime = 90000 // 90 seconds minimum
   
   private constructor() {
     this.state = {
@@ -54,7 +54,7 @@ class PersistentAdManager {
     // Track page views
     this.state.userEngagement.pageViews++
     
-    // Track user interactions
+    // Track user interactions with higher weight for file uploads
     document.addEventListener('click', (e) => {
       this.state.userEngagement.lastActivity = Date.now()
       
@@ -72,13 +72,13 @@ class PersistentAdManager {
     // Track file uploads (highest value action)
     document.addEventListener('change', (e) => {
       if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
-        this.state.userEngagement.fileUploads++
+        this.state.userEngagement.fileUploads += 3 // Higher weight
         this.state.userEngagement.lastActivity = Date.now()
         this.evaluateAdDisplay()
       }
     })
     
-    // Track scroll depth
+    // Track scroll depth for engagement
     let maxScroll = 0
     window.addEventListener('scroll', () => {
       this.state.userEngagement.lastActivity = Date.now()
@@ -90,15 +90,15 @@ class PersistentAdManager {
     // Track time on page
     setInterval(() => {
       if (document.visibilityState === 'visible') {
-        this.state.userEngagement.timeOnPage += 10000
+        this.state.userEngagement.timeOnPage += 15000
       }
-    }, 10000)
+    }, 15000)
   }
   
   private evaluateAdDisplay(): void {
     const engagement = this.calculateEngagementScore()
     const sessionTime = Date.now() - this.state.userEngagement.sessionStart
-    const isUserActive = (Date.now() - this.state.userEngagement.lastActivity) < 180000
+    const isUserActive = (Date.now() - this.state.userEngagement.lastActivity) < 300000
     
     if (engagement >= this.engagementThreshold && 
         sessionTime > this.minSessionTime && 
@@ -107,18 +107,18 @@ class PersistentAdManager {
     }
   }
   
-  private calculateEngagementScore(): number {
+  calculateEngagementScore(): number {
     const { pageViews, toolUsage, fileUploads, timeOnPage, scrollDepth } = this.state.userEngagement
     const sessionTime = Date.now() - this.state.userEngagement.sessionStart
     
     let score = 0
-    if (sessionTime > 45000) score += 2
-    if (sessionTime > 90000) score += 3
-    if (pageViews >= 2) score += 3
-    if (toolUsage >= 1) score += 4
-    if (fileUploads > 0) score += 6
-    if (timeOnPage > 60000) score += 3
-    if (scrollDepth > 50) score += 2
+    if (sessionTime > 60000) score += 3
+    if (sessionTime > 120000) score += 4
+    if (pageViews >= 2) score += 4
+    if (toolUsage >= 1) score += 5
+    if (fileUploads > 0) score += 8 // Highest weight for file uploads
+    if (timeOnPage > 90000) score += 4
+    if (scrollDepth > 60) score += 3
     
     return score
   }
@@ -140,7 +140,7 @@ class PersistentAdManager {
           } catch (e) {
             console.warn('AdSense push failed:', e)
           }
-        }, index * 3000)
+        }, index * 4000) // Longer delay between ads
       })
     } catch (e) {
       console.warn('AdSense initialization failed:', e)
@@ -162,9 +162,6 @@ class PersistentAdManager {
 }
 
 export const persistentAdManager = PersistentAdManager.getInstance()
-
-// Ensure PersistentAdBanner is properly exported
-export { PersistentAdBanner }
 
 interface PersistentAdBannerProps {
   adSlot: string
@@ -190,15 +187,15 @@ export function PersistentAdBanner({
     
     // Check if we should show ads based on engagement
     const manager = persistentAdManager
-    const engagement = manager['calculateEngagementScore']?.() || 0
+    const engagement = manager.calculateEngagementScore()
     const sessionTime = Date.now() - manager['state'].userEngagement.sessionStart
     
-    setShouldShow(engagement >= 15 && sessionTime > 60000)
+    setShouldShow(engagement >= 20 && sessionTime > 90000)
   }, [])
   
   useEffect(() => {
     if (isClient && shouldShow && adRef.current && persistAcrossPages) {
-      // Try to restore existing ad first
+      // Try to restore existing ad first to prevent duplicate loading
       const restoredAd = persistentAdManager.restoreAd(adSlot)
       if (restoredAd) {
         adRef.current.appendChild(restoredAd)
@@ -222,7 +219,7 @@ export function PersistentAdBanner({
         <div>
           <div className="text-gray-600 font-medium mb-1">Persistent AdSense Ad</div>
           <div className="text-xs text-gray-400">Slot: {adSlot}</div>
-          <div className="text-xs text-gray-400">Engagement Score: {persistentAdManager['calculateEngagementScore']?.() || 0}/15</div>
+          <div className="text-xs text-gray-400">Engagement Score: {persistentAdManager.calculateEngagementScore()}/20</div>
         </div>
       </div>
     )

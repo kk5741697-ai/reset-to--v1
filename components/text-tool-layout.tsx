@@ -354,11 +354,13 @@ export function TextToolLayout({
             
             {/* Content Area Ad */}
             <div className="mb-8">
-              <AdBanner 
-                adSlot="text-tools-content"
-                adFormat="auto"
-                className="max-w-3xl mx-auto"
+              <PersistentAdBanner 
+                adSlot="text-tools-main"
+              <PersistentAdBanner 
+                adSlot="text-tools-main"
                 mobileOptimized={true}
+                persistAcrossPages={true}
+                persistAcrossPages={true}
               />
             </div>
           </div>
@@ -448,11 +450,12 @@ export function TextToolLayout({
 
           {/* Mobile Canvas Ad */}
           <div className="my-6">
-            <AdBanner 
-              adSlot="mobile-text-canvas"
+            <PersistentAdBanner 
+              adSlot="text-tools-main"
               adFormat="auto"
               className="w-full"
               mobileOptimized={true}
+              persistAcrossPages={true}
             />
           </div>
         </div>
@@ -717,10 +720,11 @@ export function TextToolLayout({
 
               {/* Sidebar Ad */}
               <div className="pt-4">
-                <AdBanner 
-                  adSlot="text-sidebar"
+                <PersistentAdBanner 
+                  adSlot="text-tools-sidebar"
                   adFormat="auto"
                   className="w-full"
+                  persistAcrossPages={true}
                 />
               </div>
             </div>
@@ -728,7 +732,6 @@ export function TextToolLayout({
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }

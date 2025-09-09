@@ -398,90 +398,49 @@ export function PDFToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-
-        <div className="container mx-auto px-6 py-4 lg:py-8">
-          {/* Rich Content Section */}
-          <div className="bg-gradient-to-br from-red-50 via-white to-orange-50 rounded-2xl p-8 mb-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <Icon className="h-8 w-8 text-red-600" />
-                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">{title}</h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                {description} Our professional PDF processing technology ensures document integrity 
-                while providing the flexibility you need for business, academic, and personal document management. 
-                Trusted by professionals worldwide for reliable PDF manipulation.
-              </p>
-            </div>
-            
-            {/* Content Area Ad */}
-            <div className="mb-8">
-              <AdBanner 
-                adSlot="pdf-tools-content"
-                adFormat="auto"
-                className="max-w-3xl mx-auto"
-                mobileOptimized={true}
-              />
-            </div>
-          </div>
-
-          <div className="text-center mb-6 lg:mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your PDF Files</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Select your PDF documents to begin processing. Our secure tool handles your files with complete privacy.
-            </p>
-          </div>
-
-        
-            {/* Mobile Bottom Ad */}
-            <div className="mb-6 lg:mb-8 lg:hidden">
-            </div>
-
-            {/* Desktop Bottom Ad */}
-            <div className="mb-8 hidden lg:block">
-            </div>
-
-          
-          <div className="max-w-4xl mx-auto">
-            <div 
-              className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-red-400 hover:bg-red-50/30 transition-all duration-300 p-8 lg:p-16 group"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onClick={() => fileInputRef.current?.click()}
-              data-tool-action="file-upload"
-            >
-              <div className="relative mb-4 lg:mb-6">
-                <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
-                <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-red-500 group-hover:text-red-600 transition-colors group-hover:scale-110 transform duration-300" />
-              </div>
-              <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-red-600 transition-colors">Drop PDF files here</h3>
-              <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
-              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
-                <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-                Choose PDF Files
-              </Button>
-              <div className="mt-4 lg:mt-6 space-y-2 text-center">
-                <p className="text-sm text-gray-500 font-medium">PDF files only</p>
-                <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
-              </div>
-            </div>
-            
-          </div>
+      <div className="container mx-auto px-6 py-4 lg:py-8">
+        <div className="text-center mb-6 lg:mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your PDF Files</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Select your PDF documents to begin processing. Our secure tool handles your files with complete privacy.
+          </p>
         </div>
 
-        <Footer />
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/pdf"
-          multiple={maxFiles > 1}
-          onChange={(e) => handleFileUpload(e.target.files)}
-          className="hidden"
-        />
+        <div className="max-w-4xl mx-auto">
+          <div 
+            className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-red-400 hover:bg-red-50/30 transition-all duration-300 p-8 lg:p-16 group"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClick={() => fileInputRef.current?.click()}
+            data-tool-action="file-upload"
+          >
+            <div className="relative mb-4 lg:mb-6">
+              <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+              <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-red-500 group-hover:text-red-600 transition-colors group-hover:scale-110 transform duration-300" />
+            </div>
+            <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-red-600 transition-colors">Drop PDF files here</h3>
+            <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
+            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
+              <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+              Choose PDF Files
+            </Button>
+            <div className="mt-4 lg:mt-6 space-y-2 text-center">
+              <p className="text-sm text-gray-500 font-medium">PDF files only</p>
+              <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf"
+        multiple={maxFiles > 1}
+        onChange={(e) => handleFileUpload(e.target.files)}
+        className="hidden"
+      />
     )
   }
 
@@ -591,12 +550,14 @@ export function PDFToolsLayout({
             </Card>
           ))}
 
-          {/* Mobile Canvas Ad */}
+          {/* Same Persistent Ad continues in mobile interface */}
           <div className="mt-6">
-            <AdBanner 
-              adSlot="mobile-pdf-canvas"
+            <PersistentAdBanner 
+              adSlot="pdf-merger-main"
               adFormat="auto"
               className="w-full"
+              mobileOptimized={true}
+              persistAcrossPages={true}
             />
           </div>
         </div>
@@ -667,12 +628,6 @@ export function PDFToolsLayout({
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
 
-            {/* Top Ad Banner */}
-            <div className="bg-white">
-              <div className="container mx-auto px-6 py-4 lg:py-2">
-              </div>
-            </div>
-              
               <div className="p-6 space-y-4 min-h-[calc(100vh-12rem)]">
                 {files.map((file) => (
                   <Card key={file.id} className="relative">
@@ -743,12 +698,13 @@ export function PDFToolsLayout({
                   </Card>
                 ))}
 
-                {/* Canvas Ad */}
+                {/* Same Persistent Ad continues in canvas */}
                 <div className="my-8">
-                  <AdBanner 
-                    adSlot="pdf-canvas-content"
+                  <PersistentAdBanner 
+                    adSlot="pdf-merger-main"
                     adFormat="horizontal"
                     className="max-w-2xl mx-auto"
+                    persistAcrossPages={true}
                   />
                 </div>
               </div>
@@ -881,6 +837,15 @@ export function PDFToolsLayout({
                   </div>
                 )}
                 
+                {/* Same Persistent Ad in sidebar */}
+                <div className="pt-4">
+                  <PersistentAdBanner 
+                    adSlot="pdf-merger-sidebar"
+                    adFormat="auto"
+                    className="w-full"
+                    persistAcrossPages={true}
+                  />
+                </div>
               </div>
             </ScrollArea>
           </div>

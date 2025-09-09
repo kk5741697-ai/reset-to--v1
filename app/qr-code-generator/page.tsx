@@ -466,8 +466,9 @@ export default function QRCodeGeneratorPage() {
         
         <div className="bg-white border-b">
           <div className="container mx-auto px-4 py-2 lg:py-3">
+            {/* Same Persistent Ad continues from upload to tool interface */}
             <PersistentAdBanner 
-              adSlot="tool-header-banner"
+              adSlot="qr-generator-main"
               adFormat="auto"
               className="max-w-4xl mx-auto"
               persistAcrossPages={true}
@@ -535,8 +536,9 @@ export default function QRCodeGeneratorPage() {
               
               {/* Content Area Ad */}
               <div className="mb-8">
+                {/* Same Persistent Ad instance */}
                 <PersistentAdBanner 
-                  adSlot="qr-generator-content"
+                  adSlot="qr-generator-main"
                   adFormat="auto"
                   className="max-w-3xl mx-auto"
                   mobileOptimized={true}

@@ -590,82 +590,50 @@ export function ImageToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        
+      <div className="container mx-auto px-4 py-6 lg:py-8">
+        <div className="text-center mb-6 lg:mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Images</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Select your images to begin processing. Our tool supports batch operations for efficient workflow.
+          </p>
+        </div>
 
-        <div className="container mx-auto px-4 py-6 lg:py-8">
-          {/* Rich Content Section */}
-          <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl p-8 mb-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <Icon className="h-8 w-8 text-blue-600" />
-                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">{title}</h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                {description} Our advanced image processing technology ensures professional results 
-                while maintaining the highest quality standards. Perfect for photographers, designers, 
-                marketers, and content creators who demand excellence in their visual content.
+        <div className="max-w-2xl mx-auto">
+          <div 
+            className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-300 p-8 lg:p-16 group"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClick={() => fileInputRef.current?.click()}
+            data-tool-action="file-upload"
+          >
+            <div className="relative mb-4 lg:mb-6">
+              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+              <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-blue-500 group-hover:text-blue-600 transition-colors group-hover:scale-110 transform duration-300" />
+            </div>
+            <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-blue-600 transition-colors">Drop images here</h3>
+            <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
+            <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
+              <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+              Choose Images
+            </Button>
+            <div className="mt-4 lg:mt-6 space-y-2 text-center">
+              <p className="text-sm text-gray-500 font-medium">
+                {supportedFormats.map(f => f.split('/')[1].toUpperCase()).join(', ')} files
               </p>
-            </div>
-            
-            {/* Content Area Ad */}
-            <div className="mb-8">
-              <AdBanner 
-                adSlot="image-tools-content"
-                adFormat="auto"
-                className="max-w-3xl mx-auto"
-                mobileOptimized={true}
-              />
-            </div>
-          </div>
-
-          <div className="text-center mb-6 lg:mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Images</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Select your images to begin processing. Our tool supports batch operations for efficient workflow.
-            </p>
-          </div>
-
-          <div className="max-w-2xl mx-auto">
-            <div 
-              className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-300 p-8 lg:p-16 group"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onClick={() => fileInputRef.current?.click()}
-              data-tool-action="file-upload"
-            >
-              <div className="relative mb-4 lg:mb-6">
-                <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
-                <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-blue-500 group-hover:text-blue-600 transition-colors group-hover:scale-110 transform duration-300" />
-              </div>
-              <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-blue-600 transition-colors">Drop images here</h3>
-              <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
-              <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
-                <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-                Choose Images
-              </Button>
-              <div className="mt-4 lg:mt-6 space-y-2 text-center">
-                <p className="text-sm text-gray-500 font-medium">
-                  {supportedFormats.map(f => f.split('/')[1].toUpperCase()).join(', ')} files
-                </p>
-                <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
-              </div>
+              <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
             </div>
           </div>
         </div>
-
-        <Footer />
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={supportedFormats.join(",")}
-          multiple={allowBatchProcessing && maxFiles > 1}
-          onChange={(e) => handleFileUpload(e.target.files)}
-          className="hidden"
-        />
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={supportedFormats.join(",")}
+        multiple={allowBatchProcessing && maxFiles > 1}
+        onChange={(e) => handleFileUpload(e.target.files)}
+        className="hidden"
+      />
     )
   }
 
@@ -737,9 +705,15 @@ export function ImageToolsLayout({
             ))}
           </div>
 
-          {/* Mobile Canvas Ad */}
+          {/* Same Persistent Ad continues in tool interface */}
           <div className="mt-6">
-            {/* Same ad continues in tool interface */}
+            <PersistentAdBanner 
+              adSlot="image-resizer-main"
+              adFormat="auto"
+              className="w-full"
+              mobileOptimized={true}
+              persistAcrossPages={true}
+            />
           </div>
         </div>
 
@@ -888,7 +862,14 @@ export function ImageToolsLayout({
                 </div>
 
                 {/* Canvas Ad */}
-                {/* Same ad continues in canvas */}
+                <div className="my-8">
+                  <PersistentAdBanner 
+                    adSlot="image-resizer-main"
+                    adFormat="horizontal"
+                    className="max-w-2xl mx-auto"
+                    persistAcrossPages={true}
+                  />
+                </div>
               </div>
             </ScrollArea>
           </div>
@@ -1051,8 +1032,15 @@ export function ImageToolsLayout({
                   </div>
                 )}
 
-                {/* Sidebar Ad */}
-                {/* Same ad continues in sidebar */}
+                {/* Same Persistent Ad in sidebar */}
+                <div className="pt-4">
+                  <PersistentAdBanner 
+                    adSlot="image-resizer-sidebar"
+                    adFormat="auto"
+                    className="w-full"
+                    persistAcrossPages={true}
+                  />
+                </div>
               </div>
             </ScrollArea>
           </div>

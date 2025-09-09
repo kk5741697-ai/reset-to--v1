@@ -152,7 +152,7 @@ export default function JSONFormatterPage() {
             {/* Content Area Ad */}
             <div className="mb-8">
               <PersistentAdBanner 
-                adSlot="json-formatter-content"
+                adSlot="json-formatter-main"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}

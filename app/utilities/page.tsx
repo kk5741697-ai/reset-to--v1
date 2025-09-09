@@ -4,6 +4,7 @@ import { ToolCard } from "@/components/tool-card"
 import { Wrench, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { AdBanner } from "@/components/ads"
 
 export function generateViewport() {
   return {

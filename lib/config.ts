@@ -6,11 +6,11 @@ export const APP_CONFIG = {
   enableAutoAds: false, // Disabled for better control
   
   // Bounce Protection Settings (Critical for AdSense approval)
-  minSessionTime: 45000, // 45 seconds minimum before showing ads
-  minPageViews: 3, // Minimum page views before ads
-  minToolUsage: 2, // Minimum tool interactions before ads
-  maxAdsPerPage: 2, // Further reduced for tools platform
-  adRefreshInterval: 90000, // 90 seconds between refreshes
+  minSessionTime: 90000, // 90 seconds minimum before showing ads
+  minPageViews: 2, // Minimum page views before ads
+  minToolUsage: 1, // Minimum tool interactions before ads
+  maxAdsPerPage: 1, // Single ad per page for tools platform
+  adRefreshInterval: 120000, // 120 seconds between refreshes
   
   // Quality Traffic Settings
   enableBounceProtection: true,
@@ -18,12 +18,16 @@ export const APP_CONFIG = {
   enableQualityMetrics: true,
   enableFileUploadTracking: true,
   enableTimeOnPageTracking: true,
+  enablePersistentAds: true, // Prevent duplicate ad loading
+  enableContentQuality: true, // Enhanced content for approval
   
   // Content Quality Settings
   enableRichContent: true,
   enableEducationalContent: true,
   enableUniqueContent: true,
   enableToolSpecificContent: true,
+  enableProfessionalContent: true,
+  enableIndustryContent: true,
   
   // Multi-domain Configuration
   domains: {

@@ -288,7 +288,7 @@ export default function HomePage() {
             {/* Content Area Ad */}
             <div className="mb-8">
               <PersistentAdBanner 
-                adSlot="homepage-features"
+                adSlot="homepage-main"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}

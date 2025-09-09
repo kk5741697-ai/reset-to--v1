@@ -181,7 +181,7 @@ export default function PasswordGeneratorPage() {
             {/* Content Area Ad */}
             <div className="mb-8">
               <PersistentAdBanner 
-                adSlot="password-generator-content"
+                adSlot="password-generator-main"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
