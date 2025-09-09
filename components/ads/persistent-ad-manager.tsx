@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { APP_CONFIG } from "@/lib/config"
 import { AdBanner } from "./ad-banner"
+import { PersistentAdBanner } from "./persistent-ad-manager"
 
 interface PersistentAdState {
   adSlots: Map<string, HTMLElement>
