@@ -590,6 +590,7 @@ export function ImageToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
+     <>
       <div className="container mx-auto px-4 py-6 lg:py-8">
         <div className="text-center mb-6 lg:mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Images</h2>
@@ -634,6 +635,7 @@ export function ImageToolsLayout({
         onChange={(e) => handleFileUpload(e.target.files)}
         className="hidden"
       />
+     </>
     )
   }
 

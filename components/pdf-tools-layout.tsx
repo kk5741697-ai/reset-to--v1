@@ -398,6 +398,7 @@ export function PDFToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
+     <>
       <div className="min-h-screen bg-background">
         <Header />
         
@@ -446,6 +447,7 @@ export function PDFToolsLayout({
           className="hidden"
         />
       </div>
+     </>
     )
   }
 
