@@ -611,12 +611,11 @@ export function ImageToolsLayout({
             
             {/* Content Area Ad */}
             <div className="mb-8">
-              <PersistentAdBanner 
+              <AdBanner 
                 adSlot="image-tools-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
-                persistAcrossPages={true}
               />
             </div>
           </div>

@@ -163,6 +163,9 @@ class PersistentAdManager {
 
 export const persistentAdManager = PersistentAdManager.getInstance()
 
+// Ensure PersistentAdBanner is properly exported
+export { PersistentAdBanner }
+
 interface PersistentAdBannerProps {
   adSlot: string
   adFormat?: "auto" | "rectangle" | "horizontal" | "fluid"
@@ -205,6 +208,11 @@ export function PersistentAdBanner({
   }, [isClient, shouldShow, adSlot, persistAcrossPages])
   
   if (!APP_CONFIG.enableAds || !isClient || !shouldShow) {
+    return null
+  }
+
+  // Don't render during SSR
+  if (typeof window === "undefined") {
     return null
   }
   

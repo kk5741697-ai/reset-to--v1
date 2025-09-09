@@ -418,12 +418,11 @@ export function PDFToolsLayout({
             
             {/* Content Area Ad */}
             <div className="mb-8">
-              <PersistentAdBanner 
+              <AdBanner 
                 adSlot="pdf-tools-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
-                persistAcrossPages={true}
               />
             </div>
           </div>

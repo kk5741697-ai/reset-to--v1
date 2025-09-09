@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { QRProcessor } from "@/lib/qr-processor"
 import { QrCode, Download, Copy, Upload, Palette, Settings, RefreshCw, Eye, Wifi, User, Mail, Phone, MessageSquare, Globe } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
+import { PersistentAdBanner } from "@/components/ads"
 
 export default function QRCodeGeneratorPage() {
   const [content, setContent] = useState("https://pixoratools.com")

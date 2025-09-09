@@ -5,7 +5,7 @@ import { Braces, Code, CheckCircle, Archive, ArrowUpDown } from "lucide-react"
 import { TextProcessor } from "@/lib/processors/text-processor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
+import { PersistentAdBanner } from "@/components/ads"
 
 const jsonExamples = [
   {

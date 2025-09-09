@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
+import { PersistentAdBanner } from "@/components/ads"
 
 const featuredTools = [
   {

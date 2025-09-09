@@ -102,12 +102,11 @@ export default function SEOToolsPage() {
             
             {/* Content Area Ad */}
             <div className="mb-6">
-              <PersistentAdBanner
+              <AdBanner
                 adSlot="seo-tools-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
-                persistAcrossPages={true}
               />
             </div>
           </div>

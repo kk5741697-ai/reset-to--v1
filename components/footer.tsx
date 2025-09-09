@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Wrench } from "lucide-react"
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
+import { AdBanner } from "@/components/ads"
 
 const footerLinks = {
   "Tool Categories": [
@@ -40,12 +40,11 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         {/* Ad Banner in Footer */}
         <div className="mb-8">
-          <PersistentAdBanner 
+          <AdBanner 
             adSlot="1234567890"
             adFormat="horizontal"
             className="max-w-4xl mx-auto"
             mobileOptimized={true}
-            persistAcrossPages={true}
           />
         </div>
         

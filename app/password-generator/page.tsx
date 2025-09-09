@@ -12,7 +12,7 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Key, Copy, Download, RefreshCw, Shield, Eye, EyeOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-manager"
+import { PersistentAdBanner } from "@/components/ads"
 
 export default function PasswordGeneratorPage() {
   const [length, setLength] = useState([16])

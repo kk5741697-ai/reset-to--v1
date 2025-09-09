@@ -94,12 +94,11 @@ export default function UtilitiesPage() {
             
             {/* Content Area Ad */}
             <div className="mb-6">
-              <PersistentAdBanner
+              <AdBanner
                 adSlot="utilities-content"
                 adFormat="auto"
                 className="max-w-3xl mx-auto"
                 mobileOptimized={true}
-                persistAcrossPages={true}
               />
             </div>
           </div>
