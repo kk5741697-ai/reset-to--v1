@@ -29,6 +29,7 @@ import {
 import { toast } from "@/hooks/use-toast"
 import { PDFProcessor } from "@/lib/processors/pdf-processor"
 import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdBanner } from "@/components/ads"
 
 interface ToolOption {
   key: string
@@ -61,7 +62,7 @@ interface PDFToolsLayoutProps {
   description: string
   icon: any
   toolType: string
-  processFunction: (files: any[], options: any) => Promise<{ success: boolean; downloadUrl?: string; error?: string }>
+  processFunction: (files: any[], options: any) => Promise<{ success: boolean; downloadUrl?: string; error?: string; filename?: string }>
   options?: ToolOption[]
   maxFiles?: number
   allowPageSelection?: boolean
@@ -363,7 +364,6 @@ export function PDFToolsLayout({
                 })}
               </div>
             ))}
-
           </div>
         </ScrollArea>
         
@@ -398,49 +398,54 @@ export function PDFToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
-      <div className="container mx-auto px-6 py-4 lg:py-8">
-        <div className="text-center mb-6 lg:mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your PDF Files</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Select your PDF documents to begin processing. Our secure tool handles your files with complete privacy.
-          </p>
-        </div>
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <div className="container mx-auto px-6 py-4 lg:py-8">
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your PDF Files</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select your PDF documents to begin processing. Our secure tool handles your files with complete privacy.
+            </p>
+          </div>
 
-
-        <div className="max-w-4xl mx-auto">
-          <div 
-            className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-red-400 hover:bg-red-50/30 transition-all duration-300 p-8 lg:p-16 group"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onClick={() => fileInputRef.current?.click()}
-            data-tool-action="file-upload"
-          >
-            <div className="relative mb-4 lg:mb-6">
-              <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
-              <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-red-500 group-hover:text-red-600 transition-colors group-hover:scale-110 transform duration-300" />
-            </div>
-            <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-red-600 transition-colors">Drop PDF files here</h3>
-            <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
-            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
-              <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-              Choose PDF Files
-            </Button>
-            <div className="mt-4 lg:mt-6 space-y-2 text-center">
-              <p className="text-sm text-gray-500 font-medium">PDF files only</p>
-              <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
+          <div className="max-w-4xl mx-auto">
+            <div 
+              className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-red-400 hover:bg-red-50/30 transition-all duration-300 p-8 lg:p-16 group"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => fileInputRef.current?.click()}
+              data-tool-action="file-upload"
+            >
+              <div className="relative mb-4 lg:mb-6">
+                <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+                <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-red-500 group-hover:text-red-600 transition-colors group-hover:scale-110 transform duration-300" />
+              </div>
+              <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-red-600 transition-colors">Drop PDF files here</h3>
+              <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
+              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
+                <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+                Choose PDF Files
+              </Button>
+              <div className="mt-4 lg:mt-6 space-y-2 text-center">
+                <p className="text-sm text-gray-500 font-medium">PDF files only</p>
+                <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        multiple={maxFiles > 1}
-        onChange={(e) => handleFileUpload(e.target.files)}
-        className="hidden"
-      />
+        <Footer />
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/pdf"
+          multiple={maxFiles > 1}
+          onChange={(e) => handleFileUpload(e.target.files)}
+          className="hidden"
+        />
+      </div>
     )
   }
 
@@ -471,14 +476,13 @@ export function PDFToolsLayout({
           </div>
         </div>
 
-      {/* Top Ad Banner */}
-      <div className="bg-white">
-        <div className="container mx-auto py-4 lg:py-4">
-          {/* Same ad continues in tool interface */}
+        {/* Top Ad Banner */}
+        <div className="bg-white">
+          <div className="container mx-auto py-4 lg:py-4">
+            {/* Same ad continues in tool interface */}
+          </div>
         </div>
-      </div>
 
-        
         {/* Mobile Content */}
         <div className="p-4 space-y-4 min-h-[60vh]">
           {files.map((file) => (
@@ -627,7 +631,6 @@ export function PDFToolsLayout({
           {/* Canvas Content */}
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
-
               <div className="p-6 space-y-4 min-h-[calc(100vh-12rem)]">
                 {files.map((file) => (
                   <Card key={file.id} className="relative">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { APP_CONFIG } from "@/lib/config"
+import { AdBanner } from "./ad-banner"
 
 interface PersistentAdState {
   adSlots: Map<string, HTMLElement>
@@ -178,69 +179,13 @@ export function PersistentAdBanner({
   mobileOptimized = false,
   persistAcrossPages = true
 }: PersistentAdBannerProps) {
-  const [isClient, setIsClient] = useState(false)
-  const [shouldShow, setShouldShow] = useState(false)
-  const adRef = useRef<HTMLDivElement>(null)
-  
-  useEffect(() => {
-    setIsClient(true)
-    
-    // Check if we should show ads based on engagement
-    const manager = persistentAdManager
-    const engagement = manager.calculateEngagementScore()
-    const sessionTime = Date.now() - manager['state'].userEngagement.sessionStart
-    
-    setShouldShow(engagement >= 20 && sessionTime > 90000)
-  }, [])
-  
-  useEffect(() => {
-    if (isClient && shouldShow && adRef.current && persistAcrossPages) {
-      // Try to restore existing ad first to prevent duplicate loading
-      const restoredAd = persistentAdManager.restoreAd(adSlot)
-      if (restoredAd) {
-        adRef.current.appendChild(restoredAd)
-        return
-      }
-    }
-  }, [isClient, shouldShow, adSlot, persistAcrossPages])
-  
-  if (!APP_CONFIG.enableAds || !isClient || !shouldShow) {
-    return null
-  }
-
-  // Don't render during SSR
-  if (typeof window === "undefined") {
-    return null
-  }
-  
-  if (process.env.NODE_ENV === "development") {
-    return (
-      <div className={`bg-gray-100 border border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-500 text-sm min-h-[100px] flex items-center justify-center ${className}`}>
-        <div>
-          <div className="text-gray-600 font-medium mb-1">Persistent AdSense Ad</div>
-          <div className="text-xs text-gray-400">Slot: {adSlot}</div>
-          <div className="text-xs text-gray-400">Engagement Score: {persistentAdManager.calculateEngagementScore()}/20</div>
-        </div>
-      </div>
-    )
-  }
-  
+  // Use regular AdBanner for now
   return (
-    <div ref={adRef} className={`ad-container ${className}`}>
-      <ins
-        className="adsbygoogle"
-        style={{
-          display: "block",
-          textAlign: "center",
-          minHeight: mobileOptimized && window.innerWidth < 768 ? "80px" : "100px",
-          width: "100%"
-        }}
-        data-ad-client="ca-pub-4755003409431265"
-        data-ad-slot={adSlot}
-        data-ad-format={mobileOptimized && window.innerWidth < 768 ? "fluid" : adFormat}
-        data-full-width-responsive="true"
-        data-adtest={process.env.NODE_ENV === "development" ? "on" : "off"}
-      />
-    </div>
+    <AdBanner
+      adSlot={adSlot}
+      adFormat={adFormat}
+      className={className}
+      mobileOptimized={mobileOptimized}
+    />
   )
 }

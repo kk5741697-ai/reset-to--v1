@@ -707,12 +707,11 @@ export function ImageToolsLayout({
 
           {/* Same Persistent Ad continues in tool interface */}
           <div className="mt-6">
-            <PersistentAdBanner 
-              adSlot="image-resizer-main"
+            <AdBanner 
+              adSlot="image-tools-mobile"
               adFormat="auto"
               className="w-full"
               mobileOptimized={true}
-              persistAcrossPages={true}
             />
           </div>
         </div>
@@ -863,11 +862,10 @@ export function ImageToolsLayout({
 
                 {/* Canvas Ad */}
                 <div className="my-8">
-                  <PersistentAdBanner 
-                    adSlot="image-resizer-main"
+                  <AdBanner 
+                    adSlot="image-tools-canvas"
                     adFormat="horizontal"
                     className="max-w-2xl mx-auto"
-                    persistAcrossPages={true}
                   />
                 </div>
               </div>
@@ -1034,11 +1032,10 @@ export function ImageToolsLayout({
 
                 {/* Same Persistent Ad in sidebar */}
                 <div className="pt-4">
-                  <PersistentAdBanner 
-                    adSlot="image-resizer-sidebar"
+                  <AdBanner 
+                    adSlot="image-tools-sidebar"
                     adFormat="auto"
                     className="w-full"
-                    persistAcrossPages={true}
                   />
                 </div>
               </div>
