@@ -17,7 +17,6 @@ import { Badge } from "@/components/ui/badge"
 import { QRProcessor } from "@/lib/qr-processor"
 import { QrCode, Download, Copy, Upload, Palette, Settings, RefreshCw, Eye, Wifi, User, Mail, Phone, MessageSquare, Globe } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { PersistentAdBanner } from "@/components/ads"
 
 export default function QRCodeGeneratorPage() {
   const [content, setContent] = useState("https://pixoratools.com")
@@ -463,80 +462,18 @@ export default function QRCodeGeneratorPage() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        
-        {/* Rich Content Section for AdSense */}
-        <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <QrCode className="h-8 w-8 text-green-600" />
-                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
-                  Professional QR Code Generator
-                </h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                Create custom QR codes with advanced styling options, logo integration, and multiple data formats. 
-                Perfect for marketing campaigns, business cards, event management, and digital connectivity solutions. 
-                Our generator supports WiFi credentials, contact information, URLs, and custom content with professional styling.
-              </p>
-            </div>
-
-            {/* Educational Content */}
-            <div className="max-w-5xl mx-auto mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <QrCode className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Custom Styling</h3>
-                  <p className="text-sm text-gray-600">
-                    Customize colors, add logos, and apply different styles to match your brand identity.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <Settings className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Multiple Formats</h3>
-                  <p className="text-sm text-gray-600">
-                    Support for URLs, WiFi, contacts, emails, phone numbers, and custom text content.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                    <Download className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">High Quality Output</h3>
-                  <p className="text-sm text-gray-600">
-                    Generate high-resolution QR codes in PNG, SVG, and PDF formats for any use case.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                    <Palette className="h-6 w-6 text-orange-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Brand Integration</h3>
-                  <p className="text-sm text-gray-600">
-                    Add your logo and customize colors to create branded QR codes for marketing materials.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Content Area Ad */}
-              <div className="mb-8">
-                <PersistentAdBanner 
-                  adSlot="qr-generator-main"
-                  adFormat="auto"
-                  className="max-w-3xl mx-auto"
-                  mobileOptimized={true}
-                  persistAcrossPages={true}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <QrCode className="h-8 w-8 text-accent" />
+              <h1 className="text-3xl font-heading font-bold text-foreground">QR Code Generator</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Create custom QR codes with logos, colors, and multiple data types. Perfect for marketing and business use.
+            </p>
+          </div>
+
           <div className="text-center mb-6 lg:mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Create Your QR Code</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -562,80 +499,6 @@ export default function QRCodeGeneratorPage() {
               <div className="mt-4 lg:mt-6 space-y-2 text-center">
                 <p className="text-sm text-gray-500 font-medium">URL, WiFi, Contact, Email, Phone, Text</p>
                 <p className="text-xs text-gray-400">High-resolution PNG, SVG, PDF output</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* QR Code Use Cases */}
-        <div className="bg-gray-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">QR Code Applications & Best Practices</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Business & Marketing</h3>
-                  <ul className="space-y-3 text-gray-700">
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Business card contact information and social media links</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Product information, reviews, and purchase links</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Event registration, tickets, and venue information</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Restaurant menus, catalogs, and promotional campaigns</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Digital Connectivity</h3>
-                  <ul className="space-y-3 text-gray-700">
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>WiFi network credentials for instant connection</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>App download links and software distribution</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Email contact forms and messaging shortcuts</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Phone numbers for quick dialing and SMS</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Technical Integration</h3>
-                  <ul className="space-y-3 text-gray-700">
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>API endpoints, webhooks, and configuration data</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Authentication tokens and secure data transfer</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Location coordinates and mapping integration</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                      <span>Calendar events and scheduling automation</span>
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>

@@ -28,7 +28,6 @@ import {
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { PDFProcessor } from "@/lib/processors/pdf-processor"
-import { AdBanner } from "@/components/ads/ad-banner"
 import { PersistentAdBanner } from "@/components/ads"
 
 interface ToolOption {
@@ -400,120 +399,17 @@ export function PDFToolsLayout({
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        
-        {/* Rich Content Section for AdSense Approval */}
-        <div className="bg-gradient-to-br from-red-50 via-white to-orange-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <Icon className="h-8 w-8 text-red-600" />
-                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
-                  Professional {title} Tool
-                </h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                {description} Our advanced PDF processing technology ensures document integrity while providing 
-                professional-grade functionality. Perfect for businesses, legal professionals, and document 
-                management workflows requiring reliable PDF manipulation with complete security and privacy.
-              </p>
-            </div>
-
-            {/* Educational Content for AdSense */}
-            <div className="max-w-5xl mx-auto mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                    <Icon className="h-6 w-6 text-red-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Document Integrity</h3>
-                  <p className="text-sm text-gray-600">
-                    Preserve original formatting, fonts, images, and metadata while processing documents.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-green-600 font-bold text-lg">📑</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Professional Features</h3>
-                  <p className="text-sm text-gray-600">
-                    Advanced PDF manipulation with bookmark management and metadata preservation.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-purple-600 font-bold">🔒</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Security & Privacy</h3>
-                  <p className="text-sm text-gray-600">
-                    All PDF processing happens locally. No uploads to servers, ensuring complete confidentiality.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Enterprise Ready</h3>
-                  <p className="text-sm text-gray-600">
-                    Handle large documents and batch operations with professional reliability.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Persistent Ad - Same instance across upload and tool interface */}
-              <div className="mb-8">
-                <PersistentAdBanner 
-                  adSlot={`${toolType}-main`}
-                  adFormat="auto"
-                  className="max-w-3xl mx-auto"
-                  mobileOptimized={true}
-                  persistAcrossPages={true}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Professional Use Cases Section */}
-        <div className="bg-white py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Enterprise PDF Processing Applications</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Legal & Compliance</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Contract compilation and legal brief assembly</li>
-                    <li>• Regulatory compliance reporting and documentation</li>
-                    <li>• Court filing preparation with proper sequencing</li>
-                    <li>• Due diligence document packages</li>
-                    <li>• Patent application assembly and organization</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Operations</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Annual report compilation and distribution</li>
-                    <li>• Proposal development and client presentations</li>
-                    <li>• Employee handbook creation and updates</li>
-                    <li>• Board meeting packages and documentation</li>
-                    <li>• Audit documentation and compliance reporting</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Academic & Research</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Dissertation and thesis compilation</li>
-                    <li>• Grant application assembly and submission</li>
-                    <li>• Conference proceedings and publication</li>
-                    <li>• Research report consolidation</li>
-                    <li>• Academic portfolio development</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="container mx-auto px-6 py-4 lg:py-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Icon className="h-8 w-8 text-accent" />
+              <h1 className="text-3xl font-heading font-bold text-foreground">{title}</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {description}
+            </p>
+          </div>
+
           <div className="text-center mb-6 lg:mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Documents</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -809,22 +705,6 @@ export function PDFToolsLayout({
                             <p className="text-sm text-gray-600">
                               {selectedPages.length} page{selectedPages.length !== 1 ? 's' : ''} selected
                             </p>
-                          )}
-                        </div>
-                      </CardContent>
-                    )}
-                  </Card>
-                ))}
-
-                {/* Same Persistent Ad continues in canvas */}
-                <div className="my-8">
-                  <PersistentAdBanner 
-                    adSlot={`${toolType}-main`}
-                    adFormat="horizontal"
-                    className="max-w-2xl mx-auto"
-                    persistAcrossPages={true}
-                  />
-                </div>
               </div>
             </ScrollArea>
           </div>
@@ -956,15 +836,6 @@ export function PDFToolsLayout({
                 )}
                 
                 {/* Same Persistent Ad in sidebar */}
-                <div className="pt-4">
-                  <PersistentAdBanner 
-                    adSlot={`${toolType}-sidebar`}
-                    adFormat="auto"
-                    className="w-full"
-                    persistAcrossPages={true}
-                  />
-                </div>
-              </div>
             </ScrollArea>
           </div>
 

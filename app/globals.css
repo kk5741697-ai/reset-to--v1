@@ -126,6 +126,32 @@
   @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
 }
 
+/* Fix layout issues */
+.tool-interface {
+  min-height: calc(100vh - 4rem);
+}
+
+.upload-area {
+  margin-bottom: 2rem;
+}
+
+.content-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Ensure proper spacing between sections */
+.section-spacing {
+  padding: 3rem 0;
+}
+
+/* Fix content flow issues */
+.content-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 /* Fix color contrast issues */
 .toast {
   background-color: hsl(var(--card)) !important;

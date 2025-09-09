@@ -28,7 +28,7 @@ import {
   ImageIcon
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { PersistentAdBanner } from "@/components/ads/persistent-ad-banner"
+import { PersistentAdBanner } from "@/components/ads"
 
 interface ToolOption {
   key: string

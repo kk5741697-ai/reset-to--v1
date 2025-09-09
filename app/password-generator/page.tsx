@@ -12,7 +12,6 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Key, Copy, Download, RefreshCw, Shield, Eye, EyeOff } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { PersistentAdBanner } from "@/components/ads"
 
 export default function PasswordGeneratorPage() {
   const [length, setLength] = useState([16])
@@ -118,80 +117,17 @@ export default function PasswordGeneratorPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
-      {/* Rich Content Section for AdSense Approval */}
-      <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <Key className="h-8 w-8 text-indigo-600" />
-              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
-                Professional Password Generator & Security Tool
-              </h1>
-            </div>
-            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              Generate cryptographically secure passwords with advanced customization options for enterprise security, 
-              personal protection, and compliance requirements. Our password generator uses industry-standard algorithms 
-              to create strong, unique passwords that protect against brute force attacks, dictionary attacks, and 
-              social engineering attempts. Perfect for system administrators, security professionals, and privacy-conscious users.
-            </p>
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center space-x-2 mb-4">
+            <Key className="h-8 w-8 text-accent" />
+            <h1 className="text-3xl font-heading font-bold text-foreground">Password Generator</h1>
           </div>
-
-          {/* Educational Content */}
-          <div className="max-w-5xl mx-auto mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-indigo-600" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Enterprise Security</h3>
-                <p className="text-sm text-gray-600">
-                  Generate passwords that meet enterprise security policies and compliance standards like NIST, ISO 27001.
-                </p>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Key className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Cryptographic Strength</h3>
-                <p className="text-sm text-gray-600">
-                  Advanced entropy calculation and character distribution for maximum security against modern attacks.
-                </p>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <RefreshCw className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Bulk Generation</h3>
-                <p className="text-sm text-gray-600">
-                  Generate multiple unique passwords for team accounts, service accounts, and system administration.
-                </p>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Eye className="h-6 w-6 text-orange-600" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Privacy Protection</h3>
-                <p className="text-sm text-gray-600">
-                  All password generation happens locally in your browser with zero server communication or logging.
-                </p>
-              </div>
-            </div>
-            
-            {/* Content Area Ad */}
-            <div className="mb-8">
-              <PersistentAdBanner 
-                adSlot="password-generator-main"
-                adFormat="auto"
-                className="max-w-3xl mx-auto"
-                mobileOptimized={true}
-                persistAcrossPages={true}
-              />
-            </div>
-          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Generate secure passwords with customizable length, characters, and complexity options for maximum security.
+          </p>
         </div>
 
-      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Password Configuration */}
           <Card>
@@ -358,86 +294,34 @@ export default function PasswordGeneratorPage() {
           </Card>
         </div>
 
-        {/* Password Security Best Practices */}
-        <div className="mt-12 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Password Security Best Practices & Enterprise Guidelines</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Enterprise Security Standards</h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>NIST SP 800-63B compliance with minimum 12-character length for administrative accounts</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Multi-factor authentication integration with hardware security keys and biometric verification</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Password rotation policies for privileged accounts and service accounts in production environments</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Zero-knowledge password managers for secure storage and automated credential management</span>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Cybersecurity & Threat Protection</h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Protection against rainbow table attacks, credential stuffing, and password spraying campaigns</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Advanced entropy calculation with cryptographically secure random number generation (CSPRNG)</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Character set optimization to prevent social engineering and shoulder surfing vulnerabilities</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Compliance with PCI DSS, HIPAA, and SOX password complexity requirements for regulated industries</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Password Security Standards */}
-        <div className="mt-12 bg-white py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Industry Password Security Standards</h2>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Our password generator adheres to international security standards including NIST Special Publication 800-63B, 
-                OWASP password guidelines, and enterprise security frameworks. Generate passwords that meet compliance 
-                requirements for financial services, healthcare, government, and technology sectors.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-indigo-600 mb-2">256-bit</div>
-                  <p className="text-sm text-gray-600">Entropy Strength</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-2">NIST</div>
-                  <p className="text-sm text-gray-600">Compliant</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600 mb-2">OWASP</div>
-                  <p className="text-sm text-gray-600">Verified</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600 mb-2">10M+</div>
-                  <p className="text-sm text-gray-600">Passwords Generated</p>
-                </div>
+        {/* Security Tips */}
+        <Card className="mt-8 max-w-4xl mx-auto">
+          <CardHeader>
+            <CardTitle>Password Security Tips</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium mb-2">Best Practices</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Use unique passwords for each account</li>
+                  <li>• Enable two-factor authentication when available</li>
+                  <li>• Store passwords in a secure password manager</li>
+                  <li>• Avoid using personal information in passwords</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Security Guidelines</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Minimum 12 characters for important accounts</li>
+                  <li>• Include uppercase, lowercase, numbers, and symbols</li>
+                  <li>• Avoid common words and patterns</li>
+                  <li>• Change passwords if compromised</li>
+                </ul>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Footer />

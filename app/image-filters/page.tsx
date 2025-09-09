@@ -27,7 +27,6 @@ import {
 import { Palette } from "lucide-react"
 import { ImageProcessor } from "@/lib/processors/image-processor"
 import { toast } from "@/hooks/use-toast"
-import { AdBanner } from "@/components/ads/ad-banner"
 
 interface ImageFile {
   id: string
@@ -334,79 +333,18 @@ export default function ImageFiltersPage() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        
-        {/* Rich Content Section for AdSense Approval */}
-        <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <Palette className="h-8 w-8 text-purple-600" />
-                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
-                  Professional Image Filters & Effects
-                </h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                Apply professional filters and adjustments to enhance your images with real-time preview. 
-                Our comprehensive filter suite includes brightness, contrast, saturation controls, artistic effects, 
-                and color grading tools used by photographers and designers worldwide for creative image enhancement.
-              </p>
-            </div>
 
-            {/* Educational Content */}
-            <div className="max-w-5xl mx-auto mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                    <Palette className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Professional Filters</h3>
-                  <p className="text-sm text-gray-600">
-                    Comprehensive filter suite with brightness, contrast, saturation, and artistic effects.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-green-600 font-bold text-lg">👁️</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Real-time Preview</h3>
-                  <p className="text-sm text-gray-600">
-                    Live preview with instant feedback as you adjust filter parameters.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-blue-600 font-bold">🎨</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Artistic Effects</h3>
-                  <p className="text-sm text-gray-600">
-                    Sepia, grayscale, blur, and other creative effects for artistic enhancement.
-                  </p>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Non-destructive Editing</h3>
-                  <p className="text-sm text-gray-600">
-                    Apply filters without affecting the original image quality or data.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Content Area Ad */}
-              <div className="mb-8">
-                <PersistentAdBanner 
-                  adSlot="image-filters-main"
-                  adFormat="auto"
-                  className="max-w-3xl mx-auto"
-                  mobileOptimized={true}
-                  persistAcrossPages={true}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Palette className="h-8 w-8 text-accent" />
+              <h1 className="text-3xl font-heading font-bold text-foreground">Image Filters</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Apply professional filters and adjustments to enhance your images with real-time preview.
+            </p>
+          </div>
+
           <div className="text-center mb-6 lg:mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Image</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -536,14 +474,6 @@ export default function ImageFiltersPage() {
           )}
 
           {/* Canvas Ad */}
-          <div className="mt-6">
-            <AdBanner 
-              adSlot="image-filters-canvas"
-              adFormat="auto"
-              className="w-full"
-              mobileOptimized={true}
-            />
-          </div>
         </div>
 
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 space-y-3 z-30">
