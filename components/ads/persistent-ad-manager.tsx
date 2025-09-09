@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { APP_CONFIG } from "@/lib/config"
 import { AdBanner } from "./ad-banner"
 
 interface PersistentAdState {
   adSlots: Map<string, HTMLElement>
   loadedAds: Set<string>
+  preservedAds: Map<string, HTMLElement>
   userEngagement: {
     sessionStart: number
     pageViews: number
@@ -28,6 +29,7 @@ class PersistentAdManager {
     this.state = {
       adSlots: new Map(),
       loadedAds: new Set(),
+      preservedAds: new Map(),
       userEngagement: {
         sessionStart: Date.now(),
         pageViews: 0,
@@ -150,11 +152,14 @@ class PersistentAdManager {
   
   // Persist ads across page transitions
   preserveAd(adSlot: string, element: HTMLElement): void {
-    this.state.adSlots.set(adSlot, element.cloneNode(true) as HTMLElement)
+    const adElement = element.querySelector('.adsbygoogle')
+    if (adElement) {
+      this.state.preservedAds.set(adSlot, adElement.cloneNode(true) as HTMLElement)
+    }
   }
   
   restoreAd(adSlot: string): HTMLElement | null {
-    return this.state.adSlots.get(adSlot) || null
+    return this.state.preservedAds.get(adSlot) || null
   }
   
   isAdLoaded(adSlot: string): boolean {
@@ -179,13 +184,50 @@ export function PersistentAdBanner({
   mobileOptimized = false,
   persistAcrossPages = true
 }: PersistentAdBannerProps) {
-  // Use regular AdBanner for now
+  const adRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+    if (persistAcrossPages && adRef.current) {
+      // Try to restore existing ad first
+      const restoredAd = persistentAdManager.restoreAd(adSlot)
+      if (restoredAd && !persistentAdManager.isAdLoaded(adSlot)) {
+        adRef.current.appendChild(restoredAd)
+        return
+      }
+      
+      // Preserve ad for future use
+      const preserveAd = () => {
+        if (adRef.current) {
+          persistentAdManager.preserveAd(adSlot, adRef.current)
+        }
+      }
+      
+      // Preserve ad when it loads
+      const observer = new MutationObserver(() => {
+        const adElement = adRef.current?.querySelector('.adsbygoogle[data-adsbygoogle-status="done"]')
+        if (adElement) {
+          preserveAd()
+          observer.disconnect()
+        }
+      })
+      
+      if (adRef.current) {
+        observer.observe(adRef.current, { childList: true, subtree: true })
+      }
+      
+      return () => observer.disconnect()
+    }
+  }, [adSlot, persistAcrossPages])
+  
   return (
-    <AdBanner
-      adSlot={adSlot}
-      adFormat={adFormat}
-      className={className}
-      mobileOptimized={mobileOptimized}
-    />
+    <div ref={adRef}>
+      <AdBanner
+        adSlot={adSlot}
+        adFormat={adFormat}
+        className={className}
+        mobileOptimized={mobileOptimized}
+        persistAcrossPages={persistAcrossPages}
+      />
+    </div>
   )
 }

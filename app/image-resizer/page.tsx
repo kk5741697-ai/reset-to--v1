@@ -272,6 +272,5 @@ export default function ImageResizerPage() {
       </div>
       
       <Footer />
-    </div>
   )
 }

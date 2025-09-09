@@ -87,14 +87,51 @@ export default function RootLayout({
         <Script id="adsense-init" strategy="afterInteractive">
           {`
             (function() {
-              // Initialize persistent ad manager
-              if (typeof window !== "undefined" && window.persistentAdManager) {
-                // Ad manager is already initialized
-                return;
+              // Enhanced AdSense initialization for tools platform
+              window.adsbygoogle = window.adsbygoogle || [];
+              
+              // Track user engagement for quality traffic
+              let engagementScore = 0;
+              let sessionStart = Date.now();
+              
+              // Track meaningful interactions
+              document.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target.closest('[data-tool-action]') || 
+                    target.closest('button') ||
+                    target.textContent?.includes('Process') ||
+                    target.textContent?.includes('Generate')) {
+                  engagementScore += 2;
+                }
+              });
+              
+              // Track file uploads (high value action)
+              document.addEventListener('change', function(e) {
+                if (e.target.type === 'file') {
+                  engagementScore += 5;
+                }
+              });
+              
+              // Only initialize ads after user engagement
+              function initializeAdsWhenReady() {
+                const sessionTime = Date.now() - sessionStart;
+                if (engagementScore >= 3 && sessionTime > 30000) {
+                  // User is engaged, initialize ads
+                  const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
+                  ads.forEach(function(ad, index) {
+                    setTimeout(function() {
+                      try {
+                        window.adsbygoogle.push({});
+                      } catch (e) {
+                        console.warn('AdSense push failed:', e);
+                      }
+                    }, index * 2000);
+                  });
+                }
               }
               
-              // Set global reference for persistent ad manager
-              window.persistentAdManager = true;
+              // Check engagement periodically
+              setInterval(initializeAdsWhenReady, 15000);
             })();
           `}
         </Script>

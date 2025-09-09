@@ -616,24 +616,83 @@ export default function ImageCropperPage() {
       <div className="min-h-screen bg-background">
         <Header />
         
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-2 lg:py-3">
-            <AdBanner 
-              adSlot="tool-header-banner"
-              adFormat="auto"
-              className="max-w-4xl mx-auto"
-            />
+        {/* Rich Content Section for AdSense Approval */}
+        <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-2 mb-4">
+                <Crop className="h-8 w-8 text-cyan-600" />
+                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                  Professional Image Cropper & Editor
+                </h1>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                Crop images with precision using our advanced visual editor and aspect ratio presets. Perfect for 
+                social media content creation, web optimization, and professional photography workflows. Our tool 
+                provides pixel-perfect cropping with real-time preview and interactive handles for maximum control.
+              </p>
+            </div>
+
+            {/* Educational Content */}
+            <div className="max-w-5xl mx-auto mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
+                    <Crop className="h-6 w-6 text-cyan-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Precision Cropping</h3>
+                  <p className="text-sm text-gray-600">
+                    Interactive visual editor with pixel-perfect control and real-time preview.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-green-600 font-bold text-lg">📐</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Aspect Ratio Presets</h3>
+                  <p className="text-sm text-gray-600">
+                    Pre-configured ratios for Instagram, YouTube, Facebook, and other platforms.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-purple-600 font-bold">🎨</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Creative Presets</h3>
+                  <p className="text-sm text-gray-600">
+                    Professional presets for social media, print, and web optimization.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Instant Results</h3>
+                  <p className="text-sm text-gray-600">
+                    Real-time cropping with immediate preview and high-quality output.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Content Area Ad */}
+              <div className="mb-8">
+                <PersistentAdBanner 
+                  adSlot="image-cropper-main"
+                  adFormat="auto"
+                  className="max-w-3xl mx-auto"
+                  mobileOptimized={true}
+                  persistAcrossPages={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="container mx-auto px-4 py-6 lg:py-8">
           <div className="text-center mb-6 lg:mb-8">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <Crop className="h-6 w-6 lg:h-8 lg:w-8 text-cyan-600" />
-              <h1 className="text-2xl lg:text-3xl font-heading font-bold text-foreground">Image Cropper</h1>
-            </div>
-            <p className="text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              Crop images with precision using our visual editor and aspect ratio presets. Perfect for social media and web optimization.
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Image</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select an image to start cropping with our interactive visual editor.
             </p>
           </div>
 

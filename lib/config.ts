@@ -6,10 +6,10 @@ export const APP_CONFIG = {
   enableAutoAds: false, // Disabled for better control
   
   // Bounce Protection Settings (Critical for AdSense approval)
-  minSessionTime: 90000, // 90 seconds minimum before showing ads
+  minSessionTime: 60000, // 60 seconds minimum before showing ads
   minPageViews: 2, // Minimum page views before ads
   minToolUsage: 1, // Minimum tool interactions before ads
-  maxAdsPerPage: 1, // Single ad per page for tools platform
+  maxAdsPerPage: 2, // Maximum ads per page for tools platform
   adRefreshInterval: 120000, // 120 seconds between refreshes
   
   // Quality Traffic Settings

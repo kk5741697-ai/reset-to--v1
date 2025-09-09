@@ -190,7 +190,6 @@ export default function PasswordGeneratorPage() {
             </div>
           </div>
         </div>
-      </div>
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -442,6 +441,7 @@ export default function PasswordGeneratorPage() {
       </div>
 
       <Footer />
+      </div>
     </div>
   )
 }

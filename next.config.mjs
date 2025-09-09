@@ -61,12 +61,25 @@ const nextConfig = {
       fs: false,
       path: false,
       crypto: false,
+      stream: false,
+      util: false,
+      buffer: false,
     }
     
     // Handle canvas and other browser-only modules
     if (isServer) {
       config.externals = config.externals || []
       config.externals.push('canvas')
+      config.externals.push('jsdom')
+    }
+    
+    // Optimize for production builds
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react/jsx-runtime': 'react/jsx-runtime.js',
+        'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
+      }
     }
     
     return config

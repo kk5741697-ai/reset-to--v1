@@ -48,35 +48,24 @@ export function AdBanner({
   }, [])
   
   useEffect(() => {
-    if (isClient && shouldShowAd && adRef.current && persistAcrossPages) {
+    if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd) {
       // Check if ad is already loaded to prevent duplicate loading
-      if (!persistentAdManager.isAdLoaded(adSlot)) {
-        // Try to restore existing ad first
-        const restoredAd = persistentAdManager.restoreAd(adSlot)
-        if (restoredAd) {
-          adRef.current.appendChild(restoredAd)
-          return
-        }
+      if (persistentAdManager.isAdLoaded(adSlot)) {
+        return
       }
-    }
-    
-    if (isClient && adRef.current && APP_CONFIG.enableAds && APP_CONFIG.adsensePublisherId && shouldShowAd && !persistentAdManager.isAdLoaded(adSlot)) {
+      
       try {
         // Additional delay for ad initialization
         setTimeout(() => {
           (window as any).adsbygoogle = (window as any).adsbygoogle || []
           ;(window as any).adsbygoogle.push({})
-          
-          // Preserve ad for cross-page persistence
-          if (persistAcrossPages && adRef.current) {
-            persistentAdManager.preserveAd(adSlot, adRef.current)
-          }
+          persistentAdManager.state.loadedAds.add(adSlot)
         }, 1000)
       } catch (error) {
         console.warn('AdSense initialization failed:', error)
       }
     }
-  }, [isClient, shouldShowAd, adSlot, persistAcrossPages])
+  }, [isClient, shouldShowAd, adSlot])
 
   // Don't render if ads are disabled
   if (!APP_CONFIG.enableAds || !APP_CONFIG.adsensePublisherId || !shouldShowAd) {

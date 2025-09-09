@@ -879,24 +879,84 @@ export default function BackgroundRemoverPage() {
       <div className="min-h-screen bg-background">
         <Header />
         
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-2 lg:py-3">
-            <AdBanner 
-              adSlot="tool-header-banner"
-              adFormat="auto"
-              className="max-w-4xl mx-auto"
-            />
+        {/* Rich Content Section for AdSense Approval */}
+        <div className="bg-gradient-to-br from-purple-50 via-white to-blue-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-2 mb-4">
+                <Scissors className="h-8 w-8 text-purple-600" />
+                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                  AI-Powered Background Remover
+                </h1>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                Remove image backgrounds automatically with advanced AI-powered object detection and edge refinement. 
+                Perfect for e-commerce product photography, portrait editing, and professional content creation. 
+                Our intelligent algorithms detect people, animals, and objects with precision while preserving 
+                fine details and natural edges for professional results.
+              </p>
+            </div>
+
+            {/* Educational Content */}
+            <div className="max-w-5xl mx-auto mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <Scissors className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">AI Object Detection</h3>
+                  <p className="text-sm text-gray-600">
+                    Advanced machine learning algorithms automatically identify subjects and backgrounds.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-green-600 font-bold text-lg">✨</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Edge Refinement</h3>
+                  <p className="text-sm text-gray-600">
+                    Intelligent edge feathering and detail preservation for natural-looking results.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-blue-600 font-bold">🎯</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Multi-Subject Support</h3>
+                  <p className="text-sm text-gray-600">
+                    Works with people, animals, products, and complex objects with high accuracy.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Instant Processing</h3>
+                  <p className="text-sm text-gray-600">
+                    Fast local processing with real-time preview and immediate results.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Content Area Ad */}
+              <div className="mb-8">
+                <PersistentAdBanner 
+                  adSlot="background-remover-main"
+                  adFormat="auto"
+                  className="max-w-3xl mx-auto"
+                  mobileOptimized={true}
+                  persistAcrossPages={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="container mx-auto px-4 py-6 lg:py-8">
           <div className="text-center mb-6 lg:mb-8">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <Scissors className="h-6 w-6 lg:h-8 lg:w-8 text-purple-600" />
-              <h1 className="text-2xl lg:text-3xl font-heading font-bold text-foreground">Background Remover</h1>
-            </div>
-            <p className="text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              Remove image backgrounds automatically with AI-powered object detection. Works with people, animals, and objects.
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Image</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select an image to remove its background using our AI-powered detection system.
             </p>
           </div>
 

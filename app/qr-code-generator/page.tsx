@@ -464,18 +464,6 @@ export default function QRCodeGeneratorPage() {
       <div className="min-h-screen bg-background">
         <Header />
         
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-2 lg:py-3">
-            {/* Same Persistent Ad continues from upload to tool interface */}
-            <PersistentAdBanner 
-              adSlot="qr-generator-main"
-              adFormat="auto"
-              className="max-w-4xl mx-auto"
-              persistAcrossPages={true}
-            />
-          </div>
-        </div>
-
         {/* Rich Content Section for AdSense */}
         <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
           <div className="container mx-auto px-4">
@@ -536,7 +524,6 @@ export default function QRCodeGeneratorPage() {
               
               {/* Content Area Ad */}
               <div className="mb-8">
-                {/* Same Persistent Ad instance */}
                 <PersistentAdBanner 
                   adSlot="qr-generator-main"
                   adFormat="auto"
@@ -662,8 +649,6 @@ export default function QRCodeGeneratorPage() {
   // QR Code Generator Interface
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">

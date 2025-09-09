@@ -396,6 +396,108 @@ export function TextToolLayout({
     <div className="min-h-screen bg-background">
       <Header />
 
+      {/* Rich Content Section for AdSense Approval */}
+      <div className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-12">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Icon className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                Professional {title}
+              </h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              {description} Our advanced text processing engine provides enterprise-grade functionality 
+              for developers, content creators, and businesses requiring reliable text manipulation and 
+              validation capabilities with complete privacy and security.
+            </p>
+          </div>
+
+          {/* Educational Content */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Icon className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Advanced Processing</h3>
+                <p className="text-sm text-gray-600">
+                  Professional-grade text processing with syntax validation and error detection.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <div className="h-6 w-6 text-green-600 font-bold text-lg">✓</div>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Format Validation</h3>
+                <p className="text-sm text-gray-600">
+                  Real-time syntax checking and error reporting for code and data formats.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <div className="h-6 w-6 text-purple-600 font-bold">📊</div>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Analytics & Stats</h3>
+                <p className="text-sm text-gray-600">
+                  Detailed statistics and metrics for content analysis and optimization.
+                </p>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Instant Processing</h3>
+                <p className="text-sm text-gray-600">
+                  Real-time processing with immediate results and live preview capabilities.
+                </p>
+              </div>
+            </div>
+            
+            {/* Content Area Ad */}
+            <div className="mb-8">
+              <PersistentAdBanner 
+                adSlot="text-tools-main"
+                adFormat="auto"
+                className="max-w-3xl mx-auto"
+                mobileOptimized={true}
+                persistAcrossPages={true}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Professional Use Cases Section */}
+      <div className="bg-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Professional Text Processing Applications</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Software Development</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• API response formatting and validation for microservices</li>
+                  <li>• Configuration file management for deployment pipelines</li>
+                  <li>• Code formatting and quality assurance automation</li>
+                  <li>• Database schema validation and documentation</li>
+                  <li>• Automated testing data generation and validation</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Intelligence</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Data transformation and ETL pipeline processing</li>
+                  <li>• Business reporting and analytics data formatting</li>
+                  <li>• Cross-platform integration and data synchronization</li>
+                  <li>• Content management and documentation workflows</li>
+                  <li>• Quality assurance and compliance validation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
@@ -486,11 +588,12 @@ export function TextToolLayout({
 
           {/* Mobile Ad */}
           <div className="mt-6">
-            <AdBanner 
+            <PersistentAdBanner 
               adSlot="text-tools-mobile"
               adFormat="auto"
               className="w-full"
               mobileOptimized={true}
+              persistAcrossPages={true}
             />
           </div>
         </div>

@@ -28,7 +28,7 @@ import {
   ImageIcon
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdBanner } from "@/components/ads/persistent-ad-banner"
 
 interface ToolOption {
   key: string
@@ -535,11 +535,12 @@ export function ImageToolsLayout({
 
             {/* Mobile Ad */}
             <div className="py-4">
-              <AdBanner 
+              <PersistentAdBanner 
                 adSlot="mobile-image-sidebar"
                 adFormat="auto"
                 className="w-full"
                 mobileOptimized={true}
+                persistAcrossPages={true}
               />
             </div>
           </div>
@@ -590,60 +591,207 @@ export function ImageToolsLayout({
   // Show upload area if no files
   if (showUploadArea && files.length === 0) {
     return (
-     <>
-      <div className="container mx-auto px-4 py-6 lg:py-8">
-        <div className="text-center mb-6 lg:mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Images</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Select your images to begin processing. Our tool supports batch operations for efficient workflow.
-          </p>
-        </div>
-
-        <div className="max-w-2xl mx-auto">
-          <div 
-            className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-300 p-8 lg:p-16 group"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onClick={() => fileInputRef.current?.click()}
-            data-tool-action="file-upload"
-          >
-            <div className="relative mb-4 lg:mb-6">
-              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
-              <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-blue-500 group-hover:text-blue-600 transition-colors group-hover:scale-110 transform duration-300" />
-            </div>
-            <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-blue-600 transition-colors">Drop images here</h3>
-            <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
-            <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
-              <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-              Choose Images
-            </Button>
-            <div className="mt-4 lg:mt-6 space-y-2 text-center">
-              <p className="text-sm text-gray-500 font-medium">
-                {supportedFormats.map(f => f.split('/')[1].toUpperCase()).join(', ')} files
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        {/* Rich Content Section for AdSense Approval */}
+        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-2 mb-4">
+                <Icon className="h-8 w-8 text-blue-600" />
+                <h1 className="text-3xl lg:text-4xl font-heading font-bold text-foreground">
+                  Professional {title} Tool
+                </h1>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                {description} Our advanced image processing technology provides professional-grade results 
+                with complete privacy and security. Perfect for photographers, designers, marketers, and content creators 
+                who need reliable image optimization and batch processing capabilities.
               </p>
-              <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
+            </div>
+
+            {/* Educational Content for AdSense */}
+            <div className="max-w-5xl mx-auto mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <Icon className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Advanced Processing</h3>
+                  <p className="text-sm text-gray-600">
+                    State-of-the-art algorithms ensure optimal quality while maintaining fast processing speeds.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-green-600 font-bold text-lg">🔒</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Complete Privacy</h3>
+                  <p className="text-sm text-gray-600">
+                    All processing happens locally in your browser. Your files never leave your device.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-purple-600 font-bold">∞</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Batch Processing</h3>
+                  <p className="text-sm text-gray-600">
+                    Process multiple images simultaneously with consistent settings for maximum efficiency.
+                  </p>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="h-6 w-6 text-orange-600 font-bold">⚡</div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Instant Results</h3>
+                  <p className="text-sm text-gray-600">
+                    Get professional results in seconds with our optimized processing engine.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Persistent Ad - Same instance across upload and tool interface */}
+              <div className="mb-8">
+                <PersistentAdBanner 
+                  adSlot={`${toolType}-main`}
+                  adFormat="auto"
+                  className="max-w-3xl mx-auto"
+                  mobileOptimized={true}
+                  persistAcrossPages={true}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        
+        {/* Professional Use Cases Section */}
+        <div className="bg-white py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Professional Image Processing Applications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Digital Marketing & E-commerce</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>• Product photography optimization for online stores and marketplaces</li>
+                    <li>• Social media content creation with platform-specific dimensions</li>
+                    <li>• Email marketing image optimization for better deliverability</li>
+                    <li>• Website performance optimization through image compression</li>
+                    <li>• Brand asset management and consistent visual identity</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Professional Photography</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>• Wedding and event photography delivery optimization</li>
+                    <li>• Portfolio preparation for online galleries and client presentations</li>
+                    <li>• Print preparation with exact DPI requirements</li>
+                    <li>• Stock photography submission with marketplace specifications</li>
+                    <li>• Commercial photography workflow automation</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Business & Enterprise</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>• Corporate document management and standardization</li>
+                    <li>• Real estate photography for MLS listings and marketing</li>
+                    <li>• Medical imaging preparation for telemedicine platforms</li>
+                    <li>• Educational content creation for online courses</li>
+                    <li>• Legal document imaging and archival processing</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept={supportedFormats.join(",")}
-        multiple={allowBatchProcessing && maxFiles > 1}
-        onChange={(e) => handleFileUpload(e.target.files)}
-        className="hidden"
-      />
-     </>
+        <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="text-center mb-6 lg:mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Images</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select your images to begin processing. Our secure tool handles your files with complete privacy.
+            </p>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <div 
+              className="border-2 border-dashed border-gray-300 rounded-2xl flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-300 p-8 lg:p-16 group"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => fileInputRef.current?.click()}
+              data-tool-action="file-upload"
+            >
+              <div className="relative mb-4 lg:mb-6">
+                <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+                <Upload className="relative h-16 w-16 lg:h-20 lg:w-20 text-blue-500 group-hover:text-blue-600 transition-colors group-hover:scale-110 transform duration-300" />
+              </div>
+              <h3 className="text-xl lg:text-2xl font-semibold mb-2 lg:mb-3 text-gray-700 group-hover:text-blue-600 transition-colors">Drop images here</h3>
+              <p className="text-gray-500 mb-4 lg:mb-6 text-base lg:text-lg text-center">or tap to browse files</p>
+              <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 lg:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105">
+                <Upload className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+                Choose Images
+              </Button>
+              <div className="mt-4 lg:mt-6 space-y-2 text-center">
+                <p className="text-sm text-gray-500 font-medium">
+                  {supportedFormats.map(f => f.split('/')[1].toUpperCase()).join(', ')} files
+                </p>
+                <p className="text-xs text-gray-400">Up to {maxFiles} files • Up to 100MB each</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Technical Specifications Section */}
+        <div className="bg-gray-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Technical Specifications & Quality Standards</h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Our image processing engine employs advanced algorithms including bicubic interpolation, 
+                Lanczos filtering, and edge-preserving scaling to ensure optimal quality preservation 
+                during image manipulation operations.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600 mb-2">{maxFiles}x</div>
+                  <p className="text-sm text-gray-600">Batch Processing</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 mb-2">15+</div>
+                  <p className="text-sm text-gray-600">Format Support</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600 mb-2">100MB</div>
+                  <p className="text-sm text-gray-600">Max File Size</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600 mb-2">100%</div>
+                  <p className="text-sm text-gray-600">Privacy Secure</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <Footer />
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={supportedFormats.join(",")}
+          multiple={allowBatchProcessing && maxFiles > 1}
+          onChange={(e) => handleFileUpload(e.target.files)}
+          className="hidden"
+        />
+      </div>
     )
   }
 
   // Tool interface after files are uploaded
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
@@ -709,11 +857,12 @@ export function ImageToolsLayout({
 
           {/* Same Persistent Ad continues in tool interface */}
           <div className="mt-6">
-            <AdBanner 
-              adSlot="image-tools-mobile"
+            <PersistentAdBanner 
+              adSlot={`${toolType}-main`}
               adFormat="auto"
               className="w-full"
               mobileOptimized={true}
+              persistAcrossPages={true}
             />
           </div>
         </div>
@@ -864,10 +1013,11 @@ export function ImageToolsLayout({
 
                 {/* Canvas Ad */}
                 <div className="my-8">
-                  <AdBanner 
-                    adSlot="image-tools-canvas"
+                  <PersistentAdBanner 
+                    adSlot={`${toolType}-main`}
                     adFormat="horizontal"
                     className="max-w-2xl mx-auto"
+                    persistAcrossPages={true}
                   />
                 </div>
               </div>
@@ -1034,10 +1184,11 @@ export function ImageToolsLayout({
 
                 {/* Same Persistent Ad in sidebar */}
                 <div className="pt-4">
-                  <AdBanner 
-                    adSlot="image-tools-sidebar"
+                  <PersistentAdBanner 
+                    adSlot={`${toolType}-sidebar`}
                     adFormat="auto"
                     className="w-full"
+                    persistAcrossPages={true}
                   />
                 </div>
               </div>
