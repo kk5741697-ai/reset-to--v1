@@ -325,45 +325,9 @@ export function ToolContentSections({ toolName, toolCategory, position }: ToolCo
             See how {toolCategory.toLowerCase()} optimization impacts business productivity and efficiency
           </p>
         </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {getIndustryStats(toolCategory).map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">{stat.value}</div>
-              <div className="text-sm font-medium text-gray-900 mb-1">{stat.label}</div>
-              <div className="text-xs text-gray-500">{stat.description}</div>
-            </div>
           ))}
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section>
-        <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-lg text-gray-600">
-            Common questions about {toolName} and {toolCategory.toLowerCase()} processing
           </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {getFAQs(toolCategory).map((faq, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="text-lg">{faq.question}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">{faq.answer}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-    </div>
-  )
-}
 
 function getToolDescription(toolName: string, category: string): string {
   const descriptions = {

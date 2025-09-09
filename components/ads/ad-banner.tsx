@@ -50,7 +50,7 @@ export function AdBanner({
     const sessionDuration = currentTime - sessionStartTime
     
     // Enhanced bounce protection - only show ads if user has engaged meaningfully
-    const shouldShow = sessionDuration > 15000 || // 15 seconds minimum
+    const shouldShow = sessionDuration > 10000 || // 10 seconds minimum
                       pageViews > 3 || // Multiple page views
                       toolUsage > 1 // Used multiple tools
     

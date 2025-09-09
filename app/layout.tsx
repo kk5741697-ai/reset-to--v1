@@ -1,24 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { APP_CONFIG } from "@/lib/config"
 import { SecurityBanner } from "@/components/security-banner"
 import Script from "next/script"
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-})
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-})
 
 export const metadata: Metadata = {
   title: {
@@ -53,6 +39,7 @@ export function generateViewport() {
     themeColor: '#3b82f6',
   }
 }
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,6 +50,8 @@ export default function RootLayout({
       <head>
         <meta name="google-adsense-account" content="ca-pub-4755003409431265" />
         <meta name="google-site-verification" content="google6adf6312a96691f1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4755003409431265"
@@ -79,7 +68,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${inter.variable} ${poppins.variable} antialiased`} suppressHydrationWarning>
+      <body className="antialiased font-sans" suppressHydrationWarning>
         <SecurityBanner />
         {children}
         <Toaster />

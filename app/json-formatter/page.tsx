@@ -167,6 +167,11 @@ export default function JSONFormatterPage() {
               <CardContent className="text-center">
                 <p className="text-sm text-gray-600">
                   Automatically sort object keys alphabetically for consistent data organization
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Start Tool Button */}
           <div className="text-center mb-12">
             <button
@@ -177,7 +182,7 @@ export default function JSONFormatterPage() {
               Start JSON Formatting
             </button>
           </div>
-                </p>
+
           {/* After Tool Ad */}
           <PersistentAdManager 
             toolName="json-formatter"
@@ -186,21 +191,19 @@ export default function JSONFormatterPage() {
             className="max-w-4xl mx-auto mb-8"
           />
         </div>
-              </CardContent>
+
         {/* Comprehensive Content */}
         <ToolContentSections 
           toolName="JSON Formatter" 
           toolCategory="CODE" 
           position="after-upload" 
         />
-            </Card>
+
         <Footer />
       </div>
     )
   }
-          </div>
-    )
-  }
+
   // Show the actual tool interface
   return (
     <TextToolLayout

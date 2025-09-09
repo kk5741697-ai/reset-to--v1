@@ -44,7 +44,7 @@ export function PersistentAdManager({
     }
     
     // Only show ads if user has engaged meaningfully
-    const shouldShow = timeOnPage > 20000 || // 20 seconds on page
+    const shouldShow = timeOnPage > 15000 || // 15 seconds on page
                       pageViews > 2 || // Multiple page views
                       toolUsage > 0 // Used tools
     

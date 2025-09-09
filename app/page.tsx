@@ -148,7 +148,7 @@ export default function HomePage() {
           <div className="mb-8">
             <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-full px-6 py-2 border border-gray-200 shadow-lg mb-6">
               <Wrench className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-semibold text-gray-700">2000+ Professional Tools</span>
+              <span className="text-sm font-semibold text-gray-700">300+ Professional Tools</span>
             </div>
           </div>
           
@@ -436,6 +436,60 @@ export default function HomePage() {
                 </Badge>
               </div>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Professional Tools Showcase */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-heading font-bold text-gray-900 mb-4">
+              Professional-Grade Online Tools
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Trusted by millions of professionals worldwide for critical business operations, 
+              creative projects, and technical workflows. Our comprehensive suite of tools 
+              delivers enterprise-quality results with consumer-friendly simplicity.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-xl w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <FileType className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Document Processing Excellence</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Advanced PDF manipulation tools for merging, splitting, compressing, and converting documents. 
+                Maintain document integrity while optimizing for size, security, and compatibility across 
+                all platforms and devices.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-xl w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <ImageIcon className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Image Optimization Mastery</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Professional image processing with AI-powered background removal, intelligent resizing, 
+                format conversion, and quality optimization. Perfect for e-commerce, marketing, 
+                and web development projects.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-xl w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <QrCode className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Digital Connectivity Solutions</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Create custom QR codes and barcodes for marketing campaigns, inventory management, 
+                and contactless interactions. Support for WiFi sharing, contact cards, and 
+                bulk generation for enterprise applications.
+              </p>
+            </div>
           </div>
         </div>
       </section>

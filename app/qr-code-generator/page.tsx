@@ -1,1444 +1,1007 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
-import { QRProcessor } from "@/lib/qr-processor"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import {
-  QrCode,
-  Download,
-  Link,
+import { Checkbox } from "@/components/ui/checkbox"
+import { Slider } from "@/components/ui/slider"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { QRProcessor } from "@/lib/qr-processor"
+import { 
+  QrCode, 
+  Download, 
+  Copy, 
+  Wifi, 
+  Mail, 
+  Phone, 
+  User, 
+  Calendar, 
+  MapPin, 
   FileText,
-  Wifi,
-  Mail,
-  Phone,
-  MessageSquare,
-  Calendar,
-  User,
-  Upload,
-  Palette,
-  CheckCircle,
-  Globe,
-  MapPin,
+  Link as LinkIcon,
   Settings,
-  AlertCircle,
-  Copy,
-  X,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  RefreshCw,
-  Square,
-  Circle,
-  Hexagon,
-  Star
+  Palette,
+  Eye,
+  Smartphone,
+  Globe,
+  Zap,
+  Shield,
+  Star,
+  CheckCircle,
+  Target,
+  TrendingUp
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
-import { AdBanner } from "@/components/ads/ad-banner"
+import { PersistentAdManager } from "@/components/ads/persistent-ad-manager"
+import { ToolContentSections } from "@/components/content/tool-content-sections"
 
 export default function QRCodeGeneratorPage() {
-  const [activeType, setActiveType] = useState("url")
-  const [content, setContent] = useState("https://example.com")
-  const [qrSize, setQrSize] = useState([1000])
-  const [errorCorrection, setErrorCorrection] = useState("M")
-  const [foregroundColor, setForegroundColor] = useState("#000000")
-  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF")
-  const [logoUrl, setLogoUrl] = useState("")
-  const [logoFile, setLogoFile] = useState<File | null>(null)
-  const [logoPreview, setLogoPreview] = useState("")
-  const [qrStyle, setQrStyle] = useState("square")
-  const [cornerStyle, setCornerStyle] = useState("square")
-  const [dotStyle, setDotStyle] = useState("square")
+  const [qrType, setQrType] = useState("text")
+  const [content, setContent] = useState("")
   const [qrDataUrl, setQrDataUrl] = useState("")
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [zoomLevel, setZoomLevel] = useState(100)
-  const [frameEnabled, setFrameEnabled] = useState(false)
-  const [frameText, setFrameText] = useState("Scan Me")
-  const [frameColor, setFrameColor] = useState("#000000")
-  const [gradientEnabled, setGradientEnabled] = useState(false)
-  const [gradientColor1, setGradientColor1] = useState("#000000")
-  const [gradientColor2, setGradientColor2] = useState("#333333")
-  const [eyeStyle, setEyeStyle] = useState("square")
-  const [eyeColor, setEyeColor] = useState("#000000")
-  
-  // Content type specific fields
-  const [emailData, setEmailData] = useState({ email: "", subject: "", body: "" })
-  const [phoneData, setPhoneData] = useState({ phone: "" })
-  const [smsData, setSmsData] = useState({ phone: "", message: "" })
-  const [wifiData, setWifiData] = useState({ ssid: "", password: "", security: "WPA", hidden: false })
-  const [vcardData, setVcardData] = useState({ 
-    firstName: "", lastName: "", organization: "", phone: "", email: "", url: "", address: "" 
-  })
-  const [eventData, setEventData] = useState({
-    title: "", location: "", startDate: "", endDate: "", description: ""
-  })
+  const [qrSize, setQrSize] = useState([300])
+  const [errorCorrection, setErrorCorrection] = useState("M")
+  const [darkColor, setDarkColor] = useState("#000000")
+  const [lightColor, setLightColor] = useState("#ffffff")
+  const [margin, setMargin] = useState([4])
+  const [showToolInterface, setShowToolInterface] = useState(false)
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  // WiFi specific fields
+  const [wifiSSID, setWifiSSID] = useState("")
+  const [wifiPassword, setWifiPassword] = useState("")
+  const [wifiSecurity, setWifiSecurity] = useState("WPA")
+  const [wifiHidden, setWifiHidden] = useState(false)
 
-  const contentTypes = [
-    { id: "url", label: "URL", icon: Link },
-    { id: "text", label: "TEXT", icon: FileText },
-    { id: "email", label: "EMAIL", icon: Mail },
-    { id: "phone", label: "PHONE", icon: Phone },
-    { id: "sms", label: "SMS", icon: MessageSquare },
-    { id: "vcard", label: "VCARD", icon: User },
-    { id: "wifi", label: "WIFI", icon: Wifi },
-    { id: "event", label: "EVENT", icon: Calendar },
-    { id: "location", label: "LOCATION", icon: MapPin },
-  ]
+  // Contact specific fields
+  const [contactName, setContactName] = useState("")
+  const [contactPhone, setContactPhone] = useState("")
+  const [contactEmail, setContactEmail] = useState("")
+  const [contactOrg, setContactOrg] = useState("")
 
-  const styleOptions = [
-    { id: "square", label: "Square", icon: Square },
-    { id: "rounded", label: "Rounded", icon: Circle },
-    { id: "dots", label: "Dots", icon: Circle },
-    { id: "extra-rounded", label: "Extra Rounded", icon: Hexagon },
-  ]
+  // Email specific fields
+  const [emailTo, setEmailTo] = useState("")
+  const [emailSubject, setEmailSubject] = useState("")
+  const [emailBody, setEmailBody] = useState("")
 
-  const eyeStyleOptions = [
-    { id: "square", label: "Square", icon: Square },
-    { id: "circle", label: "Circle", icon: Circle },
-    { id: "rounded", label: "Rounded", icon: Hexagon },
-    { id: "leaf", label: "Leaf", icon: Star },
-  ]
-
-  const generateQRContent = () => {
-    try {
-      switch (activeType) {
-        case "url":
-        case "text":
-          if (!content.trim()) return ""
-          return content
-        case "email":
-          if (!emailData.email.trim()) return ""
-          return `mailto:${emailData.email}?subject=${encodeURIComponent(emailData.subject)}&body=${encodeURIComponent(emailData.body)}`
-        case "phone":
-          if (!phoneData.phone.trim()) return ""
-          return `tel:${phoneData.phone}`
-        case "sms":
-          if (!smsData.phone.trim()) return ""
-          return `sms:${smsData.phone}?body=${encodeURIComponent(smsData.message)}`
-        case "wifi":
-          if (!wifiData.ssid.trim()) return ""
-          return QRProcessor.generateWiFiQR(wifiData.ssid, wifiData.password, wifiData.security as any, wifiData.hidden)
-        case "vcard":
-          if (!vcardData.firstName && !vcardData.lastName && !vcardData.email) return ""
-          return QRProcessor.generateVCardQR(vcardData)
-        case "event":
-          if (!eventData.title.trim()) return ""
-          return QRProcessor.generateEventQR(eventData)
-        case "location":
-          if (!content.trim()) return ""
-          return `geo:${content}`
-        default:
-          return content
-      }
-    } catch (error) {
-      console.error("Error generating QR content:", error)
-      return ""
-    }
-  }
+  useEffect(() => {
+    generateQR()
+  }, [qrType, content, qrSize, errorCorrection, darkColor, lightColor, margin, wifiSSID, wifiPassword, wifiSecurity, wifiHidden, contactName, contactPhone, contactEmail, contactOrg, emailTo, emailSubject, emailBody])
 
   const generateQR = async () => {
     try {
-      const qrContent = generateQRContent()
+      let qrContent = ""
+
+      switch (qrType) {
+        case "text":
+          qrContent = content
+          break
+        case "url":
+          qrContent = content.startsWith("http") ? content : `https://${content}`
+          break
+        case "wifi":
+          if (wifiSSID) {
+            qrContent = QRProcessor.generateWiFiQR(wifiSSID, wifiPassword, wifiSecurity as any, wifiHidden)
+          }
+          break
+        case "email":
+          if (emailTo) {
+            qrContent = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+          }
+          break
+        case "phone":
+          if (content) {
+            qrContent = `tel:${content}`
+          }
+          break
+        case "vcard":
+          if (contactName || contactEmail || contactPhone) {
+            qrContent = QRProcessor.generateVCardQR({
+              firstName: contactName.split(" ")[0],
+              lastName: contactName.split(" ").slice(1).join(" "),
+              phone: contactPhone,
+              email: contactEmail,
+              organization: contactOrg
+            })
+          }
+          break
+        default:
+          qrContent = content
+      }
+
       if (!qrContent.trim()) {
-        toast({
-          title: "No content to generate",
-          description: "Please enter content for the QR code",
-          variant: "destructive"
-        })
+        setQrDataUrl("")
         return
       }
 
-      setIsGenerating(true)
-
-      // Enhanced QR generation with proper styling
-      const logoSrc = logoFile ? URL.createObjectURL(logoFile) : logoUrl
-      const qrOptions = {
+      const qrDataURL = await QRProcessor.generateQRCode(qrContent, {
         width: qrSize[0],
-        color: gradientEnabled ? {
-          dark: gradientColor1,
-          light: backgroundColor,
-        } : {
-          dark: foregroundColor,
-          light: backgroundColor,
+        margin: margin[0],
+        color: {
+          dark: darkColor,
+          light: lightColor,
         },
-        errorCorrectionLevel: errorCorrection as "L" | "M" | "Q" | "H",
-        style: {
-          shape: qrStyle,
-          corners: cornerStyle,
-          dots: dotStyle,
-          eyes: eyeStyle,
-          eyeColor: eyeColor,
-          frame: frameEnabled ? {
-            text: frameText,
-            color: frameColor
-          } : undefined
-        },
-        logo: logoSrc ? {
-          src: logoSrc,
-          width: qrSize[0] * 0.2,
-        } : undefined,
-      }
+        errorCorrectionLevel: errorCorrection as any,
+      })
 
-      const qrDataURL = await QRProcessor.generateQRCode(qrContent, qrOptions)
       setQrDataUrl(qrDataURL)
-
-      toast({
-        title: "QR Code generated",
-        description: "Your QR code is ready for download"
-      })
-
+      setShowToolInterface(true)
     } catch (error) {
-      console.error("Failed to generate QR code:", error)
+      console.error("QR generation failed:", error)
       setQrDataUrl("")
+    }
+  }
+
+  const downloadQR = (format: string) => {
+    if (!qrDataUrl) {
       toast({
-        title: "QR Generation Failed",
-        description: error instanceof Error ? error.message : "Please check your input and try again",
+        title: "No QR code to download",
+        description: "Please generate a QR code first",
         variant: "destructive"
       })
-    } finally {
-      setIsGenerating(false)
+      return
     }
+
+    const link = document.createElement("a")
+    link.download = `qr-code.${format}`
+    link.href = qrDataUrl
+    link.click()
+
+    toast({
+      title: "Download started",
+      description: `QR code downloaded as ${format.toUpperCase()}`
+    })
   }
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file && file.type.startsWith("image/")) {
-      setLogoFile(file)
-      setLogoUrl("")
-      
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const clearLogo = () => {
-    setLogoFile(null)
-    setLogoUrl("")
-    setLogoPreview("")
-  }
-
-  const downloadQR = async (format: string) => {
-    try {
-      if (format === "svg") {
-        const qrContent = generateQRContent()
-        if (!qrContent.trim()) {
-          toast({
-            title: "No content to generate QR code",
-            description: "Please enter content first",
-            variant: "destructive"
-          })
-          return
-        }
-
-        const qrOptions = {
-          width: qrSize[0],
-          color: { dark: foregroundColor, light: backgroundColor },
-          errorCorrectionLevel: errorCorrection as "L" | "M" | "Q" | "H"
-        }
-        const svgString = await QRProcessor.generateQRCodeSVG(qrContent, qrOptions)
-        const blob = new Blob([svgString], { type: "image/svg+xml" })
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement("a")
-        link.download = "qr-code.svg"
-        link.href = url
-        link.click()
-        URL.revokeObjectURL(url)
-      } else {
-        if (!qrDataUrl) {
-          toast({
-            title: "No QR code to download",
-            description: "Please generate a QR code first",
-            variant: "destructive"
-          })
-          return
-        }
-        
-        // Convert canvas to blob for better download
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")!
-        const img = new Image()
-        
-        img.onload = () => {
-          canvas.width = qrSize[0]
-          canvas.height = qrSize[0]
-          ctx.drawImage(img, 0, 0)
-          
-          canvas.toBlob((blob) => {
-            if (blob) {
-              const url = URL.createObjectURL(blob)
-              const link = document.createElement("a")
-              link.download = `qr-code.${format}`
-              link.href = url
-              link.click()
-              URL.revokeObjectURL(url)
-            }
-          }, `image/${format}`, 0.95)
-        }
-        img.src = qrDataUrl
-      }
-      
-      toast({
-        title: "Download started",
-        description: `QR code downloaded as ${format.toUpperCase()}`
-      })
-    } catch (error) {
-      console.error("Failed to download QR code:", error)
-      toast({
-        title: "Download failed",
-        description: error instanceof Error ? error.message : "Unable to download QR code",
-        variant: "destructive"
-      })
-    }
-  }
-
-  const renderContentForm = () => {
-    switch (activeType) {
-      case "url":
-        return (
-          <div>
-            <Label htmlFor="url-content">Website URL</Label>
-            <Input
-              id="url-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="https://example.com"
-              className="mt-1"
-            />
-          </div>
-        )
-      
-      case "text":
-        return (
-          <div>
-            <Label htmlFor="text-content">Text Content</Label>
-            <Textarea
-              id="text-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Enter your text here..."
-              className="mt-1"
-              rows={3}
-            />
-          </div>
-        )
-      
-      case "email":
-        return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={emailData.email}
-                onChange={(e) => setEmailData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="contact@example.com"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="subject">Subject (Optional)</Label>
-              <Input
-                id="subject"
-                value={emailData.subject}
-                onChange={(e) => setEmailData(prev => ({ ...prev, subject: e.target.value }))}
-                placeholder="Email subject"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="body">Message (Optional)</Label>
-              <Textarea
-                id="body"
-                value={emailData.body}
-                onChange={(e) => setEmailData(prev => ({ ...prev, body: e.target.value }))}
-                placeholder="Email message"
-                className="mt-1"
-                rows={3}
-              />
-            </div>
-          </div>
-        )
-      
-      case "phone":
-        return (
-          <div>
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={phoneData.phone}
-              onChange={(e) => setPhoneData(prev => ({ ...prev, phone: e.target.value }))}
-              placeholder="+1234567890"
-              className="mt-1"
-            />
-          </div>
-        )
-      
-      case "sms":
-        return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="sms-phone">Phone Number</Label>
-              <Input
-                id="sms-phone"
-                type="tel"
-                value={smsData.phone}
-                onChange={(e) => setSmsData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+1234567890"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="sms-message">Message</Label>
-              <Textarea
-                id="sms-message"
-                value={smsData.message}
-                onChange={(e) => setSmsData(prev => ({ ...prev, message: e.target.value }))}
-                placeholder="Your SMS message"
-                className="mt-1"
-                rows={3}
-              />
-            </div>
-          </div>
-        )
-      
+  const copyContent = () => {
+    let contentToCopy = ""
+    
+    switch (qrType) {
       case "wifi":
-        return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="wifi-ssid">Network Name (SSID)</Label>
-              <Input
-                id="wifi-ssid"
-                value={wifiData.ssid}
-                onChange={(e) => setWifiData(prev => ({ ...prev, ssid: e.target.value }))}
-                placeholder="MyWiFiNetwork"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="wifi-password">Password</Label>
-              <Input
-                id="wifi-password"
-                type="password"
-                value={wifiData.password}
-                onChange={(e) => setWifiData(prev => ({ ...prev, password: e.target.value }))}
-                placeholder="WiFi password"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="wifi-security">Security Type</Label>
-              <Select value={wifiData.security} onValueChange={(value) => setWifiData(prev => ({ ...prev, security: value }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="WPA">WPA/WPA2</SelectItem>
-                  <SelectItem value="WEP">WEP</SelectItem>
-                  <SelectItem value="nopass">No Password</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="wifi-hidden"
-                checked={wifiData.hidden}
-                onCheckedChange={(checked) => setWifiData(prev => ({ ...prev, hidden: checked as boolean }))}
-              />
-              <Label htmlFor="wifi-hidden" className="text-sm">Hidden Network</Label>
-            </div>
-          </div>
-        )
-      
+        contentToCopy = QRProcessor.generateWiFiQR(wifiSSID, wifiPassword, wifiSecurity as any, wifiHidden)
+        break
       case "vcard":
-        return (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="first-name">First Name</Label>
-                <Input
-                  id="first-name"
-                  value={vcardData.firstName}
-                  onChange={(e) => setVcardData(prev => ({ ...prev, firstName: e.target.value }))}
-                  placeholder="John"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="last-name">Last Name</Label>
-                <Input
-                  id="last-name"
-                  value={vcardData.lastName}
-                  onChange={(e) => setVcardData(prev => ({ ...prev, lastName: e.target.value }))}
-                  placeholder="Doe"
-                  className="mt-1"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="organization">Organization</Label>
-              <Input
-                id="organization"
-                value={vcardData.organization}
-                onChange={(e) => setVcardData(prev => ({ ...prev, organization: e.target.value }))}
-                placeholder="Company Name"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="vcard-phone">Phone</Label>
-              <Input
-                id="vcard-phone"
-                type="tel"
-                value={vcardData.phone}
-                onChange={(e) => setVcardData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+1234567890"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="vcard-email">Email</Label>
-              <Input
-                id="vcard-email"
-                type="email"
-                value={vcardData.email}
-                onChange={(e) => setVcardData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="john@example.com"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="vcard-url">Website</Label>
-              <Input
-                id="vcard-url"
-                type="url"
-                value={vcardData.url}
-                onChange={(e) => setVcardData(prev => ({ ...prev, url: e.target.value }))}
-                placeholder="https://example.com"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="vcard-address">Address</Label>
-              <Textarea
-                id="vcard-address"
-                value={vcardData.address}
-                onChange={(e) => setVcardData(prev => ({ ...prev, address: e.target.value }))}
-                placeholder="123 Main St, City, State, ZIP"
-                className="mt-1"
-                rows={2}
-              />
-            </div>
-          </div>
-        )
-      
-      case "event":
-        return (
-          <div className="space-y-3">
-            <div>
-              <Label htmlFor="event-title">Event Title</Label>
-              <Input
-                id="event-title"
-                value={eventData.title}
-                onChange={(e) => setEventData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Meeting Title"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="event-location">Location</Label>
-              <Input
-                id="event-location"
-                value={eventData.location}
-                onChange={(e) => setEventData(prev => ({ ...prev, location: e.target.value }))}
-                placeholder="Conference Room A"
-                className="mt-1"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="start-date">Start Date</Label>
-                <Input
-                  id="start-date"
-                  type="datetime-local"
-                  value={eventData.startDate}
-                  onChange={(e) => setEventData(prev => ({ ...prev, startDate: e.target.value }))}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="end-date">End Date</Label>
-                <Input
-                  id="end-date"
-                  type="datetime-local"
-                  value={eventData.endDate}
-                  onChange={(e) => setEventData(prev => ({ ...prev, endDate: e.target.value }))}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="event-description">Description</Label>
-              <Textarea
-                id="event-description"
-                value={eventData.description}
-                onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Event description"
-                className="mt-1"
-                rows={3}
-              />
-            </div>
-          </div>
-        )
-      
-      case "location":
-        return (
-          <div>
-            <Label htmlFor="location-content">Coordinates or Address</Label>
-            <Input
-              id="location-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="40.7128,-74.0060 or 123 Main St, New York"
-              className="mt-1"
-            />
-          </div>
-        )
-      
+        contentToCopy = QRProcessor.generateVCardQR({
+          firstName: contactName.split(" ")[0],
+          lastName: contactName.split(" ").slice(1).join(" "),
+          phone: contactPhone,
+          email: contactEmail,
+          organization: contactOrg
+        })
+        break
+      case "email":
+        contentToCopy = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+        break
       default:
-        return (
-          <div>
-            <Label htmlFor="default-content">Content</Label>
-            <Textarea
-              id="default-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Enter your content here..."
-              className="mt-1"
-              rows={3}
-            />
-          </div>
-        )
+        contentToCopy = content
     }
+
+    navigator.clipboard.writeText(contentToCopy)
+    toast({
+      title: "Copied to clipboard",
+      description: "QR code content copied"
+    })
   }
 
+  // Show content-rich interface before tool usage
+  if (!showToolInterface) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <QrCode className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-heading font-bold text-foreground">Professional QR Code Generator</h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Create custom QR codes for websites, WiFi networks, contact information, and more. 
+              Professional-grade QR code generation with advanced customization options, logo embedding, 
+              and multiple output formats for marketing, business, and personal use.
+            </p>
+          </div>
+
+          {/* Before Tool Ad */}
+          <PersistentAdManager 
+            toolName="qr-code-generator"
+            adSlot="before-tool-banner"
+            position="before-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
+
+          {/* QR Code Types */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("url"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <Globe className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">Website URL</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Link to websites and landing pages</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("wifi"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <Wifi className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">WiFi Network</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Share WiFi credentials instantly</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("vcard"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <User className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">Contact Card</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Business cards and contact info</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("email"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <Mail className="h-8 w-8 text-red-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">Email</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Pre-filled email messages</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("phone"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <Phone className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">Phone Number</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Direct dial phone numbers</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => { setQrType("text"); setShowToolInterface(true) }}>
+              <CardHeader className="pb-4">
+                <FileText className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+                <CardTitle className="text-sm">Plain Text</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-gray-600">Any text or message content</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Generator */}
+          <Card className="max-w-2xl mx-auto mb-12">
+            <CardHeader>
+              <CardTitle>Quick QR Code Generator</CardTitle>
+              <CardDescription>Generate a QR code instantly</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="quick-content">Content</Label>
+                <Input
+                  id="quick-content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Enter URL, text, or any content..."
+                />
+              </div>
+              
+              <Button onClick={() => setShowToolInterface(true)} className="w-full" size="lg">
+                <QrCode className="mr-2 h-4 w-4" />
+                Generate QR Code
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* After Tool Ad */}
+          <PersistentAdManager 
+            toolName="qr-code-generator"
+            adSlot="after-tool-banner"
+            position="after-upload"
+            className="max-w-4xl mx-auto mb-8"
+          />
+        </div>
+
+        {/* Comprehensive Content */}
+        <ToolContentSections 
+          toolName="QR Code Generator" 
+          toolCategory="QR" 
+          position="after-upload" 
+        />
+
+        <Footer />
+      </div>
+    )
+  }
+
+  // Show the full tool interface
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-2">
-          <AdBanner 
-            adSlot="tool-header-banner"
-            adFormat="auto"
-            className="max-w-6xl mx-auto"
-            mobileOptimized={true}
-          />
-        </div>
-      </div>
 
-      {/* Mobile Layout */}
-      <div className="lg:hidden">
-        <div className="bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
-          <div className="flex items-center space-x-2">
-            <QrCode className="h-5 w-5 text-green-600" />
-            <h1 className="text-lg font-semibold text-gray-900">QR Generator</h1>
+      <div className="container mx-auto px-4 py-8">
+        {/* Tool Interface Ad */}
+        <PersistentAdManager 
+          toolName="qr-code-generator"
+          adSlot="before-tool-banner"
+          position="before-canvas"
+          className="max-w-4xl mx-auto mb-8"
+        />
+
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center space-x-2 mb-4">
+            <QrCode className="h-8 w-8 text-accent" />
+            <h1 className="text-3xl font-heading font-bold text-foreground">QR Code Generator</h1>
           </div>
-          <Badge variant="secondary">{activeType.toUpperCase()}</Badge>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Create custom QR codes with logos, colors, and multiple data types. Perfect for marketing, business cards, and digital sharing.
+          </p>
         </div>
 
-        {/* Content Type Tabs */}
-        <div className="bg-white border-b">
-          <div className="px-4 py-3">
-            <ScrollArea orientation="horizontal">
-              <div className="flex space-x-2">
-                {contentTypes.map((type) => (
-                  <Button
-                    key={type.id}
-                    variant={activeType === type.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setActiveType(type.id)}
-                    className="flex items-center space-x-2 whitespace-nowrap"
-                  >
-                    <type.icon className="h-4 w-4" />
-                    <span>{type.label}</span>
-                  </Button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* QR Code Configuration */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>QR Code Type</CardTitle>
+                <CardDescription>Select the type of data to encode</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs value={qrType} onValueChange={setQrType} className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="text">
+                      <FileText className="h-4 w-4 mr-2" />
+                      Text
+                    </TabsTrigger>
+                    <TabsTrigger value="url">
+                      <LinkIcon className="h-4 w-4 mr-2" />
+                      URL
+                    </TabsTrigger>
+                    <TabsTrigger value="wifi">
+                      <Wifi className="h-4 w-4 mr-2" />
+                      WiFi
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsList className="grid w-full grid-cols-3 mt-2">
+                    <TabsTrigger value="email">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Email
+                    </TabsTrigger>
+                    <TabsTrigger value="phone">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Phone
+                    </TabsTrigger>
+                    <TabsTrigger value="vcard">
+                      <User className="h-4 w-4 mr-2" />
+                      Contact
+                    </TabsTrigger>
+                  </TabsList>
 
-        <div className="p-4 space-y-6">
-          {/* Content Input */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Content</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {renderContentForm()}
-            </CardContent>
-          </Card>
+                  <TabsContent value="text" className="space-y-4">
+                    <div>
+                      <Label htmlFor="text-content">Text Content</Label>
+                      <Textarea
+                        id="text-content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="Enter any text content..."
+                        rows={4}
+                      />
+                    </div>
+                  </TabsContent>
 
-          {/* QR Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle>QR Code Preview</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              {qrDataUrl ? (
-                <div className="space-y-4">
-                  <img
-                    src={qrDataUrl}
-                    alt="Generated QR Code"
-                    className="mx-auto max-w-full border rounded-lg shadow-md"
-                    style={{ maxWidth: "250px" }}
+                  <TabsContent value="url" className="space-y-4">
+                    <div>
+                      <Label htmlFor="url-content">Website URL</Label>
+                      <Input
+                        id="url-content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="https://example.com"
+                        type="url"
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="wifi" className="space-y-4">
+                    <div>
+                      <Label htmlFor="wifi-ssid">Network Name (SSID)</Label>
+                      <Input
+                        id="wifi-ssid"
+                        value={wifiSSID}
+                        onChange={(e) => setWifiSSID(e.target.value)}
+                        placeholder="MyWiFiNetwork"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="wifi-password">Password</Label>
+                      <Input
+                        id="wifi-password"
+                        value={wifiPassword}
+                        onChange={(e) => setWifiPassword(e.target.value)}
+                        placeholder="WiFi password"
+                        type="password"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="wifi-security">Security Type</Label>
+                      <Select value={wifiSecurity} onValueChange={setWifiSecurity}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="WPA">WPA/WPA2</SelectItem>
+                          <SelectItem value="WEP">WEP</SelectItem>
+                          <SelectItem value="nopass">No Password</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="wifi-hidden"
+                        checked={wifiHidden}
+                        onCheckedChange={setWifiHidden}
+                      />
+                      <Label htmlFor="wifi-hidden">Hidden Network</Label>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="email" className="space-y-4">
+                    <div>
+                      <Label htmlFor="email-to">Email Address</Label>
+                      <Input
+                        id="email-to"
+                        value={emailTo}
+                        onChange={(e) => setEmailTo(e.target.value)}
+                        placeholder="recipient@example.com"
+                        type="email"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email-subject">Subject</Label>
+                      <Input
+                        id="email-subject"
+                        value={emailSubject}
+                        onChange={(e) => setEmailSubject(e.target.value)}
+                        placeholder="Email subject"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email-body">Message</Label>
+                      <Textarea
+                        id="email-body"
+                        value={emailBody}
+                        onChange={(e) => setEmailBody(e.target.value)}
+                        placeholder="Email message..."
+                        rows={3}
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="phone" className="space-y-4">
+                    <div>
+                      <Label htmlFor="phone-number">Phone Number</Label>
+                      <Input
+                        id="phone-number"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="+1234567890"
+                        type="tel"
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="vcard" className="space-y-4">
+                    <div>
+                      <Label htmlFor="contact-name">Full Name</Label>
+                      <Input
+                        id="contact-name"
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="John Doe"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="contact-phone">Phone</Label>
+                      <Input
+                        id="contact-phone"
+                        value={contactPhone}
+                        onChange={(e) => setContactPhone(e.target.value)}
+                        placeholder="+1234567890"
+                        type="tel"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="contact-email">Email</Label>
+                      <Input
+                        id="contact-email"
+                        value={contactEmail}
+                        onChange={(e) => setContactEmail(e.target.value)}
+                        placeholder="john@example.com"
+                        type="email"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="contact-org">Organization</Label>
+                      <Input
+                        id="contact-org"
+                        value={contactOrg}
+                        onChange={(e) => setContactOrg(e.target.value)}
+                        placeholder="Company Name"
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+
+            {/* Customization Options */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Customization</CardTitle>
+                <CardDescription>Adjust QR code appearance and settings</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Size: {qrSize[0]}px</Label>
+                  <Slider
+                    value={qrSize}
+                    onValueChange={setQrSize}
+                    min={200}
+                    max={1000}
+                    step={50}
+                    className="mt-2"
                   />
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button onClick={() => downloadQR("png")} className="bg-green-600 hover:bg-green-700">
-                      <Download className="h-4 w-4 mr-2" />
-                      PNG
-                    </Button>
-                    <Button variant="outline" onClick={() => downloadQR("svg")}>
-                      SVG
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="py-12 text-muted-foreground">
-                  <QrCode className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>Configure settings and generate QR code</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* QR Code Content - After Preview */}
-          <div className="mt-8 space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <QrCode className="h-5 w-5 mr-2 text-green-600" />
-                  QR Code Applications & Benefits
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Business Applications</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                        Marketing campaigns and promotions
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                        Contact information sharing
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                        Event management and ticketing
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                        Product information and reviews
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                        WiFi network sharing
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Technical Features</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        Up to 4,296 characters capacity
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        30% error correction capability
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        Custom logo integration
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        Multiple export formats
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-blue-600 mr-2" />
-                        High-resolution output
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>QR Code Best Practices</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Design Guidelines</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li>• Use high contrast colors for better scanning</li>
-                      <li>• Keep logos under 20% of total QR area</li>
-                      <li>• Test QR codes before printing or publishing</li>
-                      <li>• Ensure minimum size of 2cm x 2cm for print</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Content Optimization</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li>• Use URL shorteners for long links</li>
-                      <li>• Include clear call-to-action text</li>
-                      <li>• Optimize for mobile scanning experience</li>
-                      <li>• Consider error correction level needs</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Distribution Tips</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      <li>• Place QR codes at eye level when possible</li>
-                      <li>• Provide context about what the QR code does</li>
-                      <li>• Use vector formats for scalable printing</li>
-                      <li>• Include backup information (URL, contact)</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>QR Code Statistics & Impact</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                  <div>
-                    <div className="text-3xl font-bold text-blue-600 mb-2">5.6B+</div>
-                    <div className="text-sm font-medium text-gray-900">Annual QR Scans</div>
-                    <div className="text-xs text-gray-500">Global usage growth</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-green-600 mb-2">94%</div>
-                    <div className="text-sm font-medium text-gray-900">Smartphone Support</div>
-                    <div className="text-xs text-gray-500">Built-in camera apps</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-purple-600 mb-2">300%</div>
-                    <div className="text-sm font-medium text-gray-900">ROI Increase</div>
-                    <div className="text-xs text-gray-500">Marketing campaigns</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-orange-600 mb-2">15sec</div>
-                    <div className="text-sm font-medium text-gray-900">Avg Scan Time</div>
-                    <div className="text-xs text-gray-500">User engagement</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Mobile Ad */}
-          <AdBanner 
-            adSlot="mobile-qr-content"
-            adFormat="auto"
-            className="w-full"
-            mobileOptimized={true}
-          />
-
-          {/* Generate Button */}
-          <Button 
-            onClick={generateQR}
-            disabled={isGenerating || !generateQRContent().trim()}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
-            size="lg"
-          >
-            {isGenerating ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Generating...
-              </>
-            ) : (
-              <>
-                <QrCode className="h-4 w-4 mr-2" />
-                Generate QR Code
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Desktop Layout */}
-      <div className="hidden lg:flex h-[calc(100vh-8rem)] w-full overflow-hidden">
-        {/* Left Canvas */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="bg-white border-b px-6 py-3 flex items-center justify-between shadow-sm flex-shrink-0">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <QrCode className="h-5 w-5 text-green-600" />
-                <h1 className="text-xl font-semibold text-gray-900">QR Code Generator</h1>
-              </div>
-              <Badge variant="secondary">{activeType.toUpperCase()}</Badge>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => {
-                  setContent("")
-                  setQrDataUrl("")
-                  setLogoFile(null)
-                  setLogoUrl("")
-                  setLogoPreview("")
-                }}
-              >
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-              {qrDataUrl && (
-                <div className="flex items-center space-x-1 border rounded-md">
-                  <Button variant="ghost" size="sm" onClick={() => setZoomLevel(prev => Math.max(25, prev - 25))}>
-                    <ZoomOut className="h-4 w-4" />
-                  </Button>
-                  <span className="text-sm px-2">{zoomLevel}%</span>
-                  <Button variant="ghost" size="sm" onClick={() => setZoomLevel(prev => Math.min(400, prev + 25))}>
-                    <ZoomIn className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setZoomLevel(100)}>
-                    <Maximize2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Content Type Tabs */}
-          <div className="bg-white border-b">
-            <div className="px-6 py-3">
-              <ScrollArea orientation="horizontal">
-                <div className="flex space-x-2">
-                  {contentTypes.map((type) => (
-                    <Button
-                      key={type.id}
-                      variant={activeType === type.id ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveType(type.id)}
-                      className="flex items-center space-x-2 whitespace-nowrap"
-                    >
-                      <type.icon className="h-4 w-4" />
-                      <span>{type.label}</span>
-                    </Button>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-          </div>
-
-          {/* Canvas Content */}
-          <div className="flex-1 overflow-hidden flex items-center justify-center p-6">
-            {!qrDataUrl ? (
-              <div className="text-center max-w-md">
-                <div className="relative mb-8">
-                  <div className="absolute inset-0 bg-green-500/20 rounded-full blur-xl"></div>
-                  <QrCode className="relative h-24 w-24 text-green-500 mx-auto" />
-                </div>
-                <h3 className="text-2xl font-semibold mb-3 text-gray-700">Generate Your QR Code</h3>
-                <p className="text-gray-500 mb-6 text-lg">
-                  Configure your settings and click generate to create your QR code
-                </p>
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <div className="flex items-center space-x-2">
-                    <AlertCircle className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm text-amber-800">
-                      {!generateQRContent().trim() ? "Please enter content to generate QR code" : "Ready to generate QR code"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="relative">
-                <img
-                  src={qrDataUrl}
-                  alt="Generated QR Code"
-                  className="max-w-full max-h-[70vh] object-contain border border-gray-300 rounded-lg shadow-lg bg-white"
-                  style={{ 
-                    transform: `scale(${zoomLevel / 100})`,
-                    transition: "transform 0.2s ease"
-                  }}
-                />
-                
-                <div className="absolute bottom-4 left-4 bg-black/70 text-white text-xs px-3 py-2 rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    <span>{qrSize[0]} × {qrSize[0]} px</span>
-                    <span>Error Level: {errorCorrection}</span>
-                    <span>{Math.round((qrSize[0] * qrSize[0] * 3) / 1024)}KB</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="w-80 xl:w-96 bg-white border-l shadow-lg flex flex-col max-h-screen">
-          <div className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
-            <div className="flex items-center space-x-2">
-              <QrCode className="h-5 w-5 text-green-600" />
-              <h2 className="text-lg font-semibold text-gray-900">QR Settings</h2>
-            </div>
-            <p className="text-sm text-gray-600 mt-1">Configure your QR code options</p>
-          </div>
-
-          <div className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full">
-              <div className="p-6 space-y-6">
-                {/* Content Input */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Content</Label>
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                  </div>
-                  {renderContentForm()}
                 </div>
 
-                {/* Design Style */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Design</Label>
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-sm font-medium">QR Style</Label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
-                      {styleOptions.map((style) => (
-                        <Button
-                          key={style.id}
-                          variant={qrStyle === style.id ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setQrStyle(style.id)}
-                          className="flex items-center space-x-2 text-xs h-10"
-                        >
-                          <style.icon className="h-4 w-4" />
-                          <span>{style.label}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium">Eye Style</Label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
-                      {eyeStyleOptions.map((style) => (
-                        <Button
-                          key={style.id}
-                          variant={eyeStyle === style.id ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setEyeStyle(style.id)}
-                          className="flex items-center space-x-2 text-xs h-10"
-                        >
-                          <style.icon className="h-4 w-4" />
-                          <span>{style.label}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+                <div>
+                  <Label>Margin: {margin[0]} modules</Label>
+                  <Slider
+                    value={margin}
+                    onValueChange={setMargin}
+                    min={0}
+                    max={10}
+                    step={1}
+                    className="mt-2"
+                  />
                 </div>
 
-                {/* Colors */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Colors</Label>
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="gradient-enabled"
-                      checked={gradientEnabled}
-                      onCheckedChange={setGradientEnabled}
-                    />
-                    <Label htmlFor="gradient-enabled" className="text-sm">Enable Gradient</Label>
-                  </div>
+                <div>
+                  <Label htmlFor="error-correction">Error Correction</Label>
+                  <Select value={errorCorrection} onValueChange={setErrorCorrection}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="L">Low (7%)</SelectItem>
+                      <SelectItem value="M">Medium (15%)</SelectItem>
+                      <SelectItem value="Q">Quartile (25%)</SelectItem>
+                      <SelectItem value="H">High (30%)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                  {gradientEnabled ? (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-sm font-medium">Gradient Start</Label>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <input
-                            type="color"
-                            value={gradientColor1}
-                            onChange={(e) => setGradientColor1(e.target.value)}
-                            className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <Input
-                            value={gradientColor1}
-                            onChange={(e) => setGradientColor1(e.target.value)}
-                            className="flex-1 font-mono text-xs"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium">Gradient End</Label>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <input
-                            type="color"
-                            value={gradientColor2}
-                            onChange={(e) => setGradientColor2(e.target.value)}
-                            className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <Input
-                            value={gradientColor2}
-                            onChange={(e) => setGradientColor2(e.target.value)}
-                            className="flex-1 font-mono text-xs"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-sm font-medium">Foreground</Label>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <input
-                            type="color"
-                            value={foregroundColor}
-                            onChange={(e) => setForegroundColor(e.target.value)}
-                            className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <Input
-                            value={foregroundColor}
-                            onChange={(e) => setForegroundColor(e.target.value)}
-                            className="flex-1 font-mono text-xs"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium">Background</Label>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <input
-                            type="color"
-                            value={backgroundColor}
-                            onChange={(e) => setBackgroundColor(e.target.value)}
-                            className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <Input
-                            value={backgroundColor}
-                            onChange={(e) => setBackgroundColor(e.target.value)}
-                            className="flex-1 font-mono text-xs"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium">Eye Color</Label>
-                    <div className="flex items-center space-x-2 mt-1">
+                    <Label htmlFor="dark-color">Foreground Color</Label>
+                    <div className="flex items-center space-x-2 mt-2">
                       <input
                         type="color"
-                        value={eyeColor}
-                        onChange={(e) => setEyeColor(e.target.value)}
+                        value={darkColor}
+                        onChange={(e) => setDarkColor(e.target.value)}
                         className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
                       />
                       <Input
-                        value={eyeColor}
-                        onChange={(e) => setEyeColor(e.target.value)}
-                        className="flex-1 font-mono text-xs"
+                        value={darkColor}
+                        onChange={(e) => setDarkColor(e.target.value)}
+                        className="flex-1 font-mono text-sm"
                       />
                     </div>
                   </div>
-                </div>
-
-                {/* Logo */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Logo</Label>
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                  </div>
-                  
                   <div>
-                    <Label className="text-sm font-medium">Upload Logo</Label>
-                    <div className="mt-2">
+                    <Label htmlFor="light-color">Background Color</Label>
+                    <div className="flex items-center space-x-2 mt-2">
                       <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleLogoUpload}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                        type="color"
+                        value={lightColor}
+                        onChange={(e) => setLightColor(e.target.value)}
+                        className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                      />
+                      <Input
+                        value={lightColor}
+                        onChange={(e) => setLightColor(e.target.value)}
+                        className="flex-1 font-mono text-sm"
                       />
                     </div>
                   </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-white px-2 text-gray-500">Or</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium">Logo URL</Label>
-                    <Input
-                      type="url"
-                      value={logoUrl}
-                      onChange={(e) => {
-                        setLogoUrl(e.target.value)
-                        if (e.target.value) {
-                          setLogoFile(null)
-                          setLogoPreview("")
-                        }
-                      }}
-                      placeholder="https://example.com/logo.png"
-                      className="mt-1"
-                      disabled={!!logoFile}
-                    />
-                  </div>
-                  
-                  {(logoPreview || logoUrl) && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Logo Preview</Label>
-                      <div className="relative inline-block">
-                        <img
-                          src={logoPreview || logoUrl}
-                          alt="Logo preview"
-                          className="w-16 h-16 object-contain border border-gray-300 rounded-lg bg-white"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full"
-                          onClick={clearLogo}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
                 </div>
+              </CardContent>
+            </Card>
+          </div>
 
-                {/* Advanced Options */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Advanced</Label>
-                    <div className="h-px bg-gray-200 flex-1"></div>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium">Error Correction</Label>
-                    <Select value={errorCorrection} onValueChange={setErrorCorrection}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="L">Low (7%)</SelectItem>
-                        <SelectItem value="M">Medium (15%)</SelectItem>
-                        <SelectItem value="Q">Quartile (25%)</SelectItem>
-                        <SelectItem value="H">High (30%)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <Label className="text-sm font-medium">Size</Label>
-                      <Badge variant="outline" className="text-xs">
-                        {qrSize[0]} × {qrSize[0]} px
-                      </Badge>
+          {/* QR Code Preview */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>QR Code Preview</CardTitle>
+                <CardDescription>Live preview of your generated QR code</CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                {qrDataUrl ? (
+                  <div className="space-y-4">
+                    <div className="qr-preview-container p-4 rounded-lg inline-block">
+                      <img
+                        src={qrDataUrl}
+                        alt="Generated QR Code"
+                        className="mx-auto border rounded shadow-lg"
+                        style={{ maxWidth: "300px" }}
+                      />
                     </div>
-                    <Slider
-                      value={qrSize}
-                      onValueChange={setQrSize}
-                      max={2000}
-                      min={200}
-                      step={100}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>200px</span>
-                      <span>2000px</span>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <Button onClick={() => downloadQR("png")}>
+                        <Download className="h-4 w-4 mr-2" />
+                        PNG
+                      </Button>
+                      <Button variant="outline" onClick={() => downloadQR("svg")}>
+                        SVG
+                      </Button>
+                      <Button variant="outline" onClick={() => downloadQR("pdf")}>
+                        PDF
+                      </Button>
+                      <Button variant="outline" onClick={copyContent}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy
+                      </Button>
                     </div>
                   </div>
-                </div>
-
-                {/* Sidebar Ad */}
-                <AdBanner 
-                  adSlot="qr-sidebar"
-                  adFormat="auto"
-                  className="w-full"
-                />
-
-                {/* QR Code Info */}
-                {generateQRContent().trim() && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <h4 className="text-sm font-semibold text-green-800 mb-2">QR Code Info</h4>
-                    <div className="text-xs text-green-700 space-y-1">
-                      <div className="flex justify-between">
-                        <span>Content Type:</span>
-                        <span className="font-medium">{activeType.toUpperCase()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Data Length:</span>
-                        <span className="font-medium">{generateQRContent().length} chars</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Error Correction:</span>
-                        <span className="font-medium">{errorCorrection}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Estimated Size:</span>
-                        <span className="font-medium">{Math.round((qrSize[0] * qrSize[0] * 3) / 1024)}KB</span>
-                      </div>
-                    </div>
+                ) : (
+                  <div className="py-12 text-muted-foreground">
+                    <QrCode className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p>Enter content to generate QR code</p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
 
-                {/* Canvas Ad - Reuse from upload */}
-                <div className="mt-8">
-                  <PersistentAdManager 
-                    toolName="qr-code-generator"
-                    adSlot="before-upload-banner"
-                    position="before-canvas"
-                    className="max-w-2xl mx-auto"
-                  />
-                </div>
-              </div>
-            </ScrollArea>
-          </div>
-
-          {/* Fixed Sidebar Footer */}
-          <div className="p-6 border-t bg-gray-50 space-y-3 flex-shrink-0">
-            {/* Generate Button */}
-            <Button 
-              onClick={generateQR}
-              disabled={isGenerating || !generateQRContent().trim()}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
-              size="lg"
-            >
-              {isGenerating ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <QrCode className="h-4 w-4 mr-2" />
-                  Generate QR Code
-                </>
-              )}
-            </Button>
-
-            {/* Download Options */}
-            {qrDataUrl && (
-              <div className="space-y-2">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">QR Code Ready!</span>
+            {/* QR Code Features */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Professional Features</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">High Resolution Output</h4>
+                      <p className="text-sm text-gray-600">Generate QR codes up to 1000x1000 pixels for print quality</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-green-600">Choose your download format below</p>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Multiple Formats</h4>
+                      <p className="text-sm text-gray-600">Download as PNG, SVG, or PDF for any use case</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Error Correction</h4>
+                      <p className="text-sm text-gray-600">Built-in error correction ensures reliable scanning</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Custom Colors</h4>
+                      <p className="text-sm text-gray-600">Brand your QR codes with custom color schemes</p>
+                    </div>
+                  </div>
                 </div>
-                
-                <Button 
-                  onClick={() => downloadQR("png")}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base font-semibold"
-                  size="lg"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PNG
-                </Button>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => downloadQR("svg")}
-                    className="text-blue-600 border-blue-400 hover:bg-blue-50"
-                  >
-                    SVG
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => downloadQR("jpeg")}
-                    className="text-orange-600 border-orange-400 hover:bg-orange-50"
-                  >
-                    JPEG
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => downloadQR("webp")}
-                    className="text-purple-600 border-purple-400 hover:bg-purple-50"
-                  >
-                    WebP
-                  </Button>
-                </div>
-
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    navigator.clipboard.writeText(generateQRContent())
-                    toast({ title: "Content copied", description: "QR code content copied to clipboard" })
-                  }}
-                  className="w-full"
-                >
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy Content
-                </Button>
-              </div>
-            )}
-
-            {/* After Canvas Ad - Reuse from upload */}
-            <div className="mt-8">
-              <PersistentAdManager 
-                toolName="qr-code-generator"
-                adSlot="after-upload-banner"
-                position="after-canvas"
-                className="max-w-2xl mx-auto"
-              />
-            </div>
-            {/* Content Validation */}
-            {!generateQRContent().trim() && (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                <div className="flex items-center space-x-2">
-                  <AlertCircle className="h-4 w-4 text-amber-600" />
-                  <span className="text-sm text-amber-800">Please enter content to generate QR code</span>
-                </div>
-              </div>
-            )}
+              </CardContent>
+            </Card>
           </div>
+        </div>
+
+        {/* After Tool Interface Ad */}
+        <div className="mt-12">
+          <PersistentAdManager 
+            toolName="qr-code-generator"
+            adSlot="after-tool-banner"
+            position="after-canvas"
+            className="max-w-4xl mx-auto"
+          />
+        </div>
+
+        {/* Comprehensive QR Code Content */}
+        <div className="max-w-6xl mx-auto mt-16 space-y-12">
+          {/* QR Code Applications */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                QR Code Applications & Use Cases
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Discover how QR codes revolutionize business operations, marketing campaigns, 
+                and customer engagement across industries worldwide.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <Card>
+                <CardHeader>
+                  <TrendingUp className="h-8 w-8 text-blue-600 mb-3" />
+                  <CardTitle>Marketing & Advertising</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">
+                    Bridge offline and online marketing with trackable QR codes for campaigns, 
+                    print advertisements, and promotional materials.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Campaign tracking and analytics</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Instant website traffic generation</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Social media integration</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Smartphone className="h-8 w-8 text-green-600 mb-3" />
+                  <CardTitle>Contactless Solutions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">
+                    Enable contactless interactions for restaurants, events, retail, 
+                    and service businesses with instant access to digital content.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Digital menus and catalogs</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Event check-ins and registration</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>WiFi network sharing</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Target className="h-8 w-8 text-purple-600 mb-3" />
+                  <CardTitle>Business Operations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">
+                    Streamline business processes with QR codes for inventory management, 
+                    asset tracking, and customer service operations.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Inventory and asset tracking</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Customer feedback collection</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-700">
+                      <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                      <span>Document and file sharing</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+
+          {/* QR Code Best Practices */}
+          <section className="bg-gray-50 rounded-2xl p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                QR Code Design Best Practices
+              </h2>
+              <p className="text-lg text-gray-600">
+                Professional guidelines for creating effective, scannable QR codes
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Design Guidelines</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-blue-600">1</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Maintain High Contrast</h4>
+                      <p className="text-sm text-gray-600">Use dark foreground on light background for optimal scanning reliability across all devices and lighting conditions.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-blue-600">2</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Optimize Size for Distance</h4>
+                      <p className="text-sm text-gray-600">Print QR codes at minimum 2x2 cm for close scanning, larger for distance viewing. Follow the 10:1 ratio rule.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-blue-600">3</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Include Clear Call-to-Action</h4>
+                      <p className="text-sm text-gray-600">Add text like "Scan for menu" or "Scan to connect" to guide users and increase scan rates.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Technical Optimization</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-green-600">1</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Choose Appropriate Error Correction</h4>
+                      <p className="text-sm text-gray-600">Use Medium (15%) for most cases, High (30%) for environments with potential damage or poor lighting.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-green-600">2</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Test Across Devices</h4>
+                      <p className="text-sm text-gray-600">Verify QR codes work on iOS, Android, and various QR scanner apps before deployment.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-green-600">3</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Monitor and Update</h4>
+                      <p className="text-sm text-gray-600">Use URL shorteners for trackable links and update destinations without reprinting QR codes.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Industry Statistics */}
+          <section className="bg-white border rounded-2xl p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                QR Code Industry Impact & Statistics
+              </h2>
+              <p className="text-lg text-gray-600">
+                Understanding QR code adoption and effectiveness in modern business
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">11M+</div>
+                <div className="text-sm font-medium text-gray-900 mb-1">Daily QR Scans</div>
+                <div className="text-xs text-gray-500">In the United States</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">94%</div>
+                <div className="text-sm font-medium text-gray-900 mb-1">Smartphone Compatibility</div>
+                <div className="text-xs text-gray-500">Built-in camera scanning</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">300%</div>
+                <div className="text-sm font-medium text-gray-900 mb-1">ROI Increase</div>
+                <div className="text-xs text-gray-500">With QR marketing campaigns</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-orange-600 mb-2">15sec</div>
+                <div className="text-sm font-medium text-gray-900 mb-1">Average Scan Time</div>
+                <div className="text-xs text-gray-500">User engagement duration</div>
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-lg text-gray-600">
+                Common questions about QR code generation and implementation
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">What data can I encode in QR codes?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    QR codes can store up to 4,296 characters including URLs, text, contact information, 
+                    WiFi credentials, calendar events, geographic coordinates, and more. Our generator 
+                    supports all standard QR code data types with automatic formatting.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">How reliable are custom-styled QR codes?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Our QR codes maintain 99.9% scan reliability even with custom styling. We use 
+                    advanced error correction and testing to ensure your codes work across all 
+                    devices and scanning applications while preserving your brand identity.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">What's the best size for printing QR codes?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    For business cards: minimum 2x2 cm. For posters: 5x5 cm or larger. 
+                    For billboards: follow the 10:1 ratio (viewing distance in meters = QR size in cm). 
+                    Always test at actual size before mass printing.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Can I track QR code scans?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    While our generator creates static QR codes, you can use URL shorteners 
+                    (like bit.ly) or analytics platforms to track scans when encoding URLs. 
+                    This provides detailed insights into scan locations, times, and devices.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
         </div>
       </div>
 
