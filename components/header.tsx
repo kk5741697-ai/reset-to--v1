@@ -18,20 +18,17 @@ import {
   Heart
 } from "lucide-react"
 import { useState } from "react"
-import { EnhancedSearchDialog } from "@/components/search/enhanced-search-dialog"
-
-const navigationItems = [
-  { name: "PDF Tools", href: "/pdf-tools", icon: FileText, color: "text-red-600" },
-  { name: "Image Tools", href: "/image-tools", icon: ImageIcon, color: "text-blue-600" },
-  { name: "QR Tools", href: "/qr-tools", icon: QrCode, color: "text-green-600" },
-  { name: "Text Tools", href: "/text-tools", icon: Code, color: "text-yellow-600" },
-  { name: "SEO Tools", href: "/seo-tools", icon: TrendingUp, color: "text-cyan-600" },
-  { name: "Utilities", href: "/utilities", icon: Calculator, color: "text-purple-600" },
-]
+import { EnhancedSearchDialog } from "@/components/enhanced-search-dialog"
+import { getDomainConfig } from "@/lib/domain-config"
+import { useHeaders } from "next/headers"
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  
+  // Get domain config for branding
+  const host = typeof window !== "undefined" ? window.location.host : "pixoratools.com"
+  const domainConfig = getDomainConfig(host)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -39,16 +36,20 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Wrench className="h-5 w-5 text-primary-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center" style={{ backgroundColor: domainConfig.primaryColor }}>
+              <Wrench className="h-5 w-5 text-white" />
             </div>
-            <span className="font-heading text-xl font-bold text-foreground">PixoraTools</span>
+            <span className="font-heading text-xl font-bold text-foreground">{domainConfig.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
-            {navigationItems.map((item) => {
-              const Icon = item.icon
+            {domainConfig.navigation.map((item) => {
+              const iconMap: Record<string, any> = {
+                FileText, ImageIcon, QrCode, Code, TrendingUp, Calculator
+              }
+              const Icon = iconMap[item.icon] || FileText
+              
               return (
                 <Link
                   key={item.name}
@@ -85,11 +86,6 @@ export function Header() {
               <Search className="h-4 w-4" />
             </Button>
 
-            {/* Favorites */}
-            <Button variant="outline" size="icon" className="hidden md:flex">
-              <Heart className="h-4 w-4" />
-            </Button>
-
             {/* Mobile Menu */}
             <Button
               variant="outline"
@@ -106,8 +102,12 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t bg-background/95 backdrop-blur">
             <nav className="py-4 space-y-2">
-              {navigationItems.map((item) => {
-                const Icon = item.icon
+              {domainConfig.navigation.map((item) => {
+                const iconMap: Record<string, any> = {
+                  FileText, ImageIcon, QrCode, Code, TrendingUp, Calculator
+                }
+                const Icon = iconMap[item.icon] || FileText
+                
                 return (
                   <Link
                     key={item.name}

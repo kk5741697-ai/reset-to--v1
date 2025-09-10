@@ -1,0 +1,105 @@
+// Prisma schema for Pixora Tools Platform
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  plan      String   @default("free") // free, pro, business, enterprise
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Usage tracking
+  usageStats UserUsage[]
+  sessions   Session[]
+  
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+model UserUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  toolSlug  String
+  domain    String
+  fileSize  Int?
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_usage")
+}
+
+model ToolAnalytics {
+  id          String   @id @default(cuid())
+  toolSlug    String
+  domain      String
+  usageCount  Int      @default(0)
+  errorCount  Int      @default(0)
+  avgFileSize Float?
+  date        DateTime @default(now())
+  
+  @@unique([toolSlug, domain, date])
+  @@map("tool_analytics")
+}
+
+model DomainConfig {
+  id                String  @id @default(cuid())
+  domain            String  @unique
+  name              String
+  category          String
+  primaryColor      String
+  logo              String
+  enabledCategories String[]
+  seoTitle          String
+  seoDescription    String
+  seoKeywords       String[]
+  enableAds         Boolean @default(true)
+  
+  @@map("domain_configs")
+}
+
+model ContentPage {
+  id          String   @id @default(cuid())
+  toolSlug    String
+  domain      String
+  title       String
+  description String
+  content     String   @db.Text
+  keywords    String[]
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([toolSlug, domain])
+  @@map("content_pages")
+}
+
+model AdSlot {
+  id         String  @id @default(cuid())
+  slotId     String
+  position   String
+  domain     String
+  toolSlug   String?
+  enabled    Boolean @default(true)
+  impressions Int    @default(0)
+  
+  @@unique([slotId, domain])
+  @@map("ad_slots")
+}

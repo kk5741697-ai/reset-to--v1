@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { AdBanner } from "./ad-banner"
+import { APP_CONFIG } from "@/lib/config"
 
 interface PersistentAdManagerProps {
   toolName: string
@@ -15,6 +15,7 @@ const globalAdState = new Map<string, {
   element: HTMLElement | null
   isLoaded: boolean
   position: string
+  isVisible: boolean
 }>()
 
 export function PersistentAdManager({ 
@@ -29,7 +30,7 @@ export function PersistentAdManager({
   const adKey = `${toolName}-${adSlot}`
 
   useEffect(() => {
-    // Enhanced bounce protection
+    // Enhanced bounce protection for AdSense compliance
     const sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime') || '0')
     const pageViews = parseInt(sessionStorage.getItem('pageViews') || '0')
     const toolUsage = parseInt(sessionStorage.getItem('toolUsage') || '0')
@@ -59,14 +60,46 @@ export function PersistentAdManager({
 
     const existingAd = globalAdState.get(adKey)
     
-    if (existingAd?.element && existingAd.isLoaded) {
-      // Reuse existing ad element instead of creating new one
-      if (position === "before-canvas" || position === "after-canvas") {
-        // Move existing ad to new position without reloading
-        const adElement = existingAd.element.cloneNode(true) as HTMLElement
-        adRef.current.appendChild(adElement)
+    // Check if we're transitioning from upload to tool interface
+    const isToolInterfaceTransition = position === "before-canvas" || position === "after-canvas"
+    const hasUploadAd = globalAdState.has(`${toolName}-before-upload-banner`) || 
+                       globalAdState.has(`${toolName}-after-upload-banner`)
+    
+    if (isToolInterfaceTransition && hasUploadAd) {
+      // Move existing ad from upload page to tool interface
+      const uploadAdKey = globalAdState.has(`${toolName}-before-upload-banner`) ? 
+                         `${toolName}-before-upload-banner` : 
+                         `${toolName}-after-upload-banner`
+      
+      const uploadAd = globalAdState.get(uploadAdKey)
+      if (uploadAd?.element && uploadAd.isLoaded) {
+        // Hide the upload ad and show it in the new position
+        uploadAd.isVisible = false
+        
+        // Create reference to the same ad content
+        globalAdState.set(adKey, {
+          element: uploadAd.element,
+          isLoaded: true,
+          position,
+          isVisible: true
+        })
+        
+        // Show the ad in the new position without reloading
+        if (adRef.current) {
+          adRef.current.innerHTML = uploadAd.element.innerHTML
+          adRef.current.className = uploadAd.element.className
+        }
         return
       }
+    }
+    
+    if (existingAd?.element && existingAd.isLoaded && existingAd.isVisible) {
+      // Reuse existing ad element without reloading
+      if (adRef.current && existingAd.element) {
+        adRef.current.innerHTML = existingAd.element.innerHTML
+        adRef.current.className = existingAd.element.className
+      }
+      return
     }
 
     // Only create new ad if none exists
@@ -82,7 +115,7 @@ export function PersistentAdManager({
       if (adRef.current) {
         adRef.current.appendChild(adElement)
         
-        // Initialize ad
+        // Initialize ad only once
         try {
           (window as any).adsbygoogle = (window as any).adsbygoogle || []
           ;(window as any).adsbygoogle.push({})
@@ -91,16 +124,49 @@ export function PersistentAdManager({
           globalAdState.set(adKey, {
             element: adElement,
             isLoaded: true,
-            position
+            position,
+            isVisible: true
           })
         } catch (error) {
           console.warn('AdSense initialization failed:', error)
         }
       }
     }
-  }, [shouldShowAd, adKey, position, adSlot])
+  }, [shouldShowAd, adKey, position, adSlot, toolName])
 
-  if (!shouldShowAd) {
+  // Handle tool interface transitions
+  useEffect(() => {
+    const handleToolTransition = (event: CustomEvent) => {
+      const { from, to, toolName: eventToolName } = event.detail
+      
+      if (eventToolName === toolName) {
+        if (from === "upload" && to === "interface") {
+          // Moving from upload to tool interface
+          if (position === "before-canvas" || position === "after-canvas") {
+            // This ad should now be visible in the tool interface
+            const adState = globalAdState.get(adKey)
+            if (adState) {
+              adState.isVisible = true
+            }
+          }
+        } else if (from === "interface" && to === "upload") {
+          // Moving back to upload page
+          if (position === "before-upload" || position === "after-upload") {
+            // This ad should now be visible on the upload page
+            const adState = globalAdState.get(adKey)
+            if (adState) {
+              adState.isVisible = true
+            }
+          }
+        }
+      }
+    }
+
+    window.addEventListener('tool-transition', handleToolTransition as EventListener)
+    return () => window.removeEventListener('tool-transition', handleToolTransition as EventListener)
+  }, [adKey, position, toolName])
+
+  if (!shouldShowAd || !APP_CONFIG.enableAds) {
     return null
   }
 
@@ -108,6 +174,16 @@ export function PersistentAdManager({
     <div 
       ref={adRef}
       className={`ad-container min-h-[90px] flex items-center justify-center ${className}`}
+      data-ad-position={position}
+      data-tool-name={toolName}
     />
   )
+}
+
+// Utility function to trigger tool transitions
+export function triggerToolTransition(from: string, to: string, toolName: string) {
+  const event = new CustomEvent('tool-transition', {
+    detail: { from, to, toolName }
+  })
+  window.dispatchEvent(event)
 }
