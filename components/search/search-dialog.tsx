@@ -1,13 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Search, FileText, ImageIcon, QrCode, Code, TrendingUp, Wrench } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { Search, Clock, Star, ArrowRight, Zap } from "lucide-react"
 import Link from "next/link"
+import { searchTools, getPopularTools, getRecentSearches, addToRecentSearches } from "@/lib/search/search-engine"
 
 interface SearchResult {
   title: string
@@ -15,153 +17,293 @@ interface SearchResult {
   href: string
   category: string
   icon: any
+  score: number
+  keywords: string[]
+  popularity: number
 }
 
-const allTools: SearchResult[] = [
-  // PDF Tools
-  { title: "PDF Merger", description: "Combine multiple PDF files", href: "/pdf-merger", category: "PDF", icon: FileText },
-  { title: "PDF Splitter", description: "Split PDF into separate files", href: "/pdf-splitter", category: "PDF", icon: FileText },
-  { title: "PDF Compressor", description: "Reduce PDF file size", href: "/pdf-compressor", category: "PDF", icon: FileText },
-  { title: "PDF to Image", description: "Convert PDF to images", href: "/pdf-to-image", category: "PDF", icon: FileText },
-  { title: "PDF to Word", description: "Convert PDF to Word document", href: "/pdf-to-word", category: "PDF", icon: FileText },
-  { title: "PDF Password Protector", description: "Add password protection", href: "/pdf-password-protector", category: "PDF", icon: FileText },
-  { title: "PDF Unlock", description: "Remove password protection", href: "/pdf-unlock", category: "PDF", icon: FileText },
-  { title: "PDF Watermark", description: "Add watermarks to PDF", href: "/pdf-watermark", category: "PDF", icon: FileText },
-  { title: "PDF Organizer", description: "Reorder and organize pages", href: "/pdf-organizer", category: "PDF", icon: FileText },
-  { title: "Image to PDF", description: "Convert images to PDF", href: "/image-to-pdf", category: "PDF", icon: FileText },
-
-  // Image Tools
-  { title: "Image Resizer", description: "Resize images with presets", href: "/image-resizer", category: "Image", icon: ImageIcon },
-  { title: "Image Compressor", description: "Compress images efficiently", href: "/image-compressor", category: "Image", icon: ImageIcon },
-  { title: "Image Converter", description: "Convert between formats", href: "/image-converter", category: "Image", icon: ImageIcon },
-  { title: "Image Cropper", description: "Crop images precisely", href: "/image-cropper", category: "Image", icon: ImageIcon },
-  { title: "Image Rotator", description: "Rotate and flip images", href: "/image-rotator", category: "Image", icon: ImageIcon },
-  { title: "Background Remover", description: "Remove image backgrounds", href: "/background-remover", category: "Image", icon: ImageIcon },
-  { title: "Image Flipper", description: "Flip images horizontally/vertically", href: "/image-flipper", category: "Image", icon: ImageIcon },
-  { title: "Image Filters", description: "Apply filters and effects", href: "/image-filters", category: "Image", icon: ImageIcon },
-  { title: "Image Upscaler", description: "Enlarge images with AI", href: "/image-upscaler", category: "Image", icon: ImageIcon },
-  { title: "Image Watermark", description: "Add watermarks to images", href: "/image-watermark", category: "Image", icon: ImageIcon },
-
-  // QR Tools
-  { title: "QR Code Generator", description: "Create custom QR codes", href: "/qr-code-generator", category: "QR", icon: QrCode },
-  { title: "QR Scanner", description: "Scan QR codes from images", href: "/qr-scanner", category: "QR", icon: QrCode },
-  { title: "Barcode Generator", description: "Generate various barcodes", href: "/barcode-generator", category: "QR", icon: QrCode },
-  { title: "Bulk QR Generator", description: "Generate multiple QR codes", href: "/bulk-qr-generator", category: "QR", icon: QrCode },
-  { title: "WiFi QR Generator", description: "Create WiFi QR codes", href: "/wifi-qr-generator", category: "QR", icon: QrCode },
-  { title: "vCard QR Generator", description: "Generate contact QR codes", href: "/vcard-qr-generator", category: "QR", icon: QrCode },
-
-  // Text Tools
-  { title: "JSON Formatter", description: "Format and validate JSON", href: "/json-formatter", category: "Text", icon: Code },
-  { title: "Base64 Encoder", description: "Encode/decode Base64", href: "/base64-encoder", category: "Text", icon: Code },
-  { title: "URL Encoder", description: "Encode/decode URLs", href: "/url-encoder", category: "Text", icon: Code },
-  { title: "Text Case Converter", description: "Convert text case", href: "/text-case-converter", category: "Text", icon: Code },
-  { title: "Hash Generator", description: "Generate MD5, SHA hashes", href: "/hash-generator", category: "Text", icon: Code },
-  { title: "XML Formatter", description: "Format XML documents", href: "/xml-formatter", category: "Text", icon: Code },
-  { title: "HTML Formatter", description: "Format HTML code", href: "/html-formatter", category: "Text", icon: Code },
-  { title: "CSS Minifier", description: "Minify CSS code", href: "/css-minifier", category: "Text", icon: Code },
-  { title: "JavaScript Minifier", description: "Minify JavaScript", href: "/js-minifier", category: "Text", icon: Code },
-
-  // SEO Tools
-  { title: "SEO Meta Generator", description: "Generate meta tags", href: "/seo-meta-generator", category: "SEO", icon: TrendingUp },
-  { title: "Sitemap Generator", description: "Generate XML sitemaps", href: "/sitemap-generator", category: "SEO", icon: TrendingUp },
-
-  // Utilities
-  { title: "Password Generator", description: "Generate secure passwords", href: "/password-generator", category: "Utilities", icon: Wrench },
-  { title: "Lorem Ipsum Generator", description: "Generate placeholder text", href: "/lorem-ipsum-generator", category: "Utilities", icon: Wrench },
-  { title: "UUID Generator", description: "Generate unique identifiers", href: "/uuid-generator", category: "Utilities", icon: Wrench },
-  { title: "Random Number Generator", description: "Generate random numbers", href: "/random-number-generator", category: "Utilities", icon: Wrench },
-  { title: "Text Diff Checker", description: "Compare text differences", href: "/text-diff-checker", category: "Utilities", icon: Wrench },
-  { title: "Word Counter", description: "Count words and characters", href: "/word-counter", category: "Utilities", icon: Wrench },
-  { title: "Unit Converter", description: "Convert units of measurement", href: "/unit-converter", category: "Utilities", icon: Wrench },
-  { title: "Currency Converter", description: "Convert currencies", href: "/currency-converter", category: "Utilities", icon: Wrench },
-  { title: "Color Converter", description: "Convert color formats", href: "/color-converter", category: "Utilities", icon: Wrench },
-]
-
-interface SearchDialogProps {
+interface EnhancedSearchDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
+export function EnhancedSearchDialog({ open, onOpenChange }: EnhancedSearchDialogProps) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
+  const [popularTools, setPopularTools] = useState<SearchResult[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Load initial data
+  useEffect(() => {
+    if (open) {
+      setRecentSearches(getRecentSearches())
+      setPopularTools(getPopularTools())
+    }
+  }, [open])
+
+  // Debounced search
+  const debouncedSearch = useCallback(
+    debounce((searchQuery: string) => {
+      if (!searchQuery.trim()) {
+        setResults([])
+        setIsLoading(false)
+        return
+      }
+
+      const searchResults = searchTools(searchQuery)
+      setResults(searchResults)
+      setIsLoading(false)
+    }, 300),
+    [],
+  )
 
   useEffect(() => {
-    if (!query.trim()) {
+    if (query.trim()) {
+      setIsLoading(true)
+      debouncedSearch(query)
+    } else {
       setResults([])
-      return
+      setIsLoading(false)
     }
+  }, [query, debouncedSearch])
 
-    const filtered = allTools.filter(tool =>
-      tool.title.toLowerCase().includes(query.toLowerCase()) ||
-      tool.description.toLowerCase().includes(query.toLowerCase()) ||
-      tool.category.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 10)
-
-    setResults(filtered)
-  }, [query])
-
-  const handleSelect = (href: string) => {
+  const handleSelect = (href: string, title: string) => {
+    addToRecentSearches(query || title)
     onOpenChange(false)
     setQuery("")
   }
 
+  const handleRecentSearch = (searchTerm: string) => {
+    setQuery(searchTerm)
+  }
+
+  const highlightMatch = (text: string, query: string) => {
+    if (!query.trim()) return text
+
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi")
+    const parts = text.split(regex)
+
+    return parts.map((part, index) =>
+      regex.test(part) ? (
+        <mark key={index} className="bg-yellow-200 text-yellow-900 px-1 rounded">
+          {part}
+        </mark>
+      ) : (
+        part
+      ),
+    )
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Search Tools</DialogTitle>
+      <DialogContent className="sm:max-w-3xl max-h-[80vh] p-0">
+        <DialogHeader className="px-6 pt-6 pb-4">
+          <DialogTitle className="flex items-center space-x-2">
+            <Search className="h-5 w-5" />
+            <span>Search Tools</span>
+            {query && (
+              <Badge variant="secondary" className="ml-2">
+                {results.length} results
+              </Badge>
+            )}
+          </DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-4">
+
+        <div className="px-6 pb-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search for tools..."
+              placeholder="Search 300+ professional tools..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-12 text-lg"
               autoFocus
             />
-          </div>
-
-          {results.length > 0 && (
-            <ScrollArea className="max-h-96">
-              <div className="space-y-2">
-                {results.map((result) => {
-                  const Icon = result.icon
-                  return (
-                    <Link
-                      key={result.href}
-                      href={result.href}
-                      onClick={() => handleSelect(result.href)}
-                      className="block p-3 rounded-lg border hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Icon className="h-5 w-5 text-gray-600" />
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-900">{result.title}</h3>
-                          <p className="text-sm text-gray-600">{result.description}</p>
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {result.category}
-                        </Badge>
-                      </div>
-                    </Link>
-                  )
-                })}
+            {isLoading && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
               </div>
-            </ScrollArea>
-          )}
+            )}
+          </div>
+        </div>
 
-          {query && results.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <Search className="h-12 w-12 mx-auto mb-3 opacity-50" />
-              <p>No tools found for "{query}"</p>
+        <ScrollArea className="max-h-96 px-6 pb-6">
+          {/* Search Results */}
+          {results.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-muted-foreground">Search Results</h3>
+                <Badge variant="outline" className="text-xs">
+                  {results.length} found
+                </Badge>
+              </div>
+              {results.map((result, index) => {
+                const Icon = result.icon
+                return (
+                  <Link
+                    key={`${result.href}-${index}`}
+                    href={result.href}
+                    onClick={() => handleSelect(result.href, result.title)}
+                    className="block p-4 rounded-lg border hover:bg-muted/50 transition-all duration-200 group"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <Icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
+                            {highlightMatch(result.title, query)}
+                          </h3>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {result.category}
+                            </Badge>
+                            {result.popularity > 80 && (
+                              <Badge className="bg-orange-100 text-orange-800 text-xs">
+                                <Star className="h-3 w-3 mr-1" />
+                                Popular
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {highlightMatch(result.description, query)}
+                        </p>
+                        {result.keywords.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {result.keywords.slice(0, 3).map((keyword, keywordIndex) => (
+                              <Badge key={keywordIndex} variant="outline" className="text-xs">
+                                {keyword}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           )}
+
+          {/* No Results */}
+          {query && results.length === 0 && !isLoading && (
+            <div className="text-center py-12">
+              <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <h3 className="text-lg font-medium text-foreground mb-2">No tools found</h3>
+              <p className="text-muted-foreground mb-4">We couldn't find any tools matching "{query}"</p>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Try searching for:</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {["PDF", "Image", "QR Code", "JSON", "Compress", "Convert"].map((suggestion) => (
+                    <Button
+                      key={suggestion}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuery(suggestion)}
+                      className="text-xs"
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Recent Searches & Popular Tools */}
+          {!query && (
+            <div className="space-y-6">
+              {/* Recent Searches */}
+              {recentSearches.length > 0 && (
+                <div>
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-medium text-muted-foreground">Recent Searches</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.slice(0, 6).map((search, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRecentSearch(search)}
+                        className="text-sm h-8"
+                      >
+                        <Clock className="h-3 w-3 mr-1" />
+                        {search}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <Separator />
+
+              {/* Popular Tools */}
+              <div>
+                <div className="flex items-center space-x-2 mb-3">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-medium text-muted-foreground">Popular Tools</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {popularTools.slice(0, 6).map((tool, index) => {
+                    const Icon = tool.icon
+                    return (
+                      <Link
+                        key={`popular-${tool.href}-${index}`}
+                        href={tool.href}
+                        onClick={() => handleSelect(tool.href, tool.title)}
+                        className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-all duration-200 group"
+                      >
+                        <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                          <Icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors truncate">
+                            {tool.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground truncate">{tool.description}</p>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {tool.category}
+                        </Badge>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </ScrollArea>
+
+        {/* Footer */}
+        <div className="px-6 py-3 border-t bg-muted/30">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center space-x-4">
+              <span>
+                Press <kbd className="bg-background px-1.5 py-0.5 rounded border">↑↓</kbd> to navigate
+              </span>
+              <span>
+                Press <kbd className="bg-background px-1.5 py-0.5 rounded border">Enter</kbd> to select
+              </span>
+            </div>
+            <span>300+ tools available</span>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
   )
+}
+
+// Debounce utility function
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+  let timeout: NodeJS.Timeout
+  return ((...args: any[]) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }) as T
 }
